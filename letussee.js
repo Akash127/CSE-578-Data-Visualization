@@ -1,1 +1,0 @@
-// Divide the area into different parts;
