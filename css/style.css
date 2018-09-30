@@ -1,0 +1,25 @@
+/* .container {
+    background-color:#EEEEEE;
+} */
+
+.y-axis, .x-axis {
+    color: white;
+}
+
+.tick {
+    color: #787878;
+    font-weight: bold;
+    font-size: 10px;
+}
+
+.y-axis-label, .x-axis-label {
+    fill: #787878;   
+}
+
+.y-axis-line {
+    color:white;
+}
+
+.x-axis-line {
+    color: white;
+}
