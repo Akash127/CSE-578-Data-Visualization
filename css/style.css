@@ -2,9 +2,27 @@
     background-color:#EEEEEE;
 } */
 
+.box{
+    border-radius: 25px;
+    border: 2px solid #73AD21;
+    padding: 20px; 
+    width: 120px;
+    height: 120px;
+}
+.x-top{margin:0px 0px 0px 20px;position: absolute;}
+.x-bottom{margin:400px 0px 0px 20px;position: absolute;}
+.y-left{margin:550px 0px 0px 200px;position: absolute;}
+.y-right{margin:550px 0px 0px 790px; position: absolute;}
+
+#chart-area1{
+    position: absolute;    
+    margin-left: 170px;
+}
+/* 
 .y-axis, .x-axis {
     color: white;
-}
+} */
+.xyz{position: relative;}
 
 .tick {
     color: #787878;
