@@ -9,7 +9,7 @@ function pointSelected(event) {
 }
 
 // Load Dataset and Charts
-d3.csv("dataset/cleaned_matches_dataset.csv").then(function(data) {
+d3.csv("dataset/dataclean.csv").then(function(data) {
   scatterPlot = new ScatterPlot(data, "#chart-area1");
   if(!selectedPoint) {
     selectedPoint = data[0]
