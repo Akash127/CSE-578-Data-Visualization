@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<script src="d3.v4.js"></script>
+<html>
+    <head>
+        <title>Add Option From Array</title>
+        <meta charset="windows-1252">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body>
+        <select id="select">
+            <option value="default">default</option>
+        </select>
+        <select id="select1">
+                <option value="default">default</option>
+            </select>
+        <script>
+            d3.csv('pop1.csv',function(row){
+            var select = document.getElementById("select"),
+             arr = row.columns;
+             for(var i = 0; i < arr.length; i++)
+             {
+                 var option = document.createElement("OPTION"),
+                 txt = document.createTextNode(arr[i]);
+                 option.appendChild(txt);
+                 option.setAttribute("value",arr[i]);
+                 select.insertBefore(option,select.lastChild);
+             }
+            });
+            d3.csv('pop1.csv',function(row){
+            var select1 = document.getElementById("select1"),
+             arr = row.columns;
+             for(var i = 0; i < arr.length; i++)
+             {
+                 var option = document.createElement("OPTION"),
+                 txt = document.createTextNode(arr[i]);
+                 option.appendChild(txt);
+                 option.setAttribute("value",arr[i]);
+                 select1.insertBefore(option,select1.lastChild);
+             }
+            });
+
+            </script>
+            
+             
+
+    </body>
+</html>

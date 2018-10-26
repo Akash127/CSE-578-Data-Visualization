@@ -1,0 +1,8 @@
+Vehicle Name,Small/Sporty/ Compact/Large Sedan,Sports Car,SUV,Wagon,Minivan,Pickup,AWD,RWD,Retail Price,Dealer Cost,Engine Size (l),Cyl,HP,City MPG,Hwy MPG,Weight,Wheel Base,Len,Width
+Acura 3.5 RL 4dr,1,0,0,0,0,0,0,0,43755,39014,3.5,6,225,18,24,3880,115,197,72
+Acura 3.5 RL w/Navigation 4dr,1,0,0,0,0,0,0,0,46100,41100,3.5,6,225,18,24,3893,115,197,72
+Acura MDX,0,0,1,0,0,0,1,0,36945,33337,3.5,6,265,17,23,4451,106,189,77
+Porsche 911 GT2 2dr,0,1,0,0,0,0,0,1,192465,173560,3.6,6,477,17,24,3131,93,175,72
+Acura RSX Type S 2dr,1,0,0,0,0,0,0,0,23820,21761,2,4,200,24,31,2778,101,172,68
+Acura TL 4dr,1,0,0,0,0,0,0,0,33195,30299,3.2,6,270,20,28,3575,108,186,72
+Acura TSX 4dr,1,0,0,0,0,0,0,0,26990,24647,2.4,4,200,22,29,3230,105,183,69
