@@ -1,11 +1,22 @@
 <!DOCTYPE html>
 <script src="d3.v4.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.min.js"></script>
 <html>
     <head>
         <title>Add Option From Array</title>
         <meta charset="windows-1252">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
     </head>
+    <button onclick="myFunction()">Save X</button>
+    <button onclick="myFunction()">Save X</button>
+    <button onclick="myFunction()">Save Y</button>
+    <button onclick="myFunction()">Save Y</button>
+    <script>
+            function myFunction() {
+                var btn = document.createElement("BUTTON");
+                document.body.appendChild(btn);
+            }
+    </script>
     <body>
         <select id="select">
             <option value="default">default</option>
@@ -38,6 +49,7 @@
                  select1.insertBefore(option,select1.lastChild);
              }
             });
+
 
             </script>
             
