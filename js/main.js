@@ -5,13 +5,13 @@ d3.csv("dataset/cleaned_matches_dataset.csv").then(function(data) {
 });
 
 var data = [{index: "val", value: 3},
-  {index: 1, value: 5},
-  {index: 2, value: 12}, 
-  {index: 3, value: 8},
-  {index: 4, value: 20},
-  {index: 5, value: 7},
-  {index: 6, value: 2},
-  {index: 7, value: 15}            
+  {index: "lol", value: 5},
+  {index: "yup", value: 12}, 
+  {index: "mbn fsv", value: 8},
+  {index: "bsf", value: 20},
+  {index: "khbv", value: 7},
+  {index: "mhbfs", value: 2},
+  {index: "kjhxbv", value: 15}            
   ];
 var widthX = 300,
     heightX = 250,
@@ -25,18 +25,31 @@ var y = d3.scaleLinear()
     .domain([0, data.length])
     .rangeRound([0, heightX]);
 
+    
+var svg=d3.select('.left-bars').append("svg").attr("width", 5)
+.attr("height", 300)
+.append('g');
+svg.append("line").attr("x1", 0)
+.attr("y1", 0)
+.attr("x2", 0)
+.attr("y2", 250)
+.attr("stroke-width", 2)
+.attr("stroke", "black");
+
+
 var svgX = d3.select('.left-bars')
   .append("svg")
     .attr("width", widthX)
     .attr("height", heightX)
   .append('g');
 
+
 svgX
   .append('rect')
     .attr('x', 0)
     .attr('y', 0)
 
-    .style('fill', 'lightyellow')
+    .style('fill', 'white')
     .attr('width', widthX)
     .attr('height', heightX);
 
@@ -66,9 +79,18 @@ svgbrushX
     .attr('x', function (d){return scaleX(d.value)-10;})
     .attr('y', function (d, i){return y(i) + y(0.5);})
     .attr('dy', '.35em')
-    .attr('dx', -15)
+    .attr('dx', -15) 
     .style('fill', 'white')
     .text(function (d) {return d3.format('.2')(d.value);})
+
+ svgbrushX
+  .append('text')
+    .attr('x', function (d){return 0;})
+    .attr('y', function (d, i){return y(i) + y(0.5);})
+    .attr('dy', '.35em')
+    .attr('dx', -15) 
+    .style('fill', 'white')
+    .text(function (d) {return (d.index);})
 
 function brushendX(){ 
   console.log("hi");
