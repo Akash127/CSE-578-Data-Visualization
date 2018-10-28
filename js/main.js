@@ -15,6 +15,27 @@ d3.csv("dataset/cleaned_matches_dataset.csv").then(function(data) {
     selectedPoint = data[0]
   }
   desc = new DescriptionTable("#desc");
+    var select = document.getElementById("select"),
+     arr = data.columns;
+     for(var i = 0; i < arr.length; i++)
+     {
+         var option = document.createElement("OPTION"),
+         txt = document.createTextNode(arr[i]);
+         option.appendChild(txt);
+         option.setAttribute("value",arr[i]);
+         select.insertBefore(option,select.lastChild);
+     }
+     var select1 = document.getElementById("select1"),
+     arr = data.columns;
+     for(var i = 0; i < arr.length; i++)
+     {
+         var option = document.createElement("OPTION"),
+         txt = document.createTextNode(arr[i]);
+         option.appendChild(txt);
+         option.setAttribute("value",arr[i]);
+         select1.insertBefore(option,select1.lastChild);
+     }
+    
 });
 
 var data = [{index: "val", value: 3},

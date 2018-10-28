@@ -29,14 +29,34 @@
 
     </div>
     <div class="row2">
-      <div class="dropdowns"></div>
-      <div class="right-bars"></div>
+   <div class="dropdowns">
+   <div class="xAxis">
+    <select id="select">
+        <option value="default">default</option>
+    </select>
+    <button onclick="myFunction()">Save X</button>
+    <button onclick="myFunction()">Save X</button>
+    </div>
+    <div class="yAxis">
+      <select id="select1">
+       <option value="default">default</option>
+    </select>
+    <button onclick="myFunction()">Save Y</button>
+    <button onclick="myFunction()">Save Y</button>
+    </div>
+
+   </div>
+   <div class="right-bars"></div>
     </div>
    </div>
   <div class="right-section" id="desc"></div>
   </div>
 
-
+<script>function myFunction() {
+                var btn = document.createElement("BUTTON");
+                document.body.appendChild(btn);
+        }
+  </script>
     <!-- External JS Libraries -->
     <!-- <script src="js/jquery-3.3.1.min.js"></script> -->
     <script src="js/d3.min.js"></script>
