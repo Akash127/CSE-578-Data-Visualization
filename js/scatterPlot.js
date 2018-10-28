@@ -10,7 +10,7 @@ ScatterPlot.prototype.init = function() {
 
   vis.margin = {left:50, right:10, top:10, bottom:70};
 
-  vis.width = 700 - vis.margin.left - vis.margin.right;
+  vis.width = 500 - vis.margin.left - vis.margin.right;
   vis.height = 550 - vis.margin.top - vis.margin.bottom;
 
   vis.svgCanvas = d3.select(vis.containerClassName).append("svg")
@@ -108,7 +108,8 @@ ScatterPlot.prototype.drawvis = function() {
         return vis.height - vis.yScale_scatter(d.return2);
       })
       .attr("r", 5)
-      .on("mouseover", tip.show)
+      .on("mouseover", pointSelected)
+      // .on("mouseover", tip.show)
       .on("mouseout", tip.hide)
       .attr("fill", "#FFB55F")
 }
