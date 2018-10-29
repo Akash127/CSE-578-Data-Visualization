@@ -8,20 +8,55 @@
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="css/bootstrap.min.css">
     <link rel="stylesheet" href="css/d3-tip-style.css">
-    <!-- <link rel="stylesheet" href="css/style.css"> -->
+     <link rel="stylesheet" href="css/style.css"> 
 
     <title>Inter Axis</title>
   </head>
   <body>
+  <div class="row">
+  <div class="left-section container  row">
+    <div class="row1 row">
+      <div class="left-bars row"></div>  
+        <div class="row mt-5">
+          <svg width="400" height="110" class="box y-right"></svg>
+          <svg width="400" height="110" class="box y-left"></svg>
+          <svg width="400" height="110" class="box x-top"></svg>
+          <svg width="400" height="110" class="box x-bottom"></svg>
+
+          <div class="col-sm-6" id="chart-area1"></div>
+        </div> 
     
-    <div class="container">
-      <div class="row mt-5">
-        <div class="col-sm-6" id="chart-area1"></div>
-        <div class="col-sm-6" id="desc"></div>
-      </div>
+
+    </div>
+    <div class="row2">
+   <div class="dropdowns">
+   <div class="xAxis">
+    <select id="select">
+        <option value="default">default</option>
+    </select>
+    <button onclick="myFunction()">Save X</button>
+    <button onclick="myFunction()">Clear X</button>
+    </div>
+    <div class="yAxis">
+      <select id="select1">
+       <option value="default">default</option>
+    </select>
+    <button onclick="myFunction()">Save Y</button>
+    <button onclick="myFunction()">Clear Y</button>
     </div>
 
+   </div>
+   <div class="right-bars"></div>
+    </div>
+   </div>
+  <div class="right-section" id="desc"></div>
+  </div>
 
+<script>function myFunction() {
+                var btn = document.createElement("BUTTON");
+                document.body.appendChild(btn);
+        }
+  </script>
     <!-- External JS Libraries -->
     <!-- <script src="js/jquery-3.3.1.min.js"></script> -->
     <script src="js/d3.min.js"></script>
