@@ -4,7 +4,8 @@ ScatterPlot = function(data, containerClassName) {
   this.containerClassName = containerClassName
   this.init();
 };
-
+var initX=9;
+var initY=13;
 ScatterPlot.prototype.init = function() {
   var vis = this;
   vis.margin = {left:50, right:10, top:10, bottom:70};
@@ -19,10 +20,10 @@ ScatterPlot.prototype.init = function() {
   vis.scatterPlotGroup = vis.svgCanvas.append("g")
     .attr("transform", "translate(" + vis.margin.left + "," + vis.margin.top + ")")
     var columns=this.data.columns;
-    var max=d3.max(this.data,function(d){return +d["coord"][columns[9]]});
-    var min =d3.min(this.data,function(d){return +d["coord"][columns[9]]});
-    var ymax=d3.max(this.data,function(d){return +d["coord"][columns[13]]});
-    var ymin =d3.min(this.data,function(d){return +d["coord"][columns[13]]});
+    var max=d3.max(this.data,function(d){return +d["coord"][columns[initX]]});
+    var min =d3.min(this.data,function(d){return +d["coord"][columns[initX]]});
+    var ymax=d3.max(this.data,function(d){return +d["coord"][columns[initY]]});
+    var ymin =d3.min(this.data,function(d){return +d["coord"][columns[initY]]});
    // console.log(columns);
   // Initiating Scales for Axis and Inverted Axis
 
@@ -55,7 +56,7 @@ ScatterPlot.prototype.init = function() {
   
   // Adding Axis Labels
   vis.scatterPlotGroup.append("text")
-    .text(columns[9])
+    .text(columns[initX])
     .attr("y", -35)
     .attr("x", -380)
     .attr("class", "y-axis-label")
@@ -64,7 +65,7 @@ ScatterPlot.prototype.init = function() {
 
 
   vis.scatterPlotGroup.append("text")
-    .text(columns[13])
+    .text(columns[initY])
     .attr("y", vis.height + 50)
     .attr("x", 150)
     .attr("class", "x-axis-label")
@@ -108,10 +109,10 @@ ScatterPlot.prototype.drawvis = function() {
   vis.circles.enter()
     .append("circle")
       .attr("cx", function(d, i){
-        return vis.xScale_scatter(+d["coord"][columns[13]]);
+        return vis.xScale_scatter(+d["coord"][columns[initY]]);
       })
       .attr("cy", function(d) {
-        return vis.height - vis.yScale_scatter(+d["coord"][columns[9]]);
+        return vis.height - vis.yScale_scatter(+d["coord"][columns[initX]]);
       })
       .attr("r", 5)
       .on("mouseover", pointSelected)
