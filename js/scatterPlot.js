@@ -7,7 +7,6 @@ ScatterPlot = function(data, containerClassName) {
 
 ScatterPlot.prototype.init = function() {
   var vis = this;
-
   vis.margin = {left:50, right:10, top:10, bottom:70};
 
   vis.width = 500 - vis.margin.left - vis.margin.right;
@@ -19,19 +18,26 @@ ScatterPlot.prototype.init = function() {
 
   vis.scatterPlotGroup = vis.svgCanvas.append("g")
     .attr("transform", "translate(" + vis.margin.left + "," + vis.margin.top + ")")
-
+    var columns=this.data.columns;
+    var max=d3.max(this.data,function(d){return +d["coord"][columns[9]]});
+    var min =d3.min(this.data,function(d){return +d["coord"][columns[9]]});
+    var ymax=d3.max(this.data,function(d){return +d["coord"][columns[13]]});
+    var ymin =d3.min(this.data,function(d){return +d["coord"][columns[13]]});
+   // console.log(columns);
   // Initiating Scales for Axis and Inverted Axis
+
   vis.xScale_scatter = d3.scaleLinear()
     .range([0, vis.width])
-    .domain([50,100])
+    .domain([min,max])
 
   vis.yScale_scatter = d3.scaleLinear()
     .range([0, vis.height])
-    .domain([0, 60])
-
-  vis.invertedYScale_scatter = d3.scaleLinear()
+    .domain([ymin, ymax])
+  
+    vis.invertedYScale_scatter = d3.scaleLinear()
     .range([vis.height, 0])
-    .domain([0, 60])
+    .domain([ymin, ymax])
+  
   
   // Creating and Adding Axis
   vis.xAxis_scatter = d3.axisBottom(vis.xScale_scatter)
@@ -42,14 +48,14 @@ ScatterPlot.prototype.init = function() {
     .call(vis.xAxis_scatter);
 
   vis.yAxis_scatter = d3.axisLeft(vis.invertedYScale_scatter)
-    .ticks(4)
+   // .ticks(4)
   vis.yAxis = vis.scatterPlotGroup.append("g")
     .attr("class", "y-axis")
     .call(vis.yAxis_scatter);
   
   // Adding Axis Labels
   vis.scatterPlotGroup.append("text")
-    .text("Return Points Won By Defeated Player (%)")
+    .text(columns[9])
     .attr("y", -35)
     .attr("x", -380)
     .attr("class", "y-axis-label")
@@ -58,23 +64,23 @@ ScatterPlot.prototype.init = function() {
 
 
   vis.scatterPlotGroup.append("text")
-    .text("Points Won by the Winner on First Serve (%)")
+    .text(columns[13])
     .attr("y", vis.height + 50)
     .attr("x", 150)
     .attr("class", "x-axis-label")
     .attr("font-size", "18px")
 
   vis.processData();
+
+  var low=[];
+  var high=[];
+  this.updategraph("Y",)
 };
 
 //-------------------------------Process Data------------------------------------------
 
 ScatterPlot.prototype.processData = function() {
   var vis = this;
-  vis.data.forEach(function(d) {
-    d.firstPointWon1 = +(d.firstPointWon1.replace('%', ''))
-    d.return2 = +(d.return2.replace('%', ''))
-  })
   vis.drawvis();
 }
 
@@ -98,14 +104,14 @@ ScatterPlot.prototype.drawvis = function() {
   // Adding Circles
   vis.circles = vis.scatterPlotGroup.selectAll("circle")
     .data(vis.data)
-
+    var columns=this.data.columns;
   vis.circles.enter()
     .append("circle")
       .attr("cx", function(d, i){
-        return vis.xScale_scatter(d.firstPointWon1);
+        return vis.xScale_scatter(+d["coord"][columns[13]]);
       })
       .attr("cy", function(d) {
-        return vis.height - vis.yScale_scatter(d.return2);
+        return vis.height - vis.yScale_scatter(+d["coord"][columns[9]]);
       })
       .attr("r", 5)
       .on("mouseover", pointSelected)
@@ -119,13 +125,41 @@ ScatterPlot.prototype.drawvis = function() {
 }
 
 function dragstarted(d) {
+  //console.log(d);
   d3.select(this).raise().classed("active", true);
 }
 
 function dragged(d) {
+  //console.log(d);
   d3.select(this).attr("cx", d.x = d3.event.x).attr("cy", d.y = d3.event.y);
 }
 
 function dragended(d) {
+  //console.log(d);
   d3.select(this).classed("active", false);
+}
+
+ScatterPlot.prototype.updategraph=function(axis,YH,YL,XL,XH){
+  var data=this.data;
+  
+  attr=this.data.columns;
+  var attrNo=15; //t be changed
+  var x1={},
+  x0={};
+  var high=this.data[0],low=this.data[2];
+  for (var i = 0; i<attrNo; i++) {
+    x1[attr[i]] = d3.mean(low, function(d) { return d[attr[i]]});
+    x0[attr[i]] = d3.mean(high, function(d) { return d[attr[i]]});
+  }
+
+  var hlpair = [];
+  for (var i = 0; i<high.length; i++) {
+    for (var j = 0; j<low.length; j++) {
+      var tmpelt = {};
+      for (var k = 0; k<attrNo; k++) {
+        tmpelt[attr[k]] = high[i][attr[k]] - low[j][attr[k]];
+      }
+      hlpair[hlpair.length] = tmpelt;
+    }
+  }
 }
