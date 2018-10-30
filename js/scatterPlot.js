@@ -1,11 +1,14 @@
-
-ScatterPlot = function(data, containerClassName) {
-  this.data = data
-  this.containerClassName = containerClassName
-  this.init();
-};
 var initX=9;
 var initY=13;
+
+ScatterPlot = function(data, containerClassName, xv, yv) {
+  this.data = data
+  this.containerClassName = containerClassName
+  initX = xv;
+  initY = yv;
+  this.init();
+};
+
 ScatterPlot.prototype.init = function() {
   var vis = this;
   vis.margin = {left:50, right:10, top:10, bottom:70};

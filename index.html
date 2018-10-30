@@ -17,13 +17,14 @@
   <div class="left-section container  row">
     <div class="row1 row">
       <div class="left-bars row"></div>  
-        <div class="row mt-5">
+        <div class="row mt-5" id = "11">
           <svg width="400" height="110" class="box y-right"></svg>
           <svg width="400" height="110" class="box y-left"></svg>
           <svg width="400" height="110" class="box x-top"></svg>
           <svg width="400" height="110" class="box x-bottom"></svg>
 
           <div class="col-sm-6" id="chart-area1"></div>
+          <div class="col-sm-6" id="chart-area2"></div>
         </div> 
     
 
@@ -31,14 +32,14 @@
     <div class="row2">
    <div class="dropdowns">
    <div class="xAxis">
-    <select id="select">
+    <select id="select" onchange = "chooseX()">
         <option value="default">default</option>
     </select>
     <button onclick="myFunction()">Save X</button>
     <button onclick="myFunction()">Clear X</button>
     </div>
     <div class="yAxis">
-      <select id="select1">
+      <select id="select1" onchange = "chooseY()">
        <option value="default">default</option>
     </select>
     <button onclick="myFunction()">Save Y</button>
