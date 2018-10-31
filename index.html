@@ -4,19 +4,22 @@
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
+    <script src="https://code.highcharts.com/highcharts.src.js"></script>
+    <script src="https://rawgithub.com/highcharts/draggable-points/master/draggable-points.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="css/bootstrap.min.css">
     <link rel="stylesheet" href="css/d3-tip-style.css">
      <link rel="stylesheet" href="css/style.css"> 
+     
 
     <title>Inter Axis</title>
   </head>
   <body>
   <div class="row">
-  <div class="left-section container  row">
+  <div class="left-section container  col-md-8 row">
     <div class="row1 row">
-      <div class="left-bars row"></div>  
+      <div class="left-bars row" id="left-bars"></div>  
         <div class="row mt-5">
           <svg width="400" height="110" class="box y-right"></svg>
           <svg width="400" height="110" class="box y-left"></svg>
@@ -28,7 +31,7 @@
     
 
     </div>
-    <div class="row2">
+    <div class="row2 row">
    <div class="dropdowns">
    <div class="xAxis">
     <select id="select">
@@ -46,13 +49,14 @@
     </div>
 
    </div>
-   <div class="right-bars"></div>
+   <div class="right-bars" id="right-bars"></div>
     </div>
    </div>
-  <div class="right-section" id="desc"></div>
+  <div class="right-section col-md-2" id="desc"></div>
   </div>
 
-<script>function myFunction() {
+<script>
+function myFunction() {
                 var btn = document.createElement("BUTTON");
                 document.body.appendChild(btn);
         }
@@ -65,5 +69,6 @@
     <script src="js/scatterPlot.js"></script>
     <script src="js/desc.js"></script>
     <script src="js/main.js"></script>
+
   </body>
 </html>

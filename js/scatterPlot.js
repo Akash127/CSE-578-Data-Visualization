@@ -124,9 +124,14 @@ ScatterPlot.prototype.drawvis = function() {
         .on("drag", dragged)
         .on("end", dragended));
 }
-
+function clone(selector) {
+  var node = d3.select(selector).node();
+  return d3.select(node.parentNode.insertBefore(node.cloneNode(true), node.nextSibling));
+}
 function dragstarted(d) {
-  //console.log(d);
+  console.log(d);
+  //console.log(this);
+  var copy=clone(this);
   d3.select(this).raise().classed("active", true);
 }
 
@@ -137,6 +142,7 @@ function dragged(d) {
 
 function dragended(d) {
   //console.log(d);
+  console.log(this);
   d3.select(this).classed("active", false);
 }
 
