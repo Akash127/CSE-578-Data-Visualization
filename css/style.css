@@ -67,3 +67,15 @@ svg:not(:root){overflow: visible!important;}
     margin-left: 517px;
     margin-top: 0px;
 }
+
+.tick {
+    color: #787878;
+    stroke-width: 0.2px;
+    stroke-dasharray: 2;
+}
+
+.xOriginLine, .yOriginLine {
+    stroke: #787878;
+    /* stroke: red; */
+    stroke-width: 1.2px;
+}
