@@ -4,7 +4,7 @@ var selectedPoint;
 var loadData=[];
 
 function pointSelected(event) {
-  selectedPoint = event;
+  selectedPoint = event.raw;
   desc.update();
 }
 var chart=null;
@@ -152,7 +152,7 @@ d3.csv("dataset/04cars data_clean.csv").then(function(data) {
   yv = 13;
   scatterPlot = new ScatterPlot(loadData, "#chart-area1", xv, yv);
   if(!selectedPoint) {
-    selectedPoint = data[0]
+    selectedPoint = loadData[0].raw
   }
   desc = new DescriptionTable("#desc");
     var select = document.getElementById("select"),

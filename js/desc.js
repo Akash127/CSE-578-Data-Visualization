@@ -32,7 +32,9 @@ DescriptionTable.prototype.createTable = function() {
 }
 
 DescriptionTable.prototype.update = function() {
+
   this.processData();
+  
   this.tbody.selectAll('tr')
     .data(this.featureData)
     .selectAll('td')
@@ -49,6 +51,7 @@ DescriptionTable.prototype.update = function() {
 DescriptionTable.prototype.processData = function() {
   
   var featureData = [];
+
   for(key in selectedPoint) {
     var temp = {
       'feature': key,

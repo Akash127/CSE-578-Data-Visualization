@@ -90,6 +90,10 @@ ScatterPlot.prototype.init = function() {
     .style("pointer-events", "all")
     .attr('transform', 'translate(' + vis.margin.left + ',' + vis.margin.top + ')')
     .call(zoom)
+  
+  // Define Scatterplot Group after appending rect to caputer mouseover events
+  vis.scatterPlotGroup = vis.svg.append("g")
+    .attr("transform", "translate(" + vis.margin.left + "," + vis.margin.top + ")")
 
   // Define Origin Lines
   vis.yOrigin = d3.line()
@@ -163,13 +167,11 @@ ScatterPlot.prototype.drawvis = function() {
       .attr("r", 5)
       .attr("clip-path", "url(#clip)")
       .on("mouseover", pointSelected)
-      // .on("mouseover", tip.show)
-      // .on("mouseout", tip.hide)
       .attr("fill", "#FFB55F")
-      .call(d3.drag()
-        .on("start", dragstarted)
-        .on("drag", dragged)
-        .on("end", dragended));
+      // .call(d3.drag()
+      //   .on("start", dragstarted)
+      //   .on("drag", dragged)
+      //   .on("end", dragended));
 
   // Adding X Origin
   vis.scatterPlotGroup.append("path")
@@ -223,19 +225,15 @@ function clone(selector) {
 
 function dragstarted(d) {
   console.log(d);
-  //console.log(this);
   var copy=clone(this);
   d3.select(this).raise().classed("active", true);
 }
 
 function dragged(d) {
-  //console.log(d);
   d3.select(this).attr("cx", d.x = d3.event.x).attr("cy", d.y = d3.event.y);
 }
 
 function dragended(d) {
-  //console.log(d);
-  console.log(this);
   d3.select(this).classed("active", false);
 }
 
