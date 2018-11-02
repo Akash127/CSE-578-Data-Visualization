@@ -1,6 +1,14 @@
 var initX=9;
 var initY=13;
-
+var selected;
+var selectedElement;
+var selectedProperties;
+var cx1=cx2=cy1=cy2=0;
+var x_left_dropzone=[];
+var x_right_dropzone=[];
+var y_top_dropzone=[];
+var y_bottom_dropzone=[];
+var tip;
 var lineData = [
   {"x": 0, "y": -Number.MAX_SAFE_INTEGER},
   {"x": 0, "y": Number.MAX_SAFE_INTEGER}
@@ -143,14 +151,19 @@ ScatterPlot.prototype.drawvis = function() {
   var vis = this;
 
   // // Tooltip
-  // var tip = d3.tip().attr('class', 'd3-tip')
-  //   .html(function(d) {
-  //     var text = "<strong><span style='color: #E57255'>"+d.player1+" defeated "+d.player2+"("+d.year+")</span></strong><br><br>"
-  //     text += "First Point Won-("+ d.player1 + "): " + d.firstPointWon1 + "%<br>"
-  //     text += "Return Point-(" + d.player2 + "): " + d.return2 + "%<br>"
-  //     return text;
-  //   });
-  // vis.scatterPlotGroup.call(tip);
+    tip = d3.tip().attr('class', 'd3-tip')
+     .html(function(d) {
+      $(this).addClass("selected");
+         selected=d3.selectAll('.selected');
+        selectedElement=this;
+         selectedProperties=d;
+       var text = "<button onclick=x_left_click()>Drop in X-left</button>"
+       +"<button onclick=x_right_click()>Drop in X-right</button>"
+       +"<button onclick=y_top_click()>Drop in Y-top</button>"
+      +"<button onclick=y_bottom_click()>Drop in y-bottom</button>"
+       return text;
+     });
+   vis.scatterPlotGroup.call(tip);
 
   // Adding Circles
   vis.circles = vis.scatterPlotGroup.selectAll("circle")
@@ -165,13 +178,12 @@ ScatterPlot.prototype.drawvis = function() {
         return vis.yScale(+d["coord"][vis.columns[initX]]);
       })
       .attr("r", 5)
+      .attr("class","dropdown")
       .attr("clip-path", "url(#clip)")
       .on("mouseover", pointSelected)
       .attr("fill", "#FFB55F")
-      // .call(d3.drag()
-      //   .on("start", dragstarted)
-      //   .on("drag", dragged)
-      //   .on("end", dragended));
+      .on("click",tip.show);
+  
 
   // Adding X Origin
   vis.scatterPlotGroup.append("path")
@@ -186,9 +198,14 @@ ScatterPlot.prototype.drawvis = function() {
 
 }
 
-
 function zoomed (vis) {
 
+  //if tooltip is showing 
+  if($(".d3-tip").css('opacity')==1) {
+    tip.hide();
+    selected.classed("selected",false);
+    selected=null;
+  }
   // create new scale ojects based on event
   var new_xScale = d3.event.transform.rescaleX(vis.xScale);
   var new_yScale = d3.event.transform.rescaleY(vis.yScale);
@@ -217,26 +234,78 @@ function zoomed (vis) {
     .attr("clip-path", "url(#clip)")
 }
 
+function x_left_click(){
+  tip.hide();
+  var cln = selectedElement.cloneNode(true);
+  cln.removeAttribute("class");
+  cln.classList.add("in-x-left");
+  selected.classed("selected",false);
+  selected=null;
 
-function clone(selector) {
-  var node = d3.select(selector).node();
-  return d3.select(node.parentNode.insertBefore(node.cloneNode(true), node.nextSibling));
+  x_left_dropzone.push(selectedProperties);
+  cx1+=cx1;
+  d3.select(".x-left").selectAll("circle").data(x_left_dropzone).enter()
+  .append("circle")
+  .attr("r",4)
+  .attr("cx",cx1)
+  .attr("cy",cx1)
+  .attr("fill","red")
+  .on("mouseover",pointSelected);
+  
 }
-
-function dragstarted(d) {
-  console.log(d);
-  var copy=clone(this);
-  d3.select(this).raise().classed("active", true);
+function x_right_click(){
+  tip.hide();
+  var cln = selectedElement.cloneNode(true);
+  cln.removeAttribute("class");
+  cln.classList.add("in-x-right");
+  selected.classed("selected",false);
+  selected=null;
+  x_right_dropzone.push(selectedProperties);
+  cx2+=10;
+  d3.select(".x-right").selectAll("circle").data(x_right_dropzone).enter()
+  .append("circle")
+  .attr("r",4)
+  .attr("cx",cx2)
+  .attr("cy",cx2)
+  .attr("fill","red")
+  .on("mouseover",pointSelected);
+  
 }
-
-function dragged(d) {
-  d3.select(this).attr("cx", d.x = d3.event.x).attr("cy", d.y = d3.event.y);
+function y_top_click(){
+  tip.hide();
+  var cln = selectedElement.cloneNode(true);
+  cln.removeAttribute("class");
+  cln.classList.add("in-y-top");
+  selected.classed("selected",false);
+  selected=null;
+  y_top_dropzone.push(selectedProperties);
+  cy1+=10;
+  d3.select(".y-top").selectAll("circle").data(y_top_dropzone).enter()
+  .append("circle")
+  .attr("r",4)
+  .attr("cx",cy1)
+  .attr("cy",cy1)
+  .attr("fill","red")
+  .on("mouseover",pointSelected);
+  
 }
-
-function dragended(d) {
-  d3.select(this).classed("active", false);
+function y_bottom_click(){
+  tip.hide();
+  var cln = selectedElement.cloneNode(true);
+  cln.removeAttribute("class");
+  cln.classList.add("in-x-top");
+  selected.classed("selected",false);
+  selected=null;
+  y_bottom_dropzone.push(selectedProperties);
+  cy2+=10;
+  d3.select(".y-bottom").selectAll("circle").data(y_bottom_dropzone).enter()
+  .append("circle")
+  .attr("r",4)
+  .attr("cx",cy2)
+  .attr("cy",cy2)
+  .attr("fill","red")
+  .on("mouseover",pointSelected); 
 }
-
 ScatterPlot.prototype.updategraph=function(axis,YH,YL,XL,XH){
   var data=this.data;
   

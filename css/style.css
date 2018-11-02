@@ -5,15 +5,14 @@
 .box{
     border-radius: 25px;
     border: 2px solid #73AD21;
-    padding: 20px; 
-    width: 120px;
-    height: 120px;
+    width: 100px;
+    height: 100px;
 }
 svg:not(:root){overflow: visible!important;}
-.x-top{margin:0px 0px 0px 20px;position: absolute;}
-.x-bottom{margin:400px 0px 0px 20px;position: absolute;overflow: visible;}
-.y-left{margin:550px 0px 0px 200px;position: absolute;overflow: visible;}
-.y-right{margin:550px 0px 0px 740px; position: absolute;overflow: visible;}
+.x-left{margin:0px 0px 0px 20px;position: absolute;}
+.x-right{margin:400px 0px 0px 20px;position: absolute;overflow: visible;}
+.y-top{margin:550px 0px 0px 200px;position: absolute;overflow: visible;}
+.y-bottom{margin:550px 0px 0px 740px; position: absolute;overflow: visible;}
 
 #chart-area1{
     position: absolute;    
@@ -79,3 +78,22 @@ svg:not(:root){overflow: visible!important;}
     /* stroke: red; */
     stroke-width: 1.2px;
 }
+
+
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    height: 90%;
+    top: 36px;
+    left: 64px;
+    right: -342px;
+    bottom: 0;
+    background-color: rgba(0,0,0,0.5);
+    z-index: 2;
+    cursor: pointer;
+}
+
+.selected{fill: #73AD21}
+
+.show {display: block;}

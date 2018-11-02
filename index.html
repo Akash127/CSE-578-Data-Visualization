@@ -21,18 +21,18 @@
     <div class="row1 row">
       <div class="left-bars row" id="left-bars"></div>  
         <div class="row mt-5">
-          <svg width="400" height="110" class="box y-right"></svg>
-          <svg width="400" height="110" class="box y-left"></svg>
-          <svg width="400" height="110" class="box x-top"></svg>
-          <svg width="400" height="110" class="box x-bottom"></svg>
+          <svg width="400" height="110" class="box y-top"></svg>
+          <svg width="400" height="110" class="box y-bottom"></svg>
+          <svg width="400" height="110" class="box x-left"></svg>
+          <svg width="400" height="110" class="box x-right"></svg>
 
-          <div class="col-sm-6" id="chart-area1"></div>
-          <div class="col-sm-6" id="chart-area2"></div>
+          <div class="col-sm-6" id="chart-area1">
+
+          </div>
+  
         </div> 
-    
-
     </div>
-    <div class="row2 row">
+   <div class="row2 row">
    <div class="dropdowns">
    <div class="xAxis">
     <select id="select" onchange = "chooseX()">
@@ -57,10 +57,14 @@
   </div>
 
 <script>
+function myFunc() {
+    document.getElementById("myDropdown").classList.toggle("show");
+}
 function myFunction() {
                 var btn = document.createElement("BUTTON");
                 document.body.appendChild(btn);
         }
+
   </script>
     <!-- External JS Libraries -->
     <!-- <script src="js/jquery-3.3.1.min.js"></script> -->
