@@ -1,3 +1,4 @@
+//#region global values will be defined here
 var initX=9;
 var initY=13;
 var selected;
@@ -13,8 +14,9 @@ var lineData = [
   {"x": 0, "y": -Number.MAX_SAFE_INTEGER},
   {"x": 0, "y": Number.MAX_SAFE_INTEGER}
 ] 
+//#endregion
 
-
+//#region some scatterplot shit
 ScatterPlot = function(data, containerClassName, xv, yv) {
   this.data = data
   this.containerClassName = containerClassName
@@ -27,7 +29,7 @@ ScatterPlot.prototype.init = function() {
   var vis = this;
   vis.margin = {left:50, right:50, top:50, bottom:50};
 
-  vis.width = 900 - vis.margin.left - vis.margin.right;
+  vis.width = 700 - vis.margin.left - vis.margin.right;
   vis.height = 700 - vis.margin.top - vis.margin.bottom;
 
   vis.svg = d3.select(vis.containerClassName).append("svg")
@@ -135,16 +137,14 @@ ScatterPlot.prototype.init = function() {
   var high=[];
   this.updategraph("Y",)
 };
+//#endregion
 
-//-------------------------------Process Data------------------------------------------
+//#region Draw visualisation
 
 ScatterPlot.prototype.processData = function() {
   var vis = this;
   vis.drawvis();
 }
-
-
-//-------------------------------Create Vizualization----------------------------------
 
 ScatterPlot.prototype.drawvis = function() {
 
@@ -197,7 +197,9 @@ ScatterPlot.prototype.drawvis = function() {
     .attr("clip-path", "url(#clip)")
 
 }
+//#endregion
 
+//#region zoom
 function zoomed (vis) {
 
   //if tooltip is showing 
@@ -233,7 +235,9 @@ function zoomed (vis) {
     .attr("d", vis.yOrigin(lineData))
     .attr("clip-path", "url(#clip)")
 }
+//#endregion
 
+//#region ToolTip click functions
 function x_left_click(){
   tip.hide();
   var cln = selectedElement.cloneNode(true);
@@ -306,6 +310,10 @@ function y_bottom_click(){
   .attr("fill","red")
   .on("mouseover",pointSelected); 
 }
+//#endregion
+
+//#region GraphUpdation-urf- real work starts here
+
 ScatterPlot.prototype.updategraph=function(axis,YH,YL,XL,XH){
   var data=this.data;
   
@@ -330,3 +338,4 @@ ScatterPlot.prototype.updategraph=function(axis,YH,YL,XL,XH){
     }
   }
 }
+//#endregion

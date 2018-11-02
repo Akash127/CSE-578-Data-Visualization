@@ -9,19 +9,21 @@
     height: 100px;
 }
 svg:not(:root){overflow: visible!important;}
-.x-left{margin:0px 0px 0px 20px;position: absolute;}
-.x-right{margin:400px 0px 0px 20px;position: absolute;overflow: visible;}
-.y-top{margin:550px 0px 0px 200px;position: absolute;overflow: visible;}
-.y-bottom{margin:550px 0px 0px 740px; position: absolute;overflow: visible;}
+.y-top{  
+    margin-left: 84px;    margin-top: 50px;position: absolute;overflow: visible;}
+.y-bottom{margin-top: 559px;
+    margin-left: 84px;position: absolute; }
+.x-left{    margin-top: 700px;
+    margin-left: 232px;position: absolute;overflow: visible;}
+.x-right{margin-top: 700px;margin-left:739px;position: absolute;overflow: visible;}
 
 #chart-area1{
     position: absolute;    
     margin-left: 170px;
 }
-/* 
-.y-axis, .x-axis {
-    color: white;
-} */
+table{
+    margin-top: 46px;
+}
 .xyz{position: relative;}
 
 .tick {
@@ -43,15 +45,13 @@ svg:not(:root){overflow: visible!important;}
 }
 
 .left-bars{
-    margin-left: 20px;
-    margin-top: 50px
+    /* margin-left: 20px;
+    margin-top: 50px */
 }
-.right-section{
-    margin-left: 273px;
-}
+
 .dropdowns{
-    margin-left: -214px;
-    margin-top: 361px;
+    margin-left: -202px;
+    margin-top: 42px;
 }
 
 #select1{
@@ -62,10 +62,7 @@ svg:not(:root){overflow: visible!important;}
     width: 100px;
     margin-left: 262px;
 }
-.right-bars{
-    margin-left: 517px;
-    margin-top: 0px;
-}
+
 
 .tick {
     color: #787878;
@@ -97,3 +94,8 @@ svg:not(:root){overflow: visible!important;}
 .selected{fill: #73AD21}
 
 .show {display: block;}
+.left-section{    margin-left: -31px; overflow: visible;}
+.mid-section{    margin-left: -141px;}
+.right-section{
+    margin-left: 390px;
+}
