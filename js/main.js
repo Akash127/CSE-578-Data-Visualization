@@ -20,7 +20,7 @@ chart = new Highcharts.Chart({
     enabled:false
 },
   title: {
-      text: 'Highcharts draggable points demo'
+      text: 'Y-Axis attributes weights'
   },
 
   xAxis: {
@@ -52,11 +52,14 @@ chart = new Highcharts.Chart({
   },
 
   tooltip: {
-      yDecimals: 2
+      yDecimals: 2,
+      formatter:function(){
+          return this.x + ":" +this.y;
+      }
   },
 
   series: [{
-      data: [0, 71.5, 106.4, 129.2, 144.0, 176.0, 135.6, 148.5, 216.4, 194.1, 95.6, 54.4],
+      data: [0, 0, 0.5, 0, 1, 0, 0, 0, 2, 0, 0, 0],
       //draggableX: true,
       draggableY: true,
       dragMinY: 0,
@@ -77,7 +80,7 @@ chartRight = new Highcharts.Chart({
         enabled:false
     },
     title: {
-        text: 'Highcharts draggable points demo2'
+        text: 'X-Axis attributes weights'
     },
   
     xAxis: {

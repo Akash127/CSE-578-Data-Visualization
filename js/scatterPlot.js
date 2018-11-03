@@ -1,6 +1,6 @@
 //#region global values will be defined here
-var initX=9;
-var initY=13;
+var initX=13;
+var initY=9;
 var selected;
 var selectedElement;
 var selectedProperties;
@@ -10,6 +10,8 @@ var x_right_dropzone=[];
 var y_top_dropzone=[];
 var y_bottom_dropzone=[];
 var tip;
+var index=0;
+var newxname;
 var lineData = [
   {"x": 0, "y": -Number.MAX_SAFE_INTEGER},
   {"x": 0, "y": Number.MAX_SAFE_INTEGER}
@@ -135,7 +137,6 @@ ScatterPlot.prototype.init = function() {
 
   var low=[];
   var high=[];
-  this.updategraph("Y",)
 };
 //#endregion
 
@@ -143,7 +144,12 @@ ScatterPlot.prototype.init = function() {
 
 ScatterPlot.prototype.processData = function() {
   var vis = this;
+  this.data.forEach(d=>{
+    d['x']=d["coord"][vis.columns[initY]];
+    d['y']=d["coord"][vis.columns[initX]];
+  })
   vis.drawvis();
+  vis.updategraph();
 }
 
 ScatterPlot.prototype.drawvis = function() {
@@ -155,7 +161,7 @@ ScatterPlot.prototype.drawvis = function() {
      .html(function(d) {
       $(this).addClass("selected");
          selected=d3.selectAll('.selected');
-        selectedElement=this;
+         selectedElement=this;
          selectedProperties=d;
        var text = "<button onclick=x_left_click()>Drop in X-left</button>"
        +"<button onclick=x_right_click()>Drop in X-right</button>"
@@ -172,10 +178,10 @@ ScatterPlot.prototype.drawvis = function() {
   vis.circles.enter()
     .append("circle")
       .attr("cx", function(d, i){
-        return vis.xScale(+d["coord"][vis.columns[initY]]);
+        return vis.xScale(+d['x']);
       })
       .attr("cy", function(d) {
-        return vis.yScale(+d["coord"][vis.columns[initX]]);
+        return vis.yScale(+d['y']);
       })
       .attr("r", 5)
       .attr("class","dropdown")
@@ -184,6 +190,11 @@ ScatterPlot.prototype.drawvis = function() {
       .attr("fill", "#FFB55F")
       .on("click",tip.show);
   
+      // Updating scatterplot
+      vis.scatterPlotGroup.selectAll("circle").data(vis.data)
+        .attr('cx', function(d) {return vis.xScale(+d['x'])})
+        .attr('cy', function(d) {return vis.yScale(+d['y'])});
+
 
   // Adding X Origin
   vis.scatterPlotGroup.append("path")
@@ -195,7 +206,7 @@ ScatterPlot.prototype.drawvis = function() {
     .attr("d", vis.xOrigin(lineData))
     .attr("class", "xOriginLine")
     .attr("clip-path", "url(#clip)")
-
+    
 }
 //#endregion
 
@@ -216,8 +227,8 @@ function zoomed (vis) {
   vis.gY.call(vis.yAxis.scale(new_yScale));
 
   vis.scatterPlotGroup.selectAll("circle").data(vis.data)
-   .attr('cx', function(d) {return new_xScale(+d["coord"][vis.columns[initY]])})
-   .attr('cy', function(d) {return new_yScale(+d["coord"][vis.columns[initX]])});
+   .attr('cx', function(d) {return new_xScale(+d["x"])})
+   .attr('cy', function(d) {return new_yScale(+d["y"])});
 
   vis.xOrigin = d3.line()
     .x(function(d) {return new_xScale(d.y)})
@@ -247,7 +258,7 @@ function x_left_click(){
   selected=null;
 
   x_left_dropzone.push(selectedProperties);
-  cx1+=cx1;
+  cx1+=10;
   d3.select(".x-left").selectAll("circle").data(x_left_dropzone).enter()
   .append("circle")
   .attr("r",4)
@@ -308,23 +319,29 @@ function y_bottom_click(){
   .attr("cx",cy2)
   .attr("cy",cy2)
   .attr("fill","red")
-  .on("mouseover",pointSelected); 
+  .on("mouseover",pointSelected);
+
 }
 //#endregion
 
-//#region GraphUpdation-urf- real work starts here
+//#region GraphUpdation real work starts here
 
-ScatterPlot.prototype.updategraph=function(axis,YH,YL,XL,XH){
+ScatterPlot.prototype.updategraph=function(){
   var data=this.data;
-  
+  data.forEach((element)=>{
+    element["coord"]["Vehicle Name"]=1;
+    element["coord"]["Pickup"]=2;
+  });
   attr=this.data.columns;
   var attrNo=15; //t be changed
   var x1={},
   x0={};
-  var high=this.data[0],low=this.data[2];
+  var high=[],low=[];
+  high.push(data[2]);
+  low.push(data[1]);
   for (var i = 0; i<attrNo; i++) {
-    x1[attr[i]] = d3.mean(low, function(d) { return d[attr[i]]});
-    x0[attr[i]] = d3.mean(high, function(d) { return d[attr[i]]});
+    x1[attr[i]] = d3.mean(low, function(d) { return d["coord"][attr[i]]});
+    x0[attr[i]] = d3.mean(high, function(d) { return d["coord"][attr[i]]});
   }
 
   var hlpair = [];
@@ -332,10 +349,47 @@ ScatterPlot.prototype.updategraph=function(axis,YH,YL,XL,XH){
     for (var j = 0; j<low.length; j++) {
       var tmpelt = {};
       for (var k = 0; k<attrNo; k++) {
-        tmpelt[attr[k]] = high[i][attr[k]] - low[j][attr[k]];
+        tmpelt[attr[k]] = high[i]["coord"][attr[k]] - low[j]["coord"][attr[k]];
       }
       hlpair[hlpair.length] = tmpelt;
     }
   }
+  var V = {}, Vchanged = {}, Verror = {}, norm = 0;
+  //initialise V,Verr
+  for (var i = 0; i<attrNo; i++) {
+    V[attr[i]] = 0;
+    Vchanged[attr[i]] = 0;
+  }
+  //calxxxulating norm 
+  for (var i = 0; i<attrNo; i++) {
+    V[attr[i]] = x0[attr[i]]-x1[attr[i]];
+    norm = norm + (x0[attr[i]]-x1[attr[i]])*(x0[attr[i]]-x1[attr[i]]);
+   }
+   var VV = [];
+   for (var i = 0; i<attrNo; i++) {
+     VV[i] = {"attr":attr[i], "value":V[attr[i]]};
+   }
+   //VV and Verror
+   VV.sort(function(a,b) {return Math.abs(b["value"]) - Math.abs(a["value"]);});
+   norm = Math.sqrt(norm);
+   for (var i = 0; i<attrNo; i++) 
+   {
+    V[attr[i]] = V[attr[i]]/norm;
+    if (hlpair.length>1) { Verror[attr[i]] = d3.deviation(hlpair, function(d) { return d[attr[i]]; }); }
+    else { Verror[attr[i]] = 0; }
+  }
+//making new axis
+  index = index + 1;
+   newxname = 'x'+index;
+  data.forEach(function(d,i) {
+    d["coord"][newxname] = 0; 
+    for (var j = 0; j<attrNo; j++) {
+      d["coord"][newxname] = d["coord"][newxname] + V[attr[j]]*d["coord"][attr[j]];
+    }
+  });
+
+  axistobeupdated="X";
+  data.forEach(function(d) {d[axistobeupdated=="X" ? "x" : "y"] = d["coord"][newxname]; });
+  this.drawvis();
 }
 //#endregion
