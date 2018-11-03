@@ -71,7 +71,7 @@ chartRight = new Highcharts.Chart({
         renderTo: 'right-bars',
         animation: true,
         height:300,
-        width:00
+        width:400
     },
     credits:{
         enabled:false
