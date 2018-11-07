@@ -58,15 +58,18 @@ ScatterPlot.prototype.init = function() {
     .range([vis.height, 0])
     .domain([ymin, ymax])
   
+  //Create copy of scales for zoom to work with
+  vis.copyX = vis.xScale.copy();  
+  vis.copyY = vis.yScale.copy();
   
   // Creating and Adding Axis
   // create Axis Objects
   vis.xAxis = d3.axisBottom(vis.xScale)
-    .ticks(20)
+    .ticks(10)
     .tickSize(-vis.height)
   
   vis.yAxis = d3.axisLeft(vis.yScale)
-    .ticks(20)
+    .ticks(10)
     .tickSize(-vis.width)
     
   // Draw Axis
@@ -114,6 +117,18 @@ ScatterPlot.prototype.init = function() {
   vis.xOrigin = d3.line()
     .x(function(d) {return vis.xScale(d.y)})
     .y(function(d) {return vis.yScale(d.x)})
+
+  // Adding X Origin
+  vis.scatterPlotGroup.append("path")
+    .attr("d", vis.yOrigin(lineData))
+    .attr("class", "yOriginLine")
+    .attr("clip-path", "url(#clip)")
+
+  // Adding Y Origin
+  vis.scatterPlotGroup.append("path")
+    .attr("d", vis.xOrigin(lineData))
+    .attr("class", "xOriginLine")
+    .attr("clip-path", "url(#clip)")
   
   // Adding Axis Labels
   vis.scatterPlotGroup.append("text")
@@ -148,7 +163,7 @@ ScatterPlot.prototype.processData = function() {
 }
 
 ScatterPlot.prototype.drawvis = function() {
-
+  console.log("[IN_DRAWVIS]");
   var vis = this;
 
   // Tooltip
@@ -186,23 +201,9 @@ ScatterPlot.prototype.drawvis = function() {
       .on("click",tip.show);
   
       // Updating scatterplot
-      vis.scatterPlotGroup.selectAll("circle").data(vis.data)
-        .attr('cx', function(d) {return vis.xScale(+d['x'])})
-        .attr('cy', function(d) {return vis.yScale(+d['y'])});
-
-
-  // Adding X Origin
-  
-  vis.scatterPlotGroup.append("path")
-    .attr("d", vis.yOrigin(lineData))
-    .attr("class", "yOriginLine")
-    .attr("clip-path", "url(#clip)")
-
-  // Adding Y Origin
-  vis.scatterPlotGroup.append("path")
-    .attr("d", vis.xOrigin(lineData))
-    .attr("class", "xOriginLine")
-    .attr("clip-path", "url(#clip)")
+  vis.scatterPlotGroup.selectAll("circle").data(vis.data)
+    .attr('cx', function(d) {return vis.xScale(+d['x'])})
+    .attr('cy', function(d) {return vis.yScale(+d['y'])});
     
 }
 //#endregion
@@ -210,6 +211,7 @@ ScatterPlot.prototype.drawvis = function() {
 //#region zoom
 function zoomed (vis) {
 
+  console.log("[IN_ZOOMED]")
   //if tooltip is showing 
   if($(".d3-tip").css('opacity')==1) {
     $(".d3-tip").css('opacity',"0");
@@ -217,13 +219,14 @@ function zoomed (vis) {
     selected=null;
   }
   // create new scale ojects based on event
-  var new_xScale = d3.event.transform.rescaleX(vis.xScale);
-  var new_yScale = d3.event.transform.rescaleY(vis.yScale);
+  var new_xScale = d3.event.transform.rescaleX(vis.copyX);
+  var new_yScale = d3.event.transform.rescaleY(vis.copyY);
   
   // Update axes
   vis.gX.call(vis.xAxis.scale(new_xScale));
   vis.gY.call(vis.yAxis.scale(new_yScale));
 
+  // Update Scatterplot Circles
   vis.scatterPlotGroup.selectAll("circle").data(vis.data)
    .attr('cx', function(d) {return new_xScale(+d["x"])})
    .attr('cy', function(d) {return new_yScale(+d["y"])});
@@ -243,6 +246,10 @@ function zoomed (vis) {
   vis.scatterPlotGroup.select(".yOriginLine")
     .attr("d", vis.yOrigin(lineData))
     .attr("clip-path", "url(#clip)")
+
+  //Change Original Scales
+  vis.xScale = new_xScale;
+  vis.yScale = new_yScale;
 }
 //#endregion
 
@@ -340,6 +347,7 @@ updategraph_util = function(axis) {
 
 
 ScatterPlot.prototype.updategraph=function(axis, high, low){
+  console.log("[IN UPDATE_GRAPH]");
   var data=this.data;
   data.forEach((element)=>{
     element["coord"]["Vehicle Name"]=1;
