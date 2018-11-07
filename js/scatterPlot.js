@@ -156,7 +156,7 @@ ScatterPlot.prototype.drawvis = function() {
 
   var vis = this;
 
-  // // Tooltip
+   // Tooltip
     tip = d3.tip().attr('class', 'd3-tip')
      .html(function(d) {
       $(this).addClass("selected");
@@ -215,7 +215,7 @@ function zoomed (vis) {
 
   //if tooltip is showing 
   if($(".d3-tip").css('opacity')==1) {
-    tip.hide();
+   hide();
     selected.classed("selected",false);
     selected=null;
   }
@@ -250,7 +250,7 @@ function zoomed (vis) {
 
 //#region ToolTip click functions
 function x_left_click(){
-  tip.hide();
+  hide();
   var cln = selectedElement.cloneNode(true);
   cln.removeAttribute("class");
   cln.classList.add("in-x-left");
@@ -269,7 +269,7 @@ function x_left_click(){
   
 }
 function x_right_click(){
-  tip.hide();
+  hide();
   var cln = selectedElement.cloneNode(true);
   cln.removeAttribute("class");
   cln.classList.add("in-x-right");
@@ -287,7 +287,7 @@ function x_right_click(){
   
 }
 function y_top_click(){
-  tip.hide();
+  hide();
   var cln = selectedElement.cloneNode(true);
   cln.removeAttribute("class");
   cln.classList.add("in-y-top");
@@ -305,7 +305,7 @@ function y_top_click(){
   
 }
 function y_bottom_click(){
-  tip.hide();
+  hide();
   var cln = selectedElement.cloneNode(true);
   cln.removeAttribute("class");
   cln.classList.add("in-x-top");
@@ -322,18 +322,24 @@ function y_bottom_click(){
   .on("mouseover",pointSelected);
 
 }
+function hide()
+{
+  $(".d3-tip").css('opacity',"0");
+}
 //#endregion
 
 //#region GraphUpdation real work starts here
 
-ScatterPlot.prototype.updategraph=function(){
+ScatterPlot.prototype.updategraph=function(givenV){  
   var data=this.data;
   data.forEach((element)=>{
     element["coord"]["Vehicle Name"]=1;
     element["coord"]["Pickup"]=2;
   });
+
   attr=this.data.columns;
   var attrNo=15; //t be changed
+  if(givenV==undefined){
   var x1={},
   x0={};
   var high=[],low=[];
@@ -378,6 +384,21 @@ ScatterPlot.prototype.updategraph=function(){
     if (hlpair.length>1) { Verror[attr[i]] = d3.deviation(hlpair, function(d) { return d[attr[i]]; }); }
     else { Verror[attr[i]] = 0; }
   }
+  }
+else{
+  {
+    var V = givenV, Vchanged = givenVchanged, Verror = {}, norm = 0;
+    for (var i = 0; i<attrNo; i++) {
+     norm = norm + (V[attr[i]])*(V[attr[i]]);
+    }
+    norm = Math.sqrt(norm);
+    for (var i = 0; i<attrNo; i++) {
+     V[attr[i]] = V[attr[i]]/norm;
+     Verror[attr[i]] = 0;
+    }
+    console.log("------------------------ Calculating new attr ------------------------------")
+  }
+}
 //making new axis
   index = index + 1;
    newxname = 'x'+index;

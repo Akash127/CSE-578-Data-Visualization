@@ -59,10 +59,11 @@ chart = new Highcharts.Chart({
   },
 
   series: [{
-      data: [0, 0, 0.5, 0, 1, 0, 0, 0, 2, 0, 0, 0],
+      data: [0, 0, 0.5, 0, 1, 0, 0, 0, -1, 0, 0, 0],
       //draggableX: true,
       draggableY: true,
-      dragMinY: 0,
+      dragMaxY:1.5,
+      dragMinY: -1.5,
       type: 'column',
       minPointLength: 2
   }]
