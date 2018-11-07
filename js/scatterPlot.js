@@ -314,7 +314,7 @@ function y_bottom_click(){
   var cln = selectedElement.cloneNode(true);
   cln.removeAttribute("class");
   cln.classList.add("in-x-top");
-  selected.classed("selected",false);
+  if(selected)selected.classed("selected",false);
   selected=null;
   y_bottom_dropzone.push(selectedProperties);
   cy2+=10;

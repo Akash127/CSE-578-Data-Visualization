@@ -24,7 +24,7 @@ chart = new Highcharts.Chart({
   },
 
   xAxis: {
-      categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+      categories: []
   },
 
   plotOptions: {
@@ -57,12 +57,15 @@ chart = new Highcharts.Chart({
           return this.x + ":" +this.y;
       }
   },
-
+  legend: {
+    enabled: false
+},  
   series: [{
-      data: [0, 0, 0.5, 0, 1, 0, 0, 0, 2, 0, 0, 0],
+
       //draggableX: true,
       draggableY: true,
-      dragMinY: 0,
+      dragMaxY: 1.5,
+      dragMinY: -1.5,
       type: 'column',
       minPointLength: 2
   }]
@@ -82,9 +85,11 @@ chartRight = new Highcharts.Chart({
     title: {
         text: 'X-Axis attributes weights'
     },
-  
+    legend: {
+        enabled: false
+    },
     xAxis: {
-        categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+        categories: []
     },
   
     plotOptions: {
@@ -112,14 +117,17 @@ chartRight = new Highcharts.Chart({
     },
   
     tooltip: {
-        yDecimals: 2
+        yDecimals: 2,
+        formatter:function(){
+            return this.x + ":" +this.y;
+        }
     },
   
-    series: [{
-        data: [0, 71.5, 106.4, 129.2, 144.0, 176.0, 135.6, 148.5, 216.4, 194.1, 95.6, 54.4],
+    series: [{  
         //draggableX: true,
         draggableY: true,
-        dragMinY: 0,
+        dragMaxY: 1.5,
+        dragMinY: -1.5,
         type: 'column',
         width:300,
         height:500,
@@ -137,7 +145,7 @@ d3.csv("dataset/04cars data_clean.csv").then(function(data) {
     tmp["coord"]={};
     loadData.push(tmp);
   });
- console.log(loadData);
+ //console.log(loadData);
   var columns=  data.columns;
 
   for(var i=0;i<columns.length;i++){
@@ -150,6 +158,9 @@ d3.csv("dataset/04cars data_clean.csv").then(function(data) {
    });
   }
   loadData["columns"]=columns;
+  var slicedcolumns=columns.slice(4,20);
+  this.chart.xAxis[0].setCategories(slicedcolumns);
+  this.chartRight.xAxis[0].setCategories(slicedcolumns);
 //  console.log(loadData);
   xv = 9;
   yv = 13;
@@ -169,8 +180,7 @@ d3.csv("dataset/04cars data_clean.csv").then(function(data) {
          select.insertBefore(option,select.lastChild);
          option.setAttribute("id","x"+i);
      }
-     var select1 = document.getElementById("select1"),
-     arr = data.columns;
+     var select1 = document.getElementById("select1")
      for(var i = 0; i < arr.length; i++)
      {
          var option = document.createElement("OPTION"),
@@ -179,6 +189,17 @@ d3.csv("dataset/04cars data_clean.csv").then(function(data) {
          option.setAttribute("value",arr[i]);
          select1.insertBefore(option,select1.lastChild);
      }
+     $("#select").val("HP");
+     $("#select1").val("Retail Price");
+
+     var chartData=[],chartData1=[];
+     for(var i=4;i<20;i++)
+        {
+            if(arr[i]=="HP")    chartData.push(1.5); else chartData.push(0)
+            if(arr[i]=="Retail Price") chartData1.push(1.5); else chartData1.push(0);
+        }
+        this.chart.series[0].setData(chartData);
+        this.chartRight.series[0].setData(chartData1);
     
 });
 
@@ -191,7 +212,7 @@ function chooseX() {
 
   // Load Dataset and Charts
 d3.csv("dataset/04cars data_clean.csv").then(function(data) {
-
+  loadData=[];
   data.forEach(element => {
     var tmp={"Name":null,"raw":null,"coord":null};
     tmp["Name"]=element["Vehicle Name"];
@@ -199,7 +220,7 @@ d3.csv("dataset/04cars data_clean.csv").then(function(data) {
     tmp["coord"]={};
     loadData.push(tmp);
   });
-  console.log(loadData);
+  //console.log(loadData);
   var columns=  data.columns;
 
   for(var i=0;i<columns.length;i++){
@@ -212,13 +233,17 @@ d3.csv("dataset/04cars data_clean.csv").then(function(data) {
    });
   }
   loadData["columns"]=columns;
-
+  var chartData=[];
   for(var i=0;i<columns.length;i++){
+    if(i>=4 && i<20){
     if (columns[i] == abc) {
       xv = i;
+      chartData.push(1.5);
+    }
+    else chartData.push(0);
     }
   }
-
+  chart.series[0].setData(chartData);
   scatterPlot = new ScatterPlot(loadData, "#chart-area1", xv, yv);
 
 });
@@ -233,6 +258,7 @@ function chooseY() {
   // Load Dataset and Charts
 d3.csv("dataset/04cars data_clean.csv").then(function(data) {
 
+    loadData=[];
   data.forEach(element => {
     var tmp={"Name":null,"raw":null,"coord":null};
     tmp["Name"]=element["Vehicle Name"];
@@ -240,7 +266,7 @@ d3.csv("dataset/04cars data_clean.csv").then(function(data) {
     tmp["coord"]={};
     loadData.push(tmp);
   });
-  console.log(loadData);
+
   var columns=  data.columns;
 
   for(var i=0;i<columns.length;i++){
@@ -253,14 +279,17 @@ d3.csv("dataset/04cars data_clean.csv").then(function(data) {
    });
   }
   loadData["columns"]=columns;
-
+  var chartData=[];
   for(var i=0;i<columns.length;i++){
-
+    if(i>=4 && i<20){
     if (columns[i] == abc) {
-      yv = i;
+        yv = i;
+      chartData.push(1.5);
+    }
+    else chartData.push(0);
     }
   }
-
+chartRight.series[0].setData(chartData);
   scatterPlot = new ScatterPlot(loadData, "#chart-area1", xv, yv);
 
 });
