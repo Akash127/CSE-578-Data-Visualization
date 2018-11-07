@@ -85,7 +85,6 @@ ScatterPlot.prototype.init = function() {
       .attr("width", vis.width)
       .attr("height", vis.height)
 
-
   // Define Zoom Object
   var zoom = d3.zoom()
     .scaleExtent([0, 5])
@@ -149,7 +148,7 @@ ScatterPlot.prototype.processData = function() {
     d['y']=d["coord"][vis.columns[initX]];
   })
   vis.drawvis();
-  vis.updategraph();
+  // vis.updategraph();
 }
 
 ScatterPlot.prototype.drawvis = function() {
@@ -258,6 +257,7 @@ function x_left_click(){
   selected=null;
 
   x_left_dropzone.push(selectedProperties);
+  // Show circle in dropzone
   cx1+=10;
   d3.select(".x-left").selectAll("circle").data(x_left_dropzone).enter()
   .append("circle")
@@ -267,7 +267,9 @@ function x_left_click(){
   .attr("fill","red")
   .on("mouseover",pointSelected);
   
+  updategraph_util("X")
 }
+
 function x_right_click(){
   tip.hide();
   var cln = selectedElement.cloneNode(true);
@@ -284,8 +286,11 @@ function x_right_click(){
   .attr("cy",cx2)
   .attr("fill","red")
   .on("mouseover",pointSelected);
-  
+
+  updategraph_util("X")
 }
+
+
 function y_top_click(){
   tip.hide();
   var cln = selectedElement.cloneNode(true);
@@ -302,7 +307,7 @@ function y_top_click(){
   .attr("cy",cy1)
   .attr("fill","red")
   .on("mouseover",pointSelected);
-  
+  updategraph_util("Y")
 }
 function y_bottom_click(){
   tip.hide();
@@ -320,13 +325,22 @@ function y_bottom_click(){
   .attr("cy",cy2)
   .attr("fill","red")
   .on("mouseover",pointSelected);
-
+  updategraph_util("Y")
 }
 //#endregion
 
-//#region GraphUpdation real work starts here
+//#region Graph Updation real work starts here
 
-ScatterPlot.prototype.updategraph=function(){
+updategraph_util = function(axis) {
+  if(axis == "X" && x_left_dropzone.length != 0 && x_right_dropzone.length != 0) {
+    scatterPlot.updategraph('X', x_right_dropzone, x_left_dropzone)
+  } else if(axis == "Y" && y_top_dropzone.length != 0 && y_bottom_dropzone.length != 0) {
+    scatterPlot.updategraph('Y', y_top_dropzone, y_bottom_dropzone)
+  }
+}
+
+
+ScatterPlot.prototype.updategraph=function(axis, high, low){
   var data=this.data;
   data.forEach((element)=>{
     element["coord"]["Vehicle Name"]=1;
@@ -336,9 +350,7 @@ ScatterPlot.prototype.updategraph=function(){
   var attrNo=15; //t be changed
   var x1={},
   x0={};
-  var high=[],low=[];
-  high.push(data[2]);
-  low.push(data[1]);
+
   for (var i = 0; i<attrNo; i++) {
     x1[attr[i]] = d3.mean(low, function(d) { return d["coord"][attr[i]]});
     x0[attr[i]] = d3.mean(high, function(d) { return d["coord"][attr[i]]});
@@ -388,8 +400,8 @@ ScatterPlot.prototype.updategraph=function(){
     }
   });
 
-  axistobeupdated="X";
-  data.forEach(function(d) {d[axistobeupdated=="X" ? "x" : "y"] = d["coord"][newxname]; });
+  // axistobeupdated="X";
+  data.forEach(function(d) {d[axis=="X" ? "x" : "y"] = d["coord"][newxname]; });
   this.drawvis();
 }
 //#endregion
