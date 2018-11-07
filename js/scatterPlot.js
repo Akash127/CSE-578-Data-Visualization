@@ -18,7 +18,7 @@ var lineData = [
 ] 
 //#endregion
 
-//#region some scatterplot shit
+//#region some scatterplot init
 ScatterPlot = function(data, containerClassName, xv, yv) {
   this.data = data
   this.containerClassName = containerClassName
@@ -133,9 +133,6 @@ ScatterPlot.prototype.init = function() {
     .attr("font-size", "18px")
 
   vis.processData();
-
-  var low=[];
-  var high=[];
 };
 //#endregion
 
@@ -148,14 +145,13 @@ ScatterPlot.prototype.processData = function() {
     d['y']=d["coord"][vis.columns[initX]];
   })
   vis.drawvis();
-  // vis.updategraph();
 }
 
 ScatterPlot.prototype.drawvis = function() {
 
   var vis = this;
 
-  // // Tooltip
+  // Tooltip
     tip = d3.tip().attr('class', 'd3-tip')
      .html(function(d) {
       $(this).addClass("selected");
@@ -196,10 +192,12 @@ ScatterPlot.prototype.drawvis = function() {
 
 
   // Adding X Origin
+  
   vis.scatterPlotGroup.append("path")
     .attr("d", vis.yOrigin(lineData))
     .attr("class", "yOriginLine")
     .attr("clip-path", "url(#clip)")
+
   // Adding Y Origin
   vis.scatterPlotGroup.append("path")
     .attr("d", vis.xOrigin(lineData))
@@ -221,6 +219,7 @@ function zoomed (vis) {
   // create new scale ojects based on event
   var new_xScale = d3.event.transform.rescaleX(vis.xScale);
   var new_yScale = d3.event.transform.rescaleY(vis.yScale);
+  
   // Update axes
   vis.gX.call(vis.xAxis.scale(new_xScale));
   vis.gY.call(vis.yAxis.scale(new_yScale));
@@ -229,7 +228,7 @@ function zoomed (vis) {
    .attr('cx', function(d) {return new_xScale(+d["x"])})
    .attr('cy', function(d) {return new_yScale(+d["y"])});
 
-  vis.xOrigin = d3.line()
+  vis.xOrigin
     .x(function(d) {return new_xScale(d.y)})
     .y(function(d) {return new_yScale(d.x)})
   
@@ -237,7 +236,7 @@ function zoomed (vis) {
     .attr("d", vis.xOrigin(lineData))
     .attr("clip-path", "url(#clip)")
 
-  vis.yOrigin = d3.line()
+  vis.yOrigin
    .x(function(d) {return new_xScale(d.x)})
    .y(function(d) {return new_yScale(d.y)})
   
@@ -329,7 +328,7 @@ function y_bottom_click(){
 }
 //#endregion
 
-//#region Graph Updation real work starts here
+//#region Graph Updation real work starts her
 
 updategraph_util = function(axis) {
   if(axis == "X" && x_left_dropzone.length != 0 && x_right_dropzone.length != 0) {
