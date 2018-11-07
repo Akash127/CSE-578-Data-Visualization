@@ -214,7 +214,7 @@ function zoomed (vis) {
 
   //if tooltip is showing 
   if($(".d3-tip").css('opacity')==1) {
-    tip.hide();
+    $(".d3-tip").css('opacity',"0");
     selected.classed("selected",false);
     selected=null;
   }
@@ -249,7 +249,7 @@ function zoomed (vis) {
 
 //#region ToolTip click functions
 function x_left_click(){
-  tip.hide();
+   $(".d3-tip").css('opacity',"0");
   var cln = selectedElement.cloneNode(true);
   cln.removeAttribute("class");
   cln.classList.add("in-x-left");
@@ -271,7 +271,7 @@ function x_left_click(){
 }
 
 function x_right_click(){
-  tip.hide();
+   $(".d3-tip").css('opacity',"0");
   var cln = selectedElement.cloneNode(true);
   cln.removeAttribute("class");
   cln.classList.add("in-x-right");
@@ -292,7 +292,7 @@ function x_right_click(){
 
 
 function y_top_click(){
-  tip.hide();
+   $(".d3-tip").css('opacity',"0");
   var cln = selectedElement.cloneNode(true);
   cln.removeAttribute("class");
   cln.classList.add("in-y-top");
@@ -310,7 +310,7 @@ function y_top_click(){
   updategraph_util("Y")
 }
 function y_bottom_click(){
-  tip.hide();
+   $(".d3-tip").css('opacity',"0");
   var cln = selectedElement.cloneNode(true);
   cln.removeAttribute("class");
   cln.classList.add("in-x-top");
