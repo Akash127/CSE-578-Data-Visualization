@@ -1,0 +1,101 @@
+/* .container {
+    background-color:#EEEEEE;
+} */
+
+.box{
+    border-radius: 25px;
+    border: 2px solid #73AD21;
+    width: 100px;
+    height: 100px;
+}
+svg:not(:root){overflow: visible!important;}
+.y-top{  
+    margin-left: 84px;    margin-top: 50px;position: absolute;overflow: visible;}
+.y-bottom{margin-top: 559px;
+    margin-left: 84px;position: absolute; }
+.x-left{    margin-top: 700px;
+    margin-left: 232px;position: absolute;overflow: visible;}
+.x-right{margin-top: 700px;margin-left:739px;position: absolute;overflow: visible;}
+
+#chart-area1{
+    position: absolute;    
+    margin-left: 170px;
+}
+table{
+    margin-top: 46px;
+}
+.xyz{position: relative;}
+
+.tick {
+    color: #787878;
+    font-weight: bold;
+    font-size: 10px;
+}
+
+.y-axis-label, .x-axis-label {
+    fill: #787878;   
+}
+
+.y-axis-line {
+    color:white;
+}
+
+.x-axis-line {
+    color: white;
+}
+
+.left-bars{
+    /* margin-left: 20px;
+    margin-top: 50px */
+}
+
+.dropdowns{
+    margin-left: -202px;
+    margin-top: 42px;
+}
+
+#select1{
+    width: 100px;
+    margin-left: 262px;
+}
+#select{
+    width: 100px;
+    margin-left: 262px;
+}
+
+
+.tick {
+    color: #787878;
+    stroke-width: 0.2px;
+    stroke-dasharray: 2;
+}
+
+.xOriginLine, .yOriginLine {
+    stroke: #787878;
+    /* stroke: red; */
+    stroke-width: 1.2px;
+}
+
+
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    height: 90%;
+    top: 36px;
+    left: 64px;
+    right: -342px;
+    bottom: 0;
+    background-color: rgba(0,0,0,0.5);
+    z-index: 2;
+    cursor: pointer;
+}
+
+.selected{fill: #73AD21}
+
+.show {display: block;}
+.left-section{    margin-left: -31px; overflow: visible;}
+.mid-section{    margin-left: -141px;}
+.right-section{
+    margin-left: 390px;
+}
