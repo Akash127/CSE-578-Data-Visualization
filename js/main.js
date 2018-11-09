@@ -2,6 +2,7 @@
 var scatterPlot, desc;
 var selectedPoint;
 var loadData=[];
+var da;
 
 function pointSelected(event) {
   selectedPoint = event.raw;
@@ -20,7 +21,7 @@ chart = new Highcharts.Chart({
     enabled:false
 },
   title: {
-      text: 'Y-Axis attributes weights'
+      text: 'X-Axis attributes weights'
   },
 
   xAxis: {
@@ -36,6 +37,12 @@ chart = new Highcharts.Chart({
                     
                   },
                   drop: function () {
+                    var V={},data=chart.series[0].data;
+                    for(var i=0;i<16;i++)
+                    {
+                         V[data[i].category]=data[i].y;
+                    }
+                    scatterPlot.updategraph("X",[],[],V);
                       $('.change-left').html(
                           'In <b>' + this.series.name + '</b>, <b>' + this.category + '</b> was set to <b>' + Highcharts.numberFormat(this.y, 2) + '</b>');
                   }
@@ -64,8 +71,8 @@ chart = new Highcharts.Chart({
 
       //draggableX: true,
       draggableY: true,
-      dragMaxY: 1.5,
-      dragMinY: -1.5,
+      dragMaxY: 1,
+      dragMinY: -1,
       type: 'column',
       minPointLength: 2
   }]
@@ -75,7 +82,7 @@ var chartRight=null;
 chartRight = new Highcharts.Chart({
     chart: {
         renderTo: 'right-bars',
-        animation: true,
+        animation: false,
         height:300,
         width:400
     },
@@ -83,7 +90,7 @@ chartRight = new Highcharts.Chart({
         enabled:false
     },
     title: {
-        text: 'X-Axis attributes weights'
+        text: 'Y-Axis attributes weights'
     },
     legend: {
         enabled: false
@@ -101,6 +108,12 @@ chartRight = new Highcharts.Chart({
                       
                     },
                     drop: function () {
+                        var V={},data=chartRight.series[0].data;
+                        for(var i=0;i<16;i++)
+                        {
+                             V[data[i].category]=data[i].y;
+                        }
+                        scatterPlot.updategraph("Y",[],[],V);
                         $('.change-right').html(
                             'In <b>' + this.series.name + '</b>, <b>' + this.category + '</b> was set to <b>' + Highcharts.numberFormat(this.y, 2) + '</b>');
                     }
@@ -109,7 +122,8 @@ chartRight = new Highcharts.Chart({
             stickyTracking: false
         },
         column: {
-            stacking: 'normal'
+            stacking: 'normal',
+            cursor: 'ns-resize'
         },
         line: {
             cursor: 'ns-resize'
@@ -126,8 +140,8 @@ chartRight = new Highcharts.Chart({
     series: [{  
         //draggableX: true,
         draggableY: true,
-        dragMaxY: 1.5,
-        dragMinY: -1.5,
+        dragMinY: -1,
+        dragMaxY:1,
         type: 'column',
         width:300,
         height:500,
@@ -137,7 +151,7 @@ chartRight = new Highcharts.Chart({
   });
 // Load Dataset and Charts
 d3.csv("dataset/04cars data_clean.csv").then(function(data) {
-  
+  da=data;
   data.forEach(element => {
     var tmp={"Name":null,"raw":null,"coord":null};
     tmp["Name"]=element["Vehicle Name"];
@@ -157,13 +171,15 @@ d3.csv("dataset/04cars data_clean.csv").then(function(data) {
      delete d["coord"]["Pickup"];
    });
   }
+  columns.splice(0,1);
+  columns.splice(5,1);
   loadData["columns"]=columns;
-  var slicedcolumns=columns.slice(4,20);
-  this.chart.xAxis[0].setCategories(slicedcolumns);
-  this.chartRight.xAxis[0].setCategories(slicedcolumns);
+ // var slicedcolumns=columns.slice(4,20);
+  this.chart.xAxis[0].setCategories(columns);
+  this.chartRight.xAxis[0].setCategories(columns);
 //  console.log(loadData);
-  xv = 9;
-  yv = 13;
+  xv =11;
+  yv = 7;
   scatterPlot = new ScatterPlot(loadData, "#chart-area1", xv, yv);
   if(!selectedPoint) {
     selectedPoint = loadData[0].raw
@@ -193,14 +209,13 @@ d3.csv("dataset/04cars data_clean.csv").then(function(data) {
      $("#select1").val("Retail Price");
 
      var chartData=[],chartData1=[];
-     for(var i=4;i<20;i++)
+     for(var i=0;i<columns.length;i++)
         {
-            if(arr[i]=="HP")    chartData.push(1.5); else chartData.push(0)
-            if(arr[i]=="Retail Price") chartData1.push(1.5); else chartData1.push(0);
+            if(arr[i]=="Retail Price")  chartData.push(1); else chartData.push(0)
+            if(arr[i]=="HP") chartData1.push(1); else chartData1.push(0);
         }
-        this.chart.series[0].setData(chartData);
-        this.chartRight.series[0].setData(chartData1);
-    
+        this.chart.series[0].setData(chartData1);
+        this.chartRight.series[0].setData(chartData);
 });
 
 
@@ -232,17 +247,19 @@ d3.csv("dataset/04cars data_clean.csv").then(function(data) {
      delete d["coord"]["Pickup"];
    });
   }
+  columns.splice(0,1);
+  columns.splice(5,1);
   loadData["columns"]=columns;
+
+  console.log(columns);
   var chartData=[];
   for(var i=0;i<columns.length;i++){
-    if(i>=4 && i<20){
     if (columns[i] == abc) {
       xv = i;
-      chartData.push(1.5);
+      chartData.push(1);
     }
     else chartData.push(0);
     }
-  }
   chart.series[0].setData(chartData);
   scatterPlot = new ScatterPlot(loadData, "#chart-area1", xv, yv);
 
@@ -278,17 +295,19 @@ d3.csv("dataset/04cars data_clean.csv").then(function(data) {
      delete d["coord"]["Pickup"];
    });
   }
+  columns.splice(0,1);
+  columns.splice(5,1);
   loadData["columns"]=columns;
   var chartData=[];
   for(var i=0;i<columns.length;i++){
-    if(i>=4 && i<20){
+    
     if (columns[i] == abc) {
         yv = i;
-      chartData.push(1.5);
+      chartData.push(1);
     }
     else chartData.push(0);
     }
-  }
+  
 chartRight.series[0].setData(chartData);
   scatterPlot = new ScatterPlot(loadData, "#chart-area1", xv, yv);
 

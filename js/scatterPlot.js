@@ -118,19 +118,20 @@ ScatterPlot.prototype.init = function() {
   // Adding Axis Labels
   vis.scatterPlotGroup.append("text")
     .text(vis.columns[initX])
+    .attr("y", vis.height + 50)
+    .attr("x", 150)
+    .attr("class", "x-axis-label")
+    .attr("font-size", "18px")
+
+
+
+  vis.scatterPlotGroup.append("text")
+    .text(vis.columns[initY])
     .attr("y", -35)
     .attr("x", -380)
     .attr("class", "y-axis-label")
     .attr("font-size", "18px")
     .attr("transform", "rotate(-90)")
-
-
-  vis.scatterPlotGroup.append("text")
-    .text(vis.columns[initY])
-    .attr("y", vis.height + 50)
-    .attr("x", 150)
-    .attr("class", "x-axis-label")
-    .attr("font-size", "18px")
 
   vis.processData();
 
@@ -144,8 +145,8 @@ ScatterPlot.prototype.init = function() {
 ScatterPlot.prototype.processData = function() {
   var vis = this;
   this.data.forEach(d=>{
-    d['x']=d["coord"][vis.columns[initY]];
-    d['y']=d["coord"][vis.columns[initX]];
+    d['x']=d["coord"][vis.columns[initX]];
+    d['y']=d["coord"][vis.columns[initY]];
   })
   vis.drawvis();
   // vis.updategraph();
@@ -340,7 +341,7 @@ updategraph_util = function(axis) {
 }
 
 
-ScatterPlot.prototype.updategraph=function(axis, high, low){
+ScatterPlot.prototype.updategraph=function(axis, high, low,Vgiven){
   var data=this.data;
   data.forEach((element)=>{
     element["coord"]["Vehicle Name"]=1;
@@ -350,7 +351,7 @@ ScatterPlot.prototype.updategraph=function(axis, high, low){
   var attrNo=15; //t be changed
   var x1={},
   x0={};
-
+if(Vgiven==undefined){
   for (var i = 0; i<attrNo; i++) {
     x1[attr[i]] = d3.mean(low, function(d) { return d["coord"][attr[i]]});
     x0[attr[i]] = d3.mean(high, function(d) { return d["coord"][attr[i]]});
@@ -390,12 +391,24 @@ ScatterPlot.prototype.updategraph=function(axis, high, low){
     if (hlpair.length>1) { Verror[attr[i]] = d3.deviation(hlpair, function(d) { return d[attr[i]]; }); }
     else { Verror[attr[i]] = 0; }
   }
-//making new axis
+}
+else
+{
+  var V = Vgiven, Verror = {}, norm = 0;
+  for (var i = 4; i<16; i++) {
+   norm = norm + (V[attr[i]])*(V[attr[i]]);
+  }
+  norm = Math.sqrt(norm);
+  for (var i = 4; i<16; i++) {
+   V[attr[i]] = V[attr[i]]/norm;
+   Verror[attr[i]] = 0;
+  }
+}//making new axis
   index = index + 1;
    newxname = 'x'+index;
-  data.forEach(function(d,i) {
+  data.forEach(function(d) {
     d["coord"][newxname] = 0; 
-    for (var j = 0; j<attrNo; j++) {
+    for (var j = 4; j<15; j++) {
       d["coord"][newxname] = d["coord"][newxname] + V[attr[j]]*d["coord"][attr[j]];
     }
   });
