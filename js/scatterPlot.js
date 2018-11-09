@@ -386,11 +386,13 @@ if(Vgiven==undefined){
    VV.sort(function(a,b) {return Math.abs(b["value"]) - Math.abs(a["value"]);});
    norm = Math.sqrt(norm);
    for (var i = 0; i<attrNo; i++) 
-   {
+   { 
     V[attr[i]] = V[attr[i]]/norm;
     if (hlpair.length>1) { Verror[attr[i]] = d3.deviation(hlpair, function(d) { return d[attr[i]]; }); }
     else { Verror[attr[i]] = 0; }
   }
+  GlobalV.push(V);
+  changed=axis;
 }
 else
 {
@@ -441,6 +443,8 @@ ScatterPlot.prototype.updategraphOnDropdownChange=function(axis,index,Vgiven){
  this.drawvis();
 }
 //#endregion
+
+//#region Axis Save and Clear
 function SaveX()
 {
   var select = document.getElementById("select");
@@ -463,3 +467,20 @@ function SaveY()
   $("#select1").val($('#select1 option:last').val());
  }
 }
+function ClearX(){
+x_right_dropzone=[];
+x_left_dropzone=[];
+while($(".x-left")[0].lastChild) $(".x-left")[0].removeChild($(".x-left")[0].lastChild);
+while($(".x-right")[0].lastChild) $(".x-right")[0].removeChild($(".x-right")[0].lastChild);
+document.getElementById('select').value="HP";
+chooseX();
+}
+function ClearY(){
+y_bottom_click=[];
+y_top_click=[];
+while($(".y-top")[0].lastChild) $(".y-top")[0].removeChild($(".y-top")[0].lastChild);
+while($(".y-bottom")[0].lastChild) $(".y-bottom")[0].removeChild($(".y-bottom")[0].lastChild);
+document.getElementById('select1').value="Retail Price";
+chooseY();
+}
+//#endregion
