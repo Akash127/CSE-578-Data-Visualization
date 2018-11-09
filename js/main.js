@@ -2,6 +2,8 @@
 var scatterPlot, desc;
 var selectedPoint;
 var loadData=[];
+var GlobalV=[];
+var changed;
 
 function pointSelected(event) {
   selectedPoint = event.raw;
@@ -20,11 +22,11 @@ chart = new Highcharts.Chart({
     enabled:false
 },
   title: {
-      text: 'Y-Axis attributes weights'
+      text: 'X-Axis attributes weights'
   },
 
   xAxis: {
-      categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+      categories: []
   },
 
   plotOptions: {
@@ -36,9 +38,15 @@ chart = new Highcharts.Chart({
                     
                   },
                   drop: function () {
-                      $('.change-left').html(
-                          'In <b>' + this.series.name + '</b>, <b>' + this.category + '</b> was set to <b>' + Highcharts.numberFormat(this.y, 2) + '</b>');
-                  }
+                    var V={},data=chart.series[0].data;
+                    for(var i=0;i<18;i++)
+                    {
+                         V[data[i].category]=data[i].y;
+                    }
+                    changed="X";
+                    GlobalV.push(V);
+                    scatterPlot.updategraph("X",[],[],V);
+                    }
               }
           },
           stickyTracking: false
@@ -57,12 +65,15 @@ chart = new Highcharts.Chart({
           return this.x + ":" +this.y;
       }
   },
-
+  legend: {
+    enabled: false
+},  
   series: [{
-      data: [0, 0, 0.5, 0, 1, 0, 0, 0, 2, 0, 0, 0],
+
       //draggableX: true,
       draggableY: true,
-      dragMinY: 0,
+      dragMaxY: 1,
+      dragMinY: -1,
       type: 'column',
       minPointLength: 2
   }]
@@ -72,7 +83,7 @@ var chartRight=null;
 chartRight = new Highcharts.Chart({
     chart: {
         renderTo: 'right-bars',
-        animation: true,
+        animation: false,
         height:300,
         width:400
     },
@@ -80,11 +91,13 @@ chartRight = new Highcharts.Chart({
         enabled:false
     },
     title: {
-        text: 'X-Axis attributes weights'
+        text: 'Y-Axis attributes weights'
     },
-  
+    legend: {
+        enabled: false
+    },
     xAxis: {
-        categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+        categories: []
     },
   
     plotOptions: {
@@ -96,15 +109,23 @@ chartRight = new Highcharts.Chart({
                       
                     },
                     drop: function () {
-                        $('.change-right').html(
-                            'In <b>' + this.series.name + '</b>, <b>' + this.category + '</b> was set to <b>' + Highcharts.numberFormat(this.y, 2) + '</b>');
+                        var V={},data=chartRight.series[0].data;
+                        for(var i=0;i<18;i++)
+                        {
+                             V[data[i].category]=data[i].y;
+                        }
+                        
+                        GlobalV.push(V);
+                        scatterPlot.updategraph("Y",[],[],V);
+                        changed="Y";
                     }
                 }
             },
             stickyTracking: false
         },
         column: {
-            stacking: 'normal'
+            stacking: 'normal',
+            //cursor: 'ns-resize'
         },
         line: {
             cursor: 'ns-resize'
@@ -112,14 +133,17 @@ chartRight = new Highcharts.Chart({
     },
   
     tooltip: {
-        yDecimals: 2
+        yDecimals: 2,
+        formatter:function(){
+            return this.x + ":" +this.y;
+        }
     },
   
-    series: [{
-        data: [0, 71.5, 106.4, 129.2, 144.0, 176.0, 135.6, 148.5, 216.4, 194.1, 95.6, 54.4],
+    series: [{  
         //draggableX: true,
         draggableY: true,
-        dragMinY: 0,
+        dragMinY: -1,
+        dragMaxY:1,
         type: 'column',
         width:300,
         height:500,
@@ -129,7 +153,7 @@ chartRight = new Highcharts.Chart({
   });
 // Load Dataset and Charts
 d3.csv("dataset/04cars data_clean.csv").then(function(data) {
-  
+  da=data;
   data.forEach(element => {
     var tmp={"Name":null,"raw":null,"coord":null};
     tmp["Name"]=element["Vehicle Name"];
@@ -137,7 +161,7 @@ d3.csv("dataset/04cars data_clean.csv").then(function(data) {
     tmp["coord"]={};
     loadData.push(tmp);
   });
- console.log(loadData);
+ //console.log(loadData);
   var columns=  data.columns;
 
   for(var i=0;i<columns.length;i++){
@@ -149,17 +173,21 @@ d3.csv("dataset/04cars data_clean.csv").then(function(data) {
      delete d["coord"]["Pickup"];
    });
   }
+  columns.splice(0,1);
+  columns.splice(5,1);
   loadData["columns"]=columns;
+ // var slicedcolumns=columns.slice(4,20);
+  this.chart.xAxis[0].setCategories(columns);
+  this.chartRight.xAxis[0].setCategories(columns);
 //  console.log(loadData);
-  xv = 9;
-  yv = 13;
+  xv =11;
+  yv = 7;
   scatterPlot = new ScatterPlot(loadData, "#chart-area1", xv, yv);
   if(!selectedPoint) {
     selectedPoint = loadData[0].raw
   }
   desc = new DescriptionTable("#desc");
-    var select = document.getElementById("select"),
-     arr = data.columns;
+    var select = document.getElementById("select"),arr = data.columns;
      for(var i = 0; i < arr.length; i++)
      {
          var option = document.createElement("OPTION"),
@@ -169,8 +197,7 @@ d3.csv("dataset/04cars data_clean.csv").then(function(data) {
          select.insertBefore(option,select.lastChild);
          option.setAttribute("id","x"+i);
      }
-     var select1 = document.getElementById("select1"),
-     arr = data.columns;
+     var select1 = document.getElementById("select1")
      for(var i = 0; i < arr.length; i++)
      {
          var option = document.createElement("OPTION"),
@@ -179,19 +206,26 @@ d3.csv("dataset/04cars data_clean.csv").then(function(data) {
          option.setAttribute("value",arr[i]);
          select1.insertBefore(option,select1.lastChild);
      }
-    
+     $("#select").val("HP");
+     $("#select1").val("Retail Price");
+
+     var chartData=[],chartData1=[];
+     for(var i=0;i<columns.length;i++)
+        {
+            if(arr[i]=="Retail Price")  chartData.push(1); else chartData.push(0)
+            if(arr[i]=="HP") chartData1.push(1); else chartData1.push(0);
+        }
+        this.chart.series[0].setData(chartData1);
+        this.chartRight.series[0].setData(chartData);
 });
 
 
 function chooseX() {
   var abc = document.getElementById('select').value;  
 
-  var t = document.getElementById('chart-area1');  
-  t.innerHTML = '';
-
   // Load Dataset and Charts
 d3.csv("dataset/04cars data_clean.csv").then(function(data) {
-
+  loadData=[];
   data.forEach(element => {
     var tmp={"Name":null,"raw":null,"coord":null};
     tmp["Name"]=element["Vehicle Name"];
@@ -199,7 +233,7 @@ d3.csv("dataset/04cars data_clean.csv").then(function(data) {
     tmp["coord"]={};
     loadData.push(tmp);
   });
-  console.log(loadData);
+  //console.log(loadData);
   var columns=  data.columns;
 
   for(var i=0;i<columns.length;i++){
@@ -211,28 +245,42 @@ d3.csv("dataset/04cars data_clean.csv").then(function(data) {
      delete d["coord"]["Pickup"];
    });
   }
+  columns.splice(0,1);columns.splice(5,1);
   loadData["columns"]=columns;
 
+  //console.log(columns);
+  var chartData=[];
+  if(abc.startsWith("x"))
+  {
+   var ind=abc.substr(1)-1;
+   for(var i =0;i<columns.length;i++)
+    chartData.push(GlobalV[ind][columns[i]]); 
+  scatterPlot.updategraphOnDropdownChange("X",ind+1,GlobalV[ind]);     
+  }
+  else
+  {
+    var t = document.getElementById('chart-area1');  
+    t.innerHTML = '';
   for(var i=0;i<columns.length;i++){
     if (columns[i] == abc) {
       xv = i;
+      chartData.push(1);
     }
+    else chartData.push(0);
+    }
+    scatterPlot = new ScatterPlot(loadData, "#chart-area1", xv, yv); 
   }
-
-  scatterPlot = new ScatterPlot(loadData, "#chart-area1", xv, yv);
-
+  chart.series[0].setData(chartData);
 });
 }
 
 function chooseY() {
   var abc = document.getElementById('select1').value;  
 
-  var t = document.getElementById('chart-area1');  
-  t.innerHTML = '';
-
   // Load Dataset and Charts
 d3.csv("dataset/04cars data_clean.csv").then(function(data) {
 
+    loadData=[];
   data.forEach(element => {
     var tmp={"Name":null,"raw":null,"coord":null};
     tmp["Name"]=element["Vehicle Name"];
@@ -240,7 +288,7 @@ d3.csv("dataset/04cars data_clean.csv").then(function(data) {
     tmp["coord"]={};
     loadData.push(tmp);
   });
-  console.log(loadData);
+
   var columns=  data.columns;
 
   for(var i=0;i<columns.length;i++){
@@ -252,16 +300,31 @@ d3.csv("dataset/04cars data_clean.csv").then(function(data) {
      delete d["coord"]["Pickup"];
    });
   }
+  columns.splice(0,1);
+  columns.splice(5,1);
   loadData["columns"]=columns;
-
-  for(var i=0;i<columns.length;i++){
-
-    if (columns[i] == abc) {
-      yv = i;
-    }
+  var chartData=[];
+  if(abc.startsWith("x"))
+  {
+   var ind=abc.substr(1)-1;
+   for(var i =0;i<columns.length;i++)
+    chartData.push(GlobalV[ind][columns[i]]); 
+  scatterPlot.updategraphOnDropdownChange("Y",ind+1,GlobalV[ind]);     
   }
-
-  scatterPlot = new ScatterPlot(loadData, "#chart-area1", xv, yv);
-
+  else{
+    var t = document.getElementById('chart-area1');  
+    t.innerHTML = '';
+  
+  for(var i=0;i<columns.length;i++){
+    
+    if (columns[i] == abc) {
+        yv = i;
+      chartData.push(1);
+    }
+    else chartData.push(0);
+    }
+    scatterPlot = new ScatterPlot(loadData, "#chart-area1", xv, yv);
+}
+  chartRight.series[0].setData(chartData);
 });
 }

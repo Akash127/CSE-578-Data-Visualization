@@ -133,19 +133,20 @@ ScatterPlot.prototype.init = function() {
   // Adding Axis Labels
   vis.scatterPlotGroup.append("text")
     .text(vis.columns[initX])
+    .attr("y", vis.height + 50)
+    .attr("x", 150)
+    .attr("class", "x-axis-label")
+    .attr("font-size", "18px")
+
+
+
+  vis.scatterPlotGroup.append("text")
+    .text(vis.columns[initY])
     .attr("y", -35)
     .attr("x", -380)
     .attr("class", "y-axis-label")
     .attr("font-size", "18px")
     .attr("transform", "rotate(-90)")
-
-
-  vis.scatterPlotGroup.append("text")
-    .text(vis.columns[initY])
-    .attr("y", vis.height + 50)
-    .attr("x", 150)
-    .attr("class", "x-axis-label")
-    .attr("font-size", "18px")
 
   vis.processData();
 };
@@ -156,8 +157,8 @@ ScatterPlot.prototype.init = function() {
 ScatterPlot.prototype.processData = function() {
   var vis = this;
   this.data.forEach(d=>{
-    d['x']=d["coord"][vis.columns[initY]];
-    d['y']=d["coord"][vis.columns[initX]];
+    d['x']=d["coord"][vis.columns[initX]];
+    d['y']=d["coord"][vis.columns[initY]];
   })
   vis.drawvis();
 }
@@ -320,7 +321,7 @@ function y_bottom_click(){
   var cln = selectedElement.cloneNode(true);
   cln.removeAttribute("class");
   cln.classList.add("in-x-top");
-  selected.classed("selected",false);
+  if(selected)selected.classed("selected",false);
   selected=null;
   y_bottom_dropzone.push(selectedProperties);
   cy2+=10;
@@ -346,18 +347,17 @@ updategraph_util = function(axis) {
 }
 
 
-ScatterPlot.prototype.updategraph=function(axis, high, low){
-  console.log("[IN UPDATE_GRAPH]");
+ScatterPlot.prototype.updategraph=function(axis, high, low,Vgiven){
   var data=this.data;
   data.forEach((element)=>{
     element["coord"]["Vehicle Name"]=1;
     element["coord"]["Pickup"]=2;
   });
   attr=this.data.columns;
-  var attrNo=15; //t be changed
+  var attrNo=18; //t be changed
   var x1={},
   x0={};
-
+if(Vgiven==undefined){
   for (var i = 0; i<attrNo; i++) {
     x1[attr[i]] = d3.mean(low, function(d) { return d["coord"][attr[i]]});
     x0[attr[i]] = d3.mean(high, function(d) { return d["coord"][attr[i]]});
@@ -392,23 +392,101 @@ ScatterPlot.prototype.updategraph=function(axis, high, low){
    VV.sort(function(a,b) {return Math.abs(b["value"]) - Math.abs(a["value"]);});
    norm = Math.sqrt(norm);
    for (var i = 0; i<attrNo; i++) 
-   {
+   { 
     V[attr[i]] = V[attr[i]]/norm;
     if (hlpair.length>1) { Verror[attr[i]] = d3.deviation(hlpair, function(d) { return d[attr[i]]; }); }
     else { Verror[attr[i]] = 0; }
   }
+  GlobalV.push(V);
+  changed=axis;
+}
+else
+{
+  var V = Vgiven, Verror = {}, norm = 0;
+  for (var i = 0; i<18; i++) {
+   norm = norm + (V[attr[i]])*(V[attr[i]]);
+  }
+  norm = Math.sqrt(norm);
+  for (var i = 0; i<18; i++) {
+   V[attr[i]] = V[attr[i]]/norm;
+   Verror[attr[i]] = 0;
+  }
+}
+
 //making new axis
-  index = index + 1;
+   index = index + 1; 
    newxname = 'x'+index;
-  data.forEach(function(d,i) {
+   data.forEach(function(d) {
     d["coord"][newxname] = 0; 
-    for (var j = 0; j<attrNo; j++) {
+    for (var j = 0; j<18; j++) {
       d["coord"][newxname] = d["coord"][newxname] + V[attr[j]]*d["coord"][attr[j]];
     }
   });
 
-  // axistobeupdated="X";
   data.forEach(function(d) {d[axis=="X" ? "x" : "y"] = d["coord"][newxname]; });
   this.drawvis();
+}
+ScatterPlot.prototype.updategraphOnDropdownChange=function(axis,index,Vgiven){
+  var V = Vgiven, Verror = {}, norm = 0;
+  attr=this.data.columns;
+  for (var i = 0; i<18; i++) {
+   norm = norm + (V[attr[i]])*(V[attr[i]]);
+  }
+  norm = Math.sqrt(norm);
+  for (var i = 0; i<18; i++) {
+   V[attr[i]] = V[attr[i]]/norm;
+   Verror[attr[i]] = 0;
+  }
+  
+  newxname = 'x'+index;
+  this.data.forEach(function(d) {
+   d["coord"][newxname] = 0; 
+   for (var j = 0; j<18; j++) {
+     d["coord"][newxname] = d["coord"][newxname] + V[attr[j]]*d["coord"][attr[j]];
+   }
+ });
+ this.data.forEach(function(d) {d[axis=="X" ? "x" : "y"] = d["coord"][newxname]; });
+ this.drawvis();
+}
+//#endregion
+
+//#region Axis Save and Clear
+function SaveX()
+{
+  var select = document.getElementById("select");
+  if(changed=="X"){ 
+  var option = document.createElement("OPTION"),txt=document.createTextNode("x"+index);
+  option.appendChild(txt);
+  option.setAttribute("value","x"+index);
+  select.insertBefore(option,select.lastChild); 
+  $("#select").val($('#select option:last').val());
+  }
+}
+function SaveY()
+{
+  var select1 = document.getElementById("select1");
+ if(changed=="Y"){
+  var option = document.createElement("OPTION"),txt=document.createTextNode("x"+index);
+  option.appendChild(txt);
+  option.setAttribute("value","x"+index);
+  select1.insertBefore(option,select1.lastChild);
+  $("#select1").val($('#select1 option:last').val());
+ }
+}
+function ClearX(){
+x_right_dropzone=[];
+x_left_dropzone=[];
+while($(".x-left")[0].lastChild) $(".x-left")[0].removeChild($(".x-left")[0].lastChild);
+while($(".x-right")[0].lastChild) $(".x-right")[0].removeChild($(".x-right")[0].lastChild);
+document.getElementById('select').value="HP";
+chooseX();
+}
+function ClearY(){
+y_bottom_click=[];
+y_top_click=[];
+while($(".y-top")[0].lastChild) $(".y-top")[0].removeChild($(".y-top")[0].lastChild);
+while($(".y-bottom")[0].lastChild) $(".y-bottom")[0].removeChild($(".y-bottom")[0].lastChild);
+document.getElementById('select1').value="Retail Price";
+chooseY();
 }
 //#endregion
