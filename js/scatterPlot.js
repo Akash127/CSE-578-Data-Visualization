@@ -348,7 +348,7 @@ ScatterPlot.prototype.updategraph=function(axis, high, low,Vgiven){
     element["coord"]["Pickup"]=2;
   });
   attr=this.data.columns;
-  var attrNo=15; //t be changed
+  var attrNo=18; //t be changed
   var x1={},
   x0={};
 if(Vgiven==undefined){
@@ -395,26 +395,71 @@ if(Vgiven==undefined){
 else
 {
   var V = Vgiven, Verror = {}, norm = 0;
-  for (var i = 4; i<16; i++) {
+  for (var i = 0; i<18; i++) {
    norm = norm + (V[attr[i]])*(V[attr[i]]);
   }
   norm = Math.sqrt(norm);
-  for (var i = 4; i<16; i++) {
+  for (var i = 0; i<18; i++) {
    V[attr[i]] = V[attr[i]]/norm;
    Verror[attr[i]] = 0;
   }
-}//making new axis
-  index = index + 1;
+}
+
+//making new axis
+   index = index + 1; 
    newxname = 'x'+index;
-  data.forEach(function(d) {
+   data.forEach(function(d) {
     d["coord"][newxname] = 0; 
-    for (var j = 4; j<15; j++) {
+    for (var j = 0; j<18; j++) {
       d["coord"][newxname] = d["coord"][newxname] + V[attr[j]]*d["coord"][attr[j]];
     }
   });
 
-  // axistobeupdated="X";
   data.forEach(function(d) {d[axis=="X" ? "x" : "y"] = d["coord"][newxname]; });
   this.drawvis();
 }
+ScatterPlot.prototype.updategraphOnDropdownChange=function(axis,index,Vgiven){
+  var V = Vgiven, Verror = {}, norm = 0;
+  attr=this.data.columns;
+  for (var i = 0; i<18; i++) {
+   norm = norm + (V[attr[i]])*(V[attr[i]]);
+  }
+  norm = Math.sqrt(norm);
+  for (var i = 0; i<18; i++) {
+   V[attr[i]] = V[attr[i]]/norm;
+   Verror[attr[i]] = 0;
+  }
+  
+  newxname = 'x'+index;
+  this.data.forEach(function(d) {
+   d["coord"][newxname] = 0; 
+   for (var j = 0; j<18; j++) {
+     d["coord"][newxname] = d["coord"][newxname] + V[attr[j]]*d["coord"][attr[j]];
+   }
+ });
+ this.data.forEach(function(d) {d[axis=="X" ? "x" : "y"] = d["coord"][newxname]; });
+ this.drawvis();
+}
 //#endregion
+function SaveX()
+{
+  var select = document.getElementById("select");
+  if(changed=="X"){ 
+  var option = document.createElement("OPTION"),txt=document.createTextNode("x"+index);
+  option.appendChild(txt);
+  option.setAttribute("value","x"+index);
+  select.insertBefore(option,select.lastChild); 
+  $("#select").val($('#select option:last').val());
+  }
+}
+function SaveY()
+{
+  var select1 = document.getElementById("select1");
+ if(changed=="Y"){
+  var option = document.createElement("OPTION"),txt=document.createTextNode("x"+index);
+  option.appendChild(txt);
+  option.setAttribute("value","x"+index);
+  select1.insertBefore(option,select1.lastChild);
+  $("#select1").val($('#select1 option:last').val());
+ }
+}

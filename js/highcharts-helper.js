@@ -376,14 +376,12 @@ var chart = new Highcharts.Chart({
         //draggableX: true,
         draggableX: true,
         dragMinX: -1,
-        dragMinY:1,
+        dragMaxX:1,
         type: 'bar',
         minPointLength: 2
     }]
 
 });
-
-function getChart()
-{
-    return chart;
-}
+ function getChart(){
+     return chart;
+ }
