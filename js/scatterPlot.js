@@ -32,7 +32,7 @@ ScatterPlot.prototype.init = function() {
   vis.margin = {left:50, right:50, top:50, bottom:50};
 
   vis.width = 700 - vis.margin.left - vis.margin.right;
-  vis.height = 700 - vis.margin.top - vis.margin.bottom;
+  vis.height = 650 - vis.margin.top - vis.margin.bottom;
 
   vis.svg = d3.select(vis.containerClassName).append("svg")
     .attr("width", vis.width + vis.margin.left + vis.margin.right)

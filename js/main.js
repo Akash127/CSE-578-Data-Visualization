@@ -14,9 +14,8 @@ chart = new Highcharts.Chart({
   chart: {
       renderTo: 'left-bars',
       animation: true,
-      height:300,
-      width:400,
-      credits:false
+      height:400,
+      width:400
   },
   credits:{
     enabled:false
@@ -28,6 +27,9 @@ chart = new Highcharts.Chart({
   xAxis: {
       categories: []
   },
+  yAxis: {
+    softMax: 1
+},
 
   plotOptions: {
       series: {
@@ -49,10 +51,15 @@ chart = new Highcharts.Chart({
                     }
               }
           },
-          stickyTracking: false
+          stickyTracking: false,
+          dragDrop: {
+            draggableY: true,
+            dragMaxY:1,
+            dragMinY:-1
+        }
       },
-      column: {
-          stacking: 'normal'
+      bar: {
+          stacking: 'normal', minPointLength: 2
       },
       line: {
           cursor: 'ns-resize'
@@ -69,13 +76,8 @@ chart = new Highcharts.Chart({
     enabled: false
 },  
   series: [{
-
-      //draggableX: true,
-      draggableY: true,
-      dragMaxY: 1,
-      dragMinY: -1,
-      type: 'column',
-      minPointLength: 2
+      type: 'bar',
+      negativeColor: '#FF0000'
   }]
 
 });
@@ -84,7 +86,7 @@ chartRight = new Highcharts.Chart({
     chart: {
         renderTo: 'right-bars',
         animation: false,
-        height:300,
+        height:400,
         width:400
     },
     credits:{
@@ -99,12 +101,14 @@ chartRight = new Highcharts.Chart({
     xAxis: {
         categories: []
     },
-  
+    yAxis: {
+        Max: 1
+    },
+    
     plotOptions: {
         series: {
             point: {
                 events: {
-  
                     drag: function (e) {
                       
                     },
@@ -121,9 +125,14 @@ chartRight = new Highcharts.Chart({
                     }
                 }
             },
+            dragDrop: {
+                draggableY: true,
+                dragMaxY:1,
+                dragMinY:-1
+            },
             stickyTracking: false
         },
-        column: {
+        bar: {
             stacking: 'normal',
             //cursor: 'ns-resize'
         },
@@ -141,13 +150,11 @@ chartRight = new Highcharts.Chart({
   
     series: [{  
         //draggableX: true,
-        draggableY: true,
-        dragMinY: -1,
-        dragMaxY:1,
-        type: 'column',
+        type: 'bar',
         width:300,
         height:500,
-        minPointLength: 2
+        minPointLength: 2,        
+        negativeColor: '#FF0000'
     }]
   
   });
