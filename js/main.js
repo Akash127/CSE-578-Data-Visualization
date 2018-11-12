@@ -14,7 +14,7 @@ chart = new Highcharts.Chart({
   chart: {
       renderTo: 'left-bars',
       animation: true,
-      height:300,
+      height:400,
       width:400
   },
   credits:{
@@ -53,7 +53,9 @@ chart = new Highcharts.Chart({
           },
           stickyTracking: false,
           dragDrop: {
-            draggableY: true
+            draggableY: true,
+            dragMaxY:1,
+            dragMinY:-1
         }
       },
       bar: {
@@ -84,7 +86,7 @@ chartRight = new Highcharts.Chart({
     chart: {
         renderTo: 'right-bars',
         animation: false,
-        height:300,
+        height:400,
         width:400
     },
     credits:{
@@ -107,7 +109,6 @@ chartRight = new Highcharts.Chart({
         series: {
             point: {
                 events: {
-  
                     drag: function (e) {
                       
                     },
@@ -125,7 +126,9 @@ chartRight = new Highcharts.Chart({
                 }
             },
             dragDrop: {
-                draggableY: true
+                draggableY: true,
+                dragMaxY:1,
+                dragMinY:-1
             },
             stickyTracking: false
         },

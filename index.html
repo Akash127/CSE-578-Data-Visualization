@@ -21,7 +21,18 @@
   <div class="left-section container  col-md-4 ">
       <div class="left-bars " id="left-bars"></div>    
       <div class="right-bars" id="right-bars"></div>
-       <div class="dropdowns">
+  </div>
+  <div class=" mid-section col-md-4">
+        <div class="column">
+        <svg width="200" height="110" class="box y-top"></svg>
+        <svg width="200" height="110" class="box y-bottom"></svg>
+        </div >
+        <div class="row">
+        <svg width="200" height="110" class="box x-left"></svg>
+        <svg width="200" height="110" class="box x-right"></svg>
+        </div>
+        <div class="" id="chart-area1"></div>
+ <div class="dropdowns">
     <div class="xAxis">
       <select id="select" onchange = "chooseX()">
           <option value="default">default</option>
@@ -35,20 +46,8 @@
       </select>
       <button onclick="SaveY()">Save Y</button>
       <button onclick="ClearY()">Clear Y</button>
-    
   </div> 
   </div>
-  </div>
-  <div class=" mid-section col-md-4">
-        <div class="column">
-        <svg width="200" height="110" class="box y-top"></svg>
-        <svg width="200" height="110" class="box y-bottom"></svg>
-        </div >
-        <div class="row">
-        <svg width="200" height="110" class="box x-left"></svg>
-        <svg width="200" height="110" class="box x-right"></svg>
-        </div>
-        <div class="" id="chart-area1"></div>
   </div> 
   <div class="right-section col-md-2" id="desc"></div>
   </div>
