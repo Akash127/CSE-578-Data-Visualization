@@ -339,9 +339,9 @@ function y_bottom_click(){
 
 updategraph_util = function(axis) {
   if(axis == "X" && x_left_dropzone.length != 0 && x_right_dropzone.length != 0) {
-    scatterPlot.updategraph('X', x_right_dropzone, x_left_dropzone)
+    scatterPlot.updategraph('X', x_right_dropzone, x_left_dropzone);
   } else if(axis == "Y" && y_top_dropzone.length != 0 && y_bottom_dropzone.length != 0) {
-    scatterPlot.updategraph('Y', y_top_dropzone, y_bottom_dropzone)
+    scatterPlot.updategraph('Y', y_top_dropzone, y_bottom_dropzone);
   }
 }
 
@@ -378,7 +378,7 @@ if(Vgiven==undefined){
     V[attr[i]] = 0;
     Vchanged[attr[i]] = 0;
   }
-  //calxxxulating norm 
+  //calculating norm 
   for (var i = 0; i<attrNo; i++) {
     V[attr[i]] = x0[attr[i]]-x1[attr[i]];
     norm = norm + (x0[attr[i]]-x1[attr[i]])*(x0[attr[i]]-x1[attr[i]]);
@@ -413,15 +413,17 @@ else
 }
 
 //making new axis
+chartdata=[];
    index = index + 1; 
    newxname = 'x'+index;
+   for(var j=0;j<18;j++)       chartdata.push(V[attr[j]]);
    data.forEach(function(d) {
     d["coord"][newxname] = 0; 
     for (var j = 0; j<18; j++) {
       d["coord"][newxname] = d["coord"][newxname] + V[attr[j]]*d["coord"][attr[j]];
     }
   });
-
+  axis=="X"?chart.series[0].setData(chartdata):chartRight.series[0].setData(chartdata);
   data.forEach(function(d) {d[axis=="X" ? "x" : "y"] = d["coord"][newxname]; });
   if(axis=="X") $('.x-axis-label').text(newxname);
   if(axis=="Y") $('.y-axis-label').text(newxname);
