@@ -134,7 +134,7 @@ ScatterPlot.prototype.init = function() {
   vis.scatterPlotGroup.append("text")
     .text(vis.columns[initX])
     .attr("y", vis.height + 50)
-    .attr("x", 150)
+    .attr("x", 210)
     .attr("class", "x-axis-label")
     .attr("font-size", "18px")
 
