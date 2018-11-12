@@ -50,6 +50,8 @@ ScatterPlot.prototype.init = function() {
 
   // Initiating Scales for Axis and Inverted Axis
 
+  var x_dropdown=document.getElementById('select').value;
+  var y_dropdown=document.getElementById('select1').value;
   vis.xScale = d3.scaleLinear()
     .range([0, vis.width])
     .domain([xmin,xmax])
@@ -129,19 +131,16 @@ ScatterPlot.prototype.init = function() {
     .attr("d", vis.xOrigin(lineData))
     .attr("class", "xOriginLine")
     .attr("clip-path", "url(#clip)")
-  
-  // Adding Axis Labels
+    // Adding Axis Labels
   vis.scatterPlotGroup.append("text")
-    .text(vis.columns[initX])
+    .text(x_dropdown=="default"? vis.columns[initX]:x_dropdown)
     .attr("y", vis.height + 50)
     .attr("x", 210)
     .attr("class", "x-axis-label")
     .attr("font-size", "18px")
-
-
-
+    
   vis.scatterPlotGroup.append("text")
-    .text(vis.columns[initY])
+    .text(y_dropdown=="default"? vis.columns[initY]:y_dropdown)
     .attr("y", -35)
     .attr("x", -380)
     .attr("class", "y-axis-label")
@@ -164,7 +163,7 @@ ScatterPlot.prototype.processData = function() {
 }
 
 ScatterPlot.prototype.drawvis = function() {
-  console.log("[IN_DRAWVIS]");
+ // console.log("[IN_DRAWVIS]");
   var vis = this;
 
   // Tooltip
@@ -424,6 +423,8 @@ else
   });
 
   data.forEach(function(d) {d[axis=="X" ? "x" : "y"] = d["coord"][newxname]; });
+  if(axis=="X") $('.x-axis-label').text(newxname);
+  if(axis=="Y") $('.y-axis-label').text(newxname);
   this.drawvis();
 }
 ScatterPlot.prototype.updategraphOnDropdownChange=function(axis,index,Vgiven){
@@ -446,7 +447,10 @@ ScatterPlot.prototype.updategraphOnDropdownChange=function(axis,index,Vgiven){
    }
  });
  this.data.forEach(function(d) {d[axis=="X" ? "x" : "y"] = d["coord"][newxname]; });
+  if(axis=="X") $('.x-axis-label').text(newxname);
+ if(axis=="Y") $('.y-axis-label').text(newxname);
  this.drawvis();
+
 }
 //#endregion
 
