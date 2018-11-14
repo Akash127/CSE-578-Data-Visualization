@@ -4,11 +4,21 @@ var selectedPoint;
 var loadData=[];
 var GlobalV=[];
 var changed;
+var isLassoActivated = false;
 
 function pointSelected(event) {
   selectedPoint = event.raw;
   desc.update();
 }
+// function toggle_lasso() {
+//     console.log("Lasso Activated");
+//     if(isLasso) {
+//         isLasso = false;
+//     } else {
+//         isLasso = true;
+//     }
+// }
+
 var chart=null;
 chart = new Highcharts.Chart({
   chart: {

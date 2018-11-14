@@ -37,9 +37,6 @@ ScatterPlot.prototype.init = function() {
   vis.svg = d3.select(vis.containerClassName).append("svg")
     .attr("width", vis.width + vis.margin.left + vis.margin.right)
     .attr("height", vis.height + vis.margin.top + vis.margin.bottom)
-
-  vis.scatterPlotGroup = vis.svg.append("g")
-    .attr("transform", "translate(" + vis.margin.left + "," + vis.margin.top + ")")
     
   vis.columns = this.data.columns;
 
@@ -97,10 +94,11 @@ ScatterPlot.prototype.init = function() {
     });
 
   // Define Listener Element for Zoom
-  vis.svg.append("rect")
+  vis.zoomArea = vis.svg.append("rect")
     .attr("width", vis.width)
     .attr("height", vis.height)
-    .style("fill", "none")
+    // .style("fill", "none")
+    .style("opacity", 0)
     .style("pointer-events", "all")
     .attr('transform', 'translate(' + vis.margin.left + ',' + vis.margin.top + ')')
     .call(zoom)
@@ -138,8 +136,6 @@ ScatterPlot.prototype.init = function() {
     .attr("class", "x-axis-label")
     .attr("font-size", "18px")
 
-
-
   vis.scatterPlotGroup.append("text")
     .text(vis.columns[initY])
     .attr("y", -35)
@@ -147,6 +143,15 @@ ScatterPlot.prototype.init = function() {
     .attr("class", "y-axis-label")
     .attr("font-size", "18px")
     .attr("transform", "rotate(-90)")
+  
+  //Add Lasso Objects
+  vis.lasso = d3.lasso()
+    .closePathDistance(75) 
+    .closePathSelect(true) 
+    // .targetArea(vis.scatterPlotGroup)
+    .on("start",lasso_start) 
+    .on("draw",lasso_draw) 
+    .on("end",lasso_end);
 
   vis.processData();
 };
@@ -205,7 +210,8 @@ ScatterPlot.prototype.drawvis = function() {
   vis.scatterPlotGroup.selectAll("circle").data(vis.data)
     .attr('cx', function(d) {return vis.xScale(+d['x'])})
     .attr('cy', function(d) {return vis.yScale(+d['y'])});
-    
+ 
+  vis.lasso.items(vis.scatterPlotGroup.selectAll("circle"))
 }
 //#endregion
 
@@ -490,3 +496,69 @@ document.getElementById('select1').value="Retail Price";
 chooseY();
 }
 //#endregion
+
+// Add Lasso Functions
+
+var lasso_start = function() {
+  scatterPlot.lasso.items()
+      // .attr("r",7) 
+      .classed("not_possible",true)
+      .classed("selected",false);
+};
+
+var lasso_draw = function() {
+
+  scatterPlot.lasso.possibleItems()
+      .classed("not_possible",false)
+      .classed("possible",true);
+
+  scatterPlot.lasso.notPossibleItems()
+      .classed("not_possible",true)
+      .classed("possible",false);
+};
+
+var lasso_end = function() {
+  scatterPlot.lasso.items()
+      .classed("not_possible",false)
+      .classed("possible",false);
+
+  scatterPlot.lasso.selectedItems()
+      .classed("selected",true)
+      .attr("r",7);
+
+  scatterPlot.lasso.notSelectedItems()
+      .attr("r",5);
+
+  console.log("Selected Items");
+  console.log(scatterPlot.lasso.selectedItems())
+  console.log("Not Selected Items");
+  console.log(scatterPlot.lasso.notSelectedItems())
+};
+
+function toggle_lasso() {
+  
+  if(!isLassoActivated) {
+    console.log("Lasso Activated!");
+    isLassoActivated = true;
+    scatterPlot.lassoArea = scatterPlot.scatterPlotGroup.append("rect")
+    .attr("width", scatterPlot.width)
+    .attr("height", scatterPlot.height)
+    // .style("fill", "none")
+    .style("opacity", 0)
+    // .style("pointer-events", "all")
+    // .attr('transform', 'translate(' + scatterPlot.margin.left + ',' + scatterPlot.margin.top + ')')
+    scatterPlot.lasso.targetArea(scatterPlot.lassoArea)
+    scatterPlot.scatterPlotGroup.call(scatterPlot.lasso);
+    document.getElementById("lassoToggle").innerHTML = "Deactivate Lasso";
+  } else {
+    console.log("Lasso Deactivated!");
+    isLassoActivated = false;
+    scatterPlot.lassoArea.remove();
+    document.getElementById("lassoToggle").innerHTML = "Activate Lasso";
+    // Change Selected Items color if not
+
+    scatterPlot.lasso.selectedItems()
+      .classed("selected",false)
+      .attr("r",5);
+  }
+}

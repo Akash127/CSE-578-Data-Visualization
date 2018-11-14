@@ -38,6 +38,7 @@
           <option value="default">default</option>
       </select>
       <button onclick="SaveX()">Save X</button>
+      <button id='lassoToggle' onclick="toggle_lasso()">Activate Lasso</button>
       <button onclick="ClearX()">Clear X</button>
     </div>
     <div class="yAxis">
@@ -64,6 +65,7 @@ function myFunction() {
     <!-- External JS Libraries -->
     <!-- <script src="js/jquery-3.3.1.min.js"></script> -->
     <script src="js/d3.min.js"></script>
+    <script src="js/lasso.js"></script>
     <script src="js/d3-tip.js"></script>
     <!-- Custom JS Libraries -->
     <script src="js/highcharts-helper.js"></script>
