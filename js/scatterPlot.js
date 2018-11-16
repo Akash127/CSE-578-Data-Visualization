@@ -15,7 +15,17 @@ var newxname;
 var lineData = [
   {"x": 0, "y": -Number.MAX_SAFE_INTEGER},
   {"x": 0, "y": Number.MAX_SAFE_INTEGER}
-] 
+]
+
+var clusterMap = {
+  'A':[],
+  'B':[],
+  'C':[],
+  'D':[]
+}
+var clusterInputIndex = 0;
+var selectedCluster = null;
+
 //#endregion
 
 //#region some scatterplot init
@@ -218,7 +228,6 @@ ScatterPlot.prototype.drawvis = function() {
 //#region zoom
 function zoomed (vis) {
 
-  console.log("[IN_ZOOMED]")
   //if tooltip is showing 
   if($(".d3-tip").css('opacity')==1) {
     $(".d3-tip").css('opacity',"0");
@@ -529,12 +538,11 @@ var lasso_end = function() {
   scatterPlot.lasso.notSelectedItems()
       .attr("r",5);
 
-  console.log("Selected Items");
-  console.log(scatterPlot.lasso.selectedItems())
-  console.log("Not Selected Items");
-  console.log(scatterPlot.lasso.notSelectedItems())
+  // console.log(scatterPlot.lasso.selectedItems())
+  processClusterData(scatterPlot.lasso.selectedItems())
 };
 
+//Funtion to toggle between Lasso and Zoom
 function toggle_lasso() {
   
   if(!isLassoActivated) {
@@ -549,7 +557,7 @@ function toggle_lasso() {
     // .attr('transform', 'translate(' + scatterPlot.margin.left + ',' + scatterPlot.margin.top + ')')
     scatterPlot.lasso.targetArea(scatterPlot.lassoArea)
     scatterPlot.scatterPlotGroup.call(scatterPlot.lasso);
-    document.getElementById("lassoToggle").innerHTML = "Deactivate Lasso";
+    document.getElementById("lassoToggle").innerHTML = "Activate Zoom";
   } else {
     console.log("Lasso Deactivated!");
     isLassoActivated = false;
@@ -561,4 +569,46 @@ function toggle_lasso() {
       .classed("selected",false)
       .attr("r",5);
   }
+}
+
+// --------------------------------------- Cluster Handling Functions---------------------------------
+
+// Function to process Cluster Data 
+function processClusterData(clusterData) {
+  console.log("IN PROCESS DATA")
+  
+  // Extract Data from Cluster if Valid
+  clusterData = clusterData["_groups"][0].map(node => node["__data__"])
+  
+  // Check if valid cluster
+  if(isValid(clusterData)) {
+    // Can do some further processing here.
+    selectedCluster = clusterData
+  }
+}
+
+// Function to Save Cluster When Button is Clicked
+function saveCluster() {
+  console.log("INSIDE SAVE CLUSTER")
+  var indexMap = {
+    0:'A',
+    1:'B',
+    2:'C',
+    3:'D'
+  }
+
+  if(selectedCluster) {
+    clusterMap[indexMap[clusterInputIndex]] = selectedCluster
+    clusterInputIndex = (clusterInputIndex + 1) % 4
+    selectedCluster = null;
+    console.log("CLUSTER ADDED")
+  }
+  console.log(clusterMap)
+}
+
+// Function to Check if Cluster is Valid or Not
+function isValid(clusterData) {
+  if(clusterData.length > 0)
+    return true;
+  else return false;
 }

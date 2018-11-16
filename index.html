@@ -37,17 +37,20 @@
       <select id="select" onchange = "chooseX()">
           <option value="default">default</option>
       </select>
-      <button onclick="SaveX()">Save X</button>
-      <button id='lassoToggle' onclick="toggle_lasso()">Activate Lasso</button>
-      <button onclick="ClearX()">Clear X</button>
+      <button class="btn btn-secondary btn-sm" onclick="SaveX()">Save X</button>
+      <button class="btn btn-secondary btn-sm" onclick="ClearX()">Clear X</button>
     </div>
     <div class="yAxis">
       <select id="select1" onchange = "chooseY()">
-      <option value="default">default</option>
+        <option value="default">default</option>
       </select>
-      <button onclick="SaveY()">Save Y</button>
-      <button onclick="ClearY()">Clear Y</button>
+      <button class="btn btn-secondary btn-sm mt-2" onclick="SaveY()">Save Y</button>
+      <button class="btn btn-secondary btn-sm mt-2" onclick="ClearY()">Clear Y</button>
   </div> 
+  <div class="util-buttons">
+    <button class="btn btn-secondary mt-2" id="lassoToggle"onclick="toggle_lasso()">Activate Lasso</button>
+    <button class="btn btn-secondary mt-2" onclick="saveCluster()">Save Cluster</button>
+  </div>
   </div>
   </div> 
   <div class="right-section col-md-2" id="desc"></div>
