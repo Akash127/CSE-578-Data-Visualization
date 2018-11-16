@@ -48,34 +48,32 @@
       <button class="btn btn-secondary btn-sm mt-2" onclick="ClearY()">Clear Y</button>
   </div> 
   <div class="util-buttons">
-    <button class="btn btn-secondary mt-2" id="lassoToggle"onclick="toggle_lasso()">Activate Lasso</button>
-    <button class="btn btn-secondary mt-2" onclick="saveCluster()">Save Cluster</button>
+    <button class="btn btn-secondary mt-2 btn-sm" id="lassoToggle"onclick="toggle_lasso()">Activate Lasso</button>
+    <button class="btn btn-secondary mt-2 btn-sm" onclick="saveCluster()">Save Cluster</button>
+    <!-- Button trigger modal -->
+    <button type="button" class="btn btn-secondary mt-2 btn-sm" data-toggle="modal" data-target="#exampleModalCenter">
+      Comapare Clusters
+    </button>
   </div>
   </div>
   </div> 
   <div class="right-section col-md-2" id="desc"></div>
-  <!--External Modal Display Code-->
-  <!-- Button trigger modal -->
-    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter">
-      Launch demo modal
-    </button>
-
     <!-- Modal -->
     <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
       <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLongTitle">Modal title</h5>
+            <h5 class="modal-title" id="exampleModalLongTitle">Cluster Analysis</h5>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
           </div>
           <div class="modal-body">
-            ...
+            <p>Show Cluster Comparison Graphs Below</p>
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-            <button type="button" class="btn btn-primary">Save changes</button>
+            <!-- <button type="button" class="btn btn-primary">Save changes</button> -->
           </div>
         </div>
       </div>

@@ -142,14 +142,14 @@ ScatterPlot.prototype.init = function() {
   vis.scatterPlotGroup.append("text")
     .text(vis.columns[initX])
     .attr("y", vis.height + 50)
-    .attr("x", 150)
+    .attr("x", vis.width/2)
     .attr("class", "x-axis-label")
     .attr("font-size", "18px")
 
   vis.scatterPlotGroup.append("text")
     .text(vis.columns[initY])
+    .attr("x", -vis.height/2 - 50)
     .attr("y", -35)
-    .attr("x", -380)
     .attr("class", "y-axis-label")
     .attr("font-size", "18px")
     .attr("transform", "rotate(-90)")
@@ -189,10 +189,10 @@ ScatterPlot.prototype.drawvis = function() {
          selected=d3.selectAll('.selected');
          selectedElement=this;
          selectedProperties=d;
-       var text = "<button onclick=x_left_click()>Drop in X-left</button>"
-       +"<button onclick=x_right_click()>Drop in X-right</button>"
-       +"<button onclick=y_top_click()>Drop in Y-top</button>"
-      +"<button onclick=y_bottom_click()>Drop in y-bottom</button>"
+       var text = "<button class='btn btn-sm btn-secondary mr-1' onclick=x_left_click()>Drop in X-Low</button>"
+       +"<button class='btn btn-sm btn-secondary mr-1' onclick=x_right_click()>Drop in X-High</button>"
+       +"<button class='btn btn-sm btn-secondary mr-1' onclick=y_top_click()>Drop in Y-High</button>"
+      +"<button class='btn btn-sm btn-secondary' onclick=y_bottom_click()>Drop in Y-Low</button>"
        return text;
      });
    vis.scatterPlotGroup.call(tip);
@@ -214,6 +214,7 @@ ScatterPlot.prototype.drawvis = function() {
       .attr("clip-path", "url(#clip)")
       .on("mouseover", pointSelected)
       .attr("fill", "#FFB55F")
+      // .attr("fill", "#A4A4A4")
       .on("click",tip.show);
   
       // Updating scatterplot
@@ -533,7 +534,7 @@ var lasso_end = function() {
 
   scatterPlot.lasso.selectedItems()
       .classed("selected",true)
-      .attr("r",7);
+      .attr("r",5);
 
   scatterPlot.lasso.notSelectedItems()
       .attr("r",5);
