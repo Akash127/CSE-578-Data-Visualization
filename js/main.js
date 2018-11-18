@@ -10,6 +10,7 @@ function pointSelected(event) {
   selectedPoint = event.raw;
   desc.update();
 }
+
 // function toggle_lasso() {
 //     console.log("Lasso Activated");
 //     if(isLasso) {

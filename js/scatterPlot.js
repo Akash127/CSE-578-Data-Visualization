@@ -15,7 +15,17 @@ var newxname;
 var lineData = [
   {"x": 0, "y": -Number.MAX_SAFE_INTEGER},
   {"x": 0, "y": Number.MAX_SAFE_INTEGER}
-] 
+]
+
+var clusterMap = {
+  'A':[],
+  'B':[],
+  'C':[],
+  'D':[]
+}
+var clusterInputIndex = 0;
+var selectedCluster = null;
+
 //#endregion
 
 //#region some scatterplot init
@@ -133,13 +143,13 @@ ScatterPlot.prototype.init = function() {
   vis.scatterPlotGroup.append("text")
     .text(x_dropdown=="default"? vis.columns[initX]:x_dropdown)
     .attr("y", vis.height + 50)
-    .attr("x", 210)
+    .attr("x", vis.width/2)
     .attr("class", "x-axis-label")
     .attr("font-size", "18px")
   vis.scatterPlotGroup.append("text")
-    .text(y_dropdown=="default"? vis.columns[initY]:y_dropdown)
+    .text(vis.columns[initY])
+    .attr("x", -vis.height/2 - 50)
     .attr("y", -35)
-    .attr("x", -380)
     .attr("class", "y-axis-label")
     .attr("font-size", "18px")
     .attr("transform", "rotate(-90)")
@@ -179,10 +189,10 @@ ScatterPlot.prototype.drawvis = function() {
          selected=d3.selectAll('.selected');
          selectedElement=this;
          selectedProperties=d;
-       var text = "<button onclick=x_left_click()>Drop in X-left</button>"
-       +"<button onclick=x_right_click()>Drop in X-right</button>"
-       +"<button onclick=y_top_click()>Drop in Y-top</button>"
-      +"<button onclick=y_bottom_click()>Drop in y-bottom</button>"
+       var text = "<button class='btn btn-sm btn-secondary mr-1' onclick=x_left_click()>Drop in X-Low</button>"
+       +"<button class='btn btn-sm btn-secondary mr-1' onclick=x_right_click()>Drop in X-High</button>"
+       +"<button class='btn btn-sm btn-secondary mr-1' onclick=y_top_click()>Drop in Y-High</button>"
+      +"<button class='btn btn-sm btn-secondary' onclick=y_bottom_click()>Drop in Y-Low</button>"
        return text;
      });
    vis.scatterPlotGroup.call(tip);
@@ -204,6 +214,7 @@ ScatterPlot.prototype.drawvis = function() {
       .attr("clip-path", "url(#clip)")
       .on("mouseover", pointSelected)
       .attr("fill", "#FFB55F")
+      // .attr("fill", "#A4A4A4")
       .on("click",tip.show);
   
       // Updating scatterplot
@@ -218,7 +229,6 @@ ScatterPlot.prototype.drawvis = function() {
 //#region zoom
 function zoomed (vis) {
 
-  console.log("[IN_ZOOMED]")
   //if tooltip is showing 
   if($(".d3-tip").css('opacity')==1) {
     $(".d3-tip").css('opacity',"0");
@@ -531,17 +541,16 @@ var lasso_end = function() {
 
   scatterPlot.lasso.selectedItems()
       .classed("selected",true)
-      .attr("r",7);
+      .attr("r",5);
 
   scatterPlot.lasso.notSelectedItems()
       .attr("r",5);
 
-  console.log("Selected Items");
-  console.log(scatterPlot.lasso.selectedItems())
-  console.log("Not Selected Items");
-  console.log(scatterPlot.lasso.notSelectedItems())
+  // console.log(scatterPlot.lasso.selectedItems())
+  processClusterData(scatterPlot.lasso.selectedItems())
 };
 
+//Funtion to toggle between Lasso and Zoom
 function toggle_lasso() {
   
   if(!isLassoActivated) {
@@ -556,7 +565,7 @@ function toggle_lasso() {
     // .attr('transform', 'translate(' + scatterPlot.margin.left + ',' + scatterPlot.margin.top + ')')
     scatterPlot.lasso.targetArea(scatterPlot.lassoArea)
     scatterPlot.scatterPlotGroup.call(scatterPlot.lasso);
-    document.getElementById("lassoToggle").innerHTML = "Deactivate Lasso";
+    document.getElementById("lassoToggle").innerHTML = "Activate Zoom";
   } else {
     console.log("Lasso Deactivated!");
     isLassoActivated = false;
@@ -568,4 +577,46 @@ function toggle_lasso() {
       .classed("selected",false)
       .attr("r",5);
   }
+}
+
+// --------------------------------------- Cluster Handling Functions---------------------------------
+
+// Function to process Cluster Data 
+function processClusterData(clusterData) {
+  console.log("IN PROCESS DATA")
+  
+  // Extract Data from Cluster if Valid
+  clusterData = clusterData["_groups"][0].map(node => node["__data__"])
+  
+  // Check if valid cluster
+  if(isValid(clusterData)) {
+    // Can do some further processing here.
+    selectedCluster = clusterData
+  }
+}
+
+// Function to Save Cluster When Button is Clicked
+function saveCluster() {
+  console.log("INSIDE SAVE CLUSTER")
+  var indexMap = {
+    0:'A',
+    1:'B',
+    2:'C',
+    3:'D'
+  }
+
+  if(selectedCluster) {
+    clusterMap[indexMap[clusterInputIndex]] = selectedCluster
+    clusterInputIndex = (clusterInputIndex + 1) % 4
+    selectedCluster = null;
+    console.log("CLUSTER ADDED")
+  }
+  console.log(clusterMap)
+}
+
+// Function to Check if Cluster is Valid or Not
+function isValid(clusterData) {
+  if(clusterData.length > 0)
+    return true;
+  else return false;
 }
