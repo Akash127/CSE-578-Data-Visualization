@@ -68,7 +68,7 @@ ScatterPlot.prototype.init = function() {
     .domain([ymin, ymax])
   
   //Create copy of scales for zoom to work with
-  vis.copyX = vis.xScale.copy();  
+  vis.copyX = vis.xScale.copy();    
   vis.copyY = vis.yScale.copy();
   
   // Creating and Adding Axis
@@ -189,10 +189,10 @@ ScatterPlot.prototype.drawvis = function() {
          selected=d3.selectAll('.selected');
          selectedElement=this;
          selectedProperties=d;
-       var text = "<button class='btn btn-sm btn-secondary mr-1' onclick=x_left_click()>Drop in X-Low</button>"
-       +"<button class='btn btn-sm btn-secondary mr-1' onclick=x_right_click()>Drop in X-High</button>"
-       +"<button class='btn btn-sm btn-secondary mr-1' onclick=y_top_click()>Drop in Y-High</button>"
-      +"<button class='btn btn-sm btn-secondary' onclick=y_bottom_click()>Drop in Y-Low</button>"
+       var text = "<button class='btn tool-tip btn-sm btn-secondary mr-1' onclick=x_left_click()>Drop in X-Low</button>"
+       +"<button class='btn tool-tip  btn-sm btn-secondary mr-1' onclick=x_right_click()>Drop in X-High</button>"
+       +"<button class='btn tool-tip btn-sm btn-secondary mr-1' onclick=y_top_click()>Drop in Y-High</button>"
+      +"<button class='btn tool-tip btn-sm btn-secondary' onclick=y_bottom_click()>Drop in Y-Low</button>"
        return text;
      });
    vis.scatterPlotGroup.call(tip);
@@ -232,6 +232,7 @@ function zoomed (vis) {
   //if tooltip is showing 
   if($(".d3-tip").css('opacity')==1) {
     $(".d3-tip").css('opacity',"0");
+    $(".tool-tip").attr("disabled",true)
     selected.classed("selected",false);
     selected=null;
   }
@@ -273,6 +274,7 @@ function zoomed (vis) {
 //#region ToolTip click functions
 function x_left_click(){
    $(".d3-tip").css('opacity',"0");
+   $(".tool-tip").attr("disabled",true)
   var cln = selectedElement.cloneNode(true);
   cln.removeAttribute("class");
   cln.classList.add("in-x-left");
@@ -295,6 +297,7 @@ function x_left_click(){
 
 function x_right_click(){
    $(".d3-tip").css('opacity',"0");
+   $(".tool-tip").attr("disabled",true)
   var cln = selectedElement.cloneNode(true);
   cln.removeAttribute("class");
   cln.classList.add("in-x-right");
@@ -316,6 +319,7 @@ function x_right_click(){
 
 function y_top_click(){
    $(".d3-tip").css('opacity',"0");
+   $(".tool-tip").attr("disabled",true)
   var cln = selectedElement.cloneNode(true);
   cln.removeAttribute("class");
   cln.classList.add("in-y-top");
@@ -334,6 +338,7 @@ function y_top_click(){
 }
 function y_bottom_click(){
    $(".d3-tip").css('opacity',"0");
+   $(".tool-tip").attr("disabled",true)
   var cln = selectedElement.cloneNode(true);
   cln.removeAttribute("class");
   cln.classList.add("in-x-top");

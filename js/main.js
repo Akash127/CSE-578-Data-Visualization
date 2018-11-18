@@ -179,7 +179,7 @@ d3.csv("dataset/04cars data_clean.csv").then(function(data) {
     tmp["coord"]={};
     loadData.push(tmp);
   });
- //console.log(loadData);
+
   var columns=  data.columns;
 
   for(var i=0;i<columns.length;i++){
