@@ -26,6 +26,9 @@ var clusterMap = {
 var clusterInputIndex = 0;
 var selectedCluster = null;
 
+var categorialList = ['Sports Car', 'SUV', 'Wagon', 'Minivan', 'Small/Sporty/ Compact/Large Sedan', 
+'Pickup', 'AWD', 'RWD', 'LodaLassan']
+
 //#endregion
 
 //#region some scatterplot init
@@ -526,6 +529,7 @@ var lasso_start = function() {
       // .attr("r",7) 
       .classed("not_possible",true)
       .classed("selected",false);
+  selectedCluster = null;
 };
 
 var lasso_draw = function() {
@@ -596,7 +600,7 @@ function processClusterData(clusterData) {
   // Check if valid cluster
   if(isValid(clusterData)) {
     // Can do some further processing here.
-    selectedCluster = clusterData
+    selectedCluster = getClusterSummary(clusterData)
   }
 }
 
@@ -669,4 +673,155 @@ function isValid(clusterData) {
 }
 function toggleSideBar(){
   $('#sidebar').toggleClass('active');
+}
+// Function to return cluster summary
+function getClusterSummary(clusterData) {
+  var categoricalSummary = {};
+  var continuousSummary = {};
+
+  categoricalSummary = getCategoricalSummary(clusterData);
+  continuousSummary = getContinuousSummary(clusterData);
+
+  var result = {
+    catSum: categoricalSummary,
+    contSum: continuousSummary 
+  }
+  return result;
+}
+
+// Function return dictionary with summary of categorical attributes
+function getCategoricalSummary(clusterData) {
+  var attributeMap = {};
+  for(attr in clusterData[0]['raw']) {
+    if(categorialList.includes(attr)) {
+      attributeMap[attr] = {};
+    }
+  }
+
+  for(attribute in attributeMap) {
+    uniqueAttrValues = getUnique(attribute)
+    for(var i = 0; i < clusterData.length; i++) {
+      uniqueAttrValues[clusterData[i]["raw"][attribute]] += 1
+    }
+    attributeMap[attribute] = uniqueAttrValues;
+  }
+
+  // Adding Attributes Name in Attribute Map
+  var newAttributeMap = {};
+  for(attr in attributeMap) {
+    newAttributeMap[attr] = {};
+  }
+
+  for(attr in attributeMap) {
+    var temp = "Non-" + attr;
+    newAttributeMap[attr][attr] = attributeMap[attr][1],
+    newAttributeMap[attr][temp] = attributeMap[attr][0]
+  }
+
+  return newAttributeMap;
+}
+
+// Function return dictionary with summary of continuous attributes
+function getContinuousSummary(clusterData) {
+  var attributeMap = {};
+  // TODO VYOM's Code
+//  console.log(clusterData);
+
+  var matrix = {};
+  var value = {};
+  var cl = clusterData.length;
+  var i = 0;
+  var nc = {};
+  for (i = 0; i<= cl - 1; i++) {
+    var abc = clusterData[i]['raw'];
+    var j = 0;
+    var rowValue = {};
+    for (var m in abc) {
+      rowValue[j] = abc[m];
+      value[j] = m;
+      j++;
+    }
+    nc = j;
+    matrix[i] = rowValue;
+  }
+  var names = {};
+  var j= 0;
+  for (j = 0; j <= nc - 1; j++) {
+    var s = new Set();
+    for (i = 0; i <= cl - 1; i++ ) {
+      s.add(Math.floor(Number(matrix[i][j])));
+    }
+    if (s.size >= 5) {
+      var arr = Array.from(s);
+      var minv, maxv;
+      minv = arr[0];
+      maxv = arr[0];
+      for (var ch in arr) {
+        minv = Math.min(minv,arr[ch]);
+        maxv = Math.max(maxv,arr[ch]);
+      }
+      range = maxv - minv;
+      var interval = range/10;
+
+      var countRange = {};
+      var p = 0;
+      for (p = 0; p <= 9; p++) {
+        countRange[p] = 0;
+      }
+    var rangeArray = {};
+    for (var ch in arr) {
+        var val = arr[ch];
+        var diff = val - minv;
+        var part = Math.floor(diff/interval);
+        if (arr[ch] == maxv) {
+          countRange[part-1]++;
+          continue;
+        }
+        countRange[part]++;
+      }
+      var rangeArray = {};
+      for (var m in countRange) {
+        v1 = minv + m*interval;
+        v2 = v1 + interval;
+        v1 = v1.toString();
+        v2 = v2.toString();
+        rangeArray[v1] = countRange[m];
+      }
+    }
+    names[value[j]] = rangeArray; 
+  }
+  console.log(names);
+  return names;
+}
+
+
+// Function to Sort Dictionary and return top 5 values
+function sortDictionaryByValue(dict) {
+  
+  var items = Object.keys(dict).map(function(key) {
+    return [key, dict[key]];
+  });
+  items.sort(function(first, second) {
+    return second[1] - first[1];
+  });
+
+  items = items.slice(0, 5);
+
+  sortedDict = {}
+  
+  for(var i = 0; i < items.length; i++) {
+    data = items[i]
+    sortedDict[data[0]] = data[1]
+  }
+  return sortedDict;
+}
+
+// Function Get Unique Value
+function getUnique(attr) {
+  uniqueHash = {};
+  scatterPlot.data.forEach(row => {
+    type_category = row["raw"][attr]
+    uniqueHash[type_category] = 0;
+  })
+  return uniqueHash
 }

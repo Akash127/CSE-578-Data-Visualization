@@ -307,7 +307,7 @@ d3.csv("dataset/04cars data_clean.csv").then(function(data) {
     loadData.push(tmp);
   });
 
-  var columns=  data.columns;
+  var columns =  data.columns;
 
   for(var i=0;i<columns.length;i++){
    var tmpMax=d3.max(loadData,function(d){return +d["raw"][columns[i]];});
