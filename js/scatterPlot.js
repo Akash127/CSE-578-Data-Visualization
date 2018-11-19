@@ -669,8 +669,73 @@ function getCategoricalSummary(clusterData) {
 function getContinuousSummary(clusterData) {
   var attributeMap = {};
   // TODO VYOM's Code
+//  console.log(clusterData);
 
-  return attributeMap;
+  var matrix = {};
+  var value = {};
+  var cl = clusterData.length;
+  var i = 0;
+  var nc = {};
+  for (i = 0; i<= cl - 1; i++) {
+    var abc = clusterData[i]['raw'];
+    var j = 0;
+    var rowValue = {};
+    for (var m in abc) {
+      rowValue[j] = abc[m];
+      value[j] = m;
+      j++;
+    }
+    nc = j;
+    matrix[i] = rowValue;
+  }
+  var names = {};
+  var j= 0;
+  for (j = 0; j <= nc - 1; j++) {
+    var s = new Set();
+    for (i = 0; i <= cl - 1; i++ ) {
+      s.add(Math.floor(Number(matrix[i][j])));
+    }
+    if (s.size >= 5) {
+      var arr = Array.from(s);
+      var minv, maxv;
+      minv = arr[0];
+      maxv = arr[0];
+      for (var ch in arr) {
+        minv = Math.min(minv,arr[ch]);
+        maxv = Math.max(maxv,arr[ch]);
+      }
+      range = maxv - minv;
+      var interval = range/10;
+
+      var countRange = {};
+      var p = 0;
+      for (p = 0; p <= 9; p++) {
+        countRange[p] = 0;
+      }
+    var rangeArray = {};
+    for (var ch in arr) {
+        var val = arr[ch];
+        var diff = val - minv;
+        var part = Math.floor(diff/interval);
+        if (arr[ch] == maxv) {
+          countRange[part-1]++;
+          continue;
+        }
+        countRange[part]++;
+      }
+      var rangeArray = {};
+      for (var m in countRange) {
+        v1 = minv + m*interval;
+        v2 = v1 + interval;
+        v1 = v1.toString();
+        v2 = v2.toString();
+        rangeArray[v1] = countRange[m];
+      }
+    }
+    names[value[j]] = rangeArray; 
+  }
+  console.log(names);
+  return names;
 }
 
 
