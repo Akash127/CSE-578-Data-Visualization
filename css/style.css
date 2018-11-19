@@ -11,11 +11,11 @@
 svg:not(:root){overflow: visible!important;}
 .y-top{  
     margin-left: 84px;    margin-top: 50px;position: absolute;overflow: visible;}
-.y-bottom{margin-top: 559px;
+.y-bottom{margin-top: 514px;
     margin-left: 84px;position: absolute; }
-.x-left{    margin-top: 700px;
+.x-left{    margin-top: 643px;
     margin-left: 232px;position: absolute;overflow: visible;}
-.x-right{margin-top: 700px;margin-left:739px;position: absolute;overflow: visible;}
+.x-right{margin-top: 643px;margin-left:739px;position: absolute;overflow: visible;}
 
 #chart-area1{
     position: absolute;    
@@ -49,18 +49,17 @@ table{
     margin-top: 50px */
 }
 
-.dropdowns{
-    margin-left: -202px;
-    margin-top: 42px;
+.dropdowns{   margin-left: 380px;
+    margin-top: 680px;
+    position: absolute;
 }
+
 
 #select1{
     width: 100px;
-    margin-left: 262px;
 }
 #select{
     width: 100px;
-    margin-left: 262px;
 }
 
 
@@ -94,8 +93,42 @@ table{
 .selected{fill: #73AD21}
 
 .show {display: block;}
-.left-section{    margin-left: -31px; overflow: visible;}
+.left-section{    margin-left: -8px; overflow: visible;}
 .mid-section{    margin-left: -141px;}
 .right-section{
     margin-left: 390px;
+}
+.xAxis,.yAxis{width: 250px;}
+
+/* Lasso Styles */
+
+.lasso path {
+    stroke: rgb(80,80,80);
+    stroke-width:2px;
+}
+
+.lasso .drawn {
+    fill-opacity:.05 ;
+}
+
+.lasso .loop_close {
+    fill:none;
+    stroke-dasharray: 4,4;
+}
+
+.lasso .origin {
+    fill:#3399FF;
+    fill-opacity:.5;
+}
+
+.not_possible {
+    fill: rgb(200,200,200);
+}
+
+.possible {
+    fill: #EC888C;
+}
+
+.selected {
+    fill: steelblue;
 }
