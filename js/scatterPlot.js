@@ -41,8 +41,8 @@ ScatterPlot.prototype.init = function() {
   var vis = this;
   vis.margin = {left:50, right:50, top:50, bottom:50};
 
-  vis.width = 700 - vis.margin.left - vis.margin.right;
-  vis.height = 650 - vis.margin.top - vis.margin.bottom;
+  vis.width = 600 - vis.margin.left - vis.margin.right;
+  vis.height = 550 - vis.margin.top - vis.margin.bottom;
 
   vis.svg = d3.select(vis.containerClassName).append("svg")
     .attr("width", vis.width + vis.margin.left + vis.margin.right)
@@ -617,6 +617,48 @@ function saveCluster() {
     console.log("CLUSTER ADDED")
   }
   console.log(clusterMap)
+  addToCompare();
+}
+function addToCompare() {
+  viewBox1="350 78 710 1300"
+  viewBox2="350 -250 700 1300"
+  viewBox3="350 -580 700 1300"
+  viewBox4="350 -900 700 1300"
+var temp=$("#ToCompare1>svg");
+var temp1=$("#ToCompare2>svg");
+var temp2=$("#ToCompare3>svg");
+
+$("#ToCompare1").empty();
+$("#ToCompare1").append('<input type="checkbox" class="FirstC">');
+$("#chart-area1>svg").clone().appendTo("#ToCompare1");
+$("#ToCompare2").empty();
+$("#ToCompare2").append('<input type="checkbox" class="SecondC">');
+$("#ToCompare2").append(temp);
+$("#ToCompare3").empty();
+$("#ToCompare3").append('<input type="checkbox" class="ThirdC">');
+$("#ToCompare3").append(temp1);
+$("#ToCompare4").empty();
+$("#ToCompare4").append('<input type="checkbox" class="FourthC">');
+$("#ToCompare4").append(temp2);
+if($("#ToCompare1>svg").length!=0) {
+  document.getElementById("ToCompare1").childNodes[1].setAttribute("viewBox",viewBox1);
+}
+else $("#ToCompare1").empty();
+
+if($("#ToCompare2>svg").length!=0){
+  document.getElementById("ToCompare2").childNodes[1].setAttribute("viewBox",viewBox2 );
+}
+else $("#ToCompare2").empty();
+
+if($("#ToCompare3>svg").length!=0){
+  document.getElementById("ToCompare3").childNodes[1].setAttribute("viewBox",viewBox3 );
+}
+else $("#ToCompare3").empty();
+
+if($("#ToCompare4>svg").length!=0){
+  document.getElementById("ToCompare4").childNodes[1].setAttribute("viewBox",viewBox4  );
+}
+else $("#ToCompare4").empty();
 }
 
 // Function to Check if Cluster is Valid or Not
@@ -624,4 +666,7 @@ function isValid(clusterData) {
   if(clusterData.length > 0)
     return true;
   else return false;
+}
+function toggleSideBar(){
+  $('#sidebar').toggleClass('active');
 }
