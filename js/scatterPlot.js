@@ -44,8 +44,8 @@ ScatterPlot.prototype.init = function() {
   var vis = this;
   vis.margin = {left:50, right:50, top:50, bottom:50};
 
-  vis.width = 700 - vis.margin.left - vis.margin.right;
-  vis.height = 650 - vis.margin.top - vis.margin.bottom;
+  vis.width = 600 - vis.margin.left - vis.margin.right;
+  vis.height = 550 - vis.margin.top - vis.margin.bottom;
 
   vis.svg = d3.select(vis.containerClassName).append("svg")
     .attr("width", vis.width + vis.margin.left + vis.margin.right)
@@ -60,6 +60,8 @@ ScatterPlot.prototype.init = function() {
 
   // Initiating Scales for Axis and Inverted Axis
 
+  var x_dropdown=document.getElementById('select').value;
+  var y_dropdown=document.getElementById('select1').value;
   vis.xScale = d3.scaleLinear()
     .range([0, vis.width])
     .domain([xmin,xmax])
@@ -69,7 +71,7 @@ ScatterPlot.prototype.init = function() {
     .domain([ymin, ymax])
   
   //Create copy of scales for zoom to work with
-  vis.copyX = vis.xScale.copy();  
+  vis.copyX = vis.xScale.copy();    
   vis.copyY = vis.yScale.copy();
   
   // Creating and Adding Axis
@@ -140,15 +142,13 @@ ScatterPlot.prototype.init = function() {
     .attr("d", vis.xOrigin(lineData))
     .attr("class", "xOriginLine")
     .attr("clip-path", "url(#clip)")
-  
-  // Adding Axis Labels
+    // Adding Axis Labels
   vis.scatterPlotGroup.append("text")
-    .text(vis.columns[initX])
+    .text(x_dropdown=="default"? vis.columns[initX]:x_dropdown)
     .attr("y", vis.height + 50)
     .attr("x", vis.width/2)
     .attr("class", "x-axis-label")
     .attr("font-size", "18px")
-
   vis.scatterPlotGroup.append("text")
     .text(vis.columns[initY])
     .attr("x", -vis.height/2 - 50)
@@ -171,7 +171,20 @@ ScatterPlot.prototype.init = function() {
 //#endregion
 
 //#region Draw visualisation
-
+$(document).ready(function(){
+  $($("#chart-area1>svg>rect"),$("#clip>rect")).on("click",function()
+  {
+    if($(".d3-tip").css('opacity')==1) 
+    {
+      $(".d3-tip").css('opacity',"0");
+      $(".tool-tip").attr("disabled",true)
+      selected.classed("selected",false);
+      selected=null;
+    }
+  });
+});
+ 
+  
 ScatterPlot.prototype.processData = function() {
   var vis = this;
   this.data.forEach(d=>{
@@ -182,20 +195,20 @@ ScatterPlot.prototype.processData = function() {
 }
 
 ScatterPlot.prototype.drawvis = function() {
-  console.log("[IN_DRAWVIS]");
+ // console.log("[IN_DRAWVIS]");
   var vis = this;
 
   // Tooltip
     tip = d3.tip().attr('class', 'd3-tip')
      .html(function(d) {
       $(this).addClass("selected");
-         selected=d3.selectAll('.selected');
+         selected=d3.selectAll('#chart-area1 .selected');
          selectedElement=this;
          selectedProperties=d;
-       var text = "<button class='btn btn-sm btn-secondary mr-1' onclick=x_left_click()>Drop in X-Low</button>"
-       +"<button class='btn btn-sm btn-secondary mr-1' onclick=x_right_click()>Drop in X-High</button>"
-       +"<button class='btn btn-sm btn-secondary mr-1' onclick=y_top_click()>Drop in Y-High</button>"
-      +"<button class='btn btn-sm btn-secondary' onclick=y_bottom_click()>Drop in Y-Low</button>"
+       var text = "<button class='btn tool-tip btn-sm btn-secondary mr-1' onclick=x_left_click()>Drop in X-Low</button>"
+       +"<button class='btn tool-tip  btn-sm btn-secondary mr-1' onclick=x_right_click()>Drop in X-High</button>"
+       +"<button class='btn tool-tip btn-sm btn-secondary mr-1' onclick=y_top_click()>Drop in Y-High</button>"
+      +"<button class='btn tool-tip btn-sm btn-secondary' onclick=y_bottom_click()>Drop in Y-Low</button>"
        return text;
      });
    vis.scatterPlotGroup.call(tip);
@@ -231,10 +244,19 @@ ScatterPlot.prototype.drawvis = function() {
 
 //#region zoom
 function zoomed (vis) {
-
+var toolTipVar=$(".d3-tip");
   //if tooltip is showing 
+  $(".d3-tip").each((element)=>{
+    if($(toolTipVar[element]).css('opacity')==1) {
+      $(toolTipVar[element]).css('opacity',"0");
+      $(".tool-tip").attr("disabled",true)
+      selected.classed("selected",false);
+      selected=null;
+    }
+  })
   if($(".d3-tip").css('opacity')==1) {
     $(".d3-tip").css('opacity',"0");
+    $(".tool-tip").attr("disabled",true)
     selected.classed("selected",false);
     selected=null;
   }
@@ -276,6 +298,7 @@ function zoomed (vis) {
 //#region ToolTip click functions
 function x_left_click(){
    $(".d3-tip").css('opacity',"0");
+   $(".tool-tip").attr("disabled",true)
   var cln = selectedElement.cloneNode(true);
   cln.removeAttribute("class");
   cln.classList.add("in-x-left");
@@ -298,6 +321,7 @@ function x_left_click(){
 
 function x_right_click(){
    $(".d3-tip").css('opacity',"0");
+   $(".tool-tip").attr("disabled",true)
   var cln = selectedElement.cloneNode(true);
   cln.removeAttribute("class");
   cln.classList.add("in-x-right");
@@ -319,6 +343,7 @@ function x_right_click(){
 
 function y_top_click(){
    $(".d3-tip").css('opacity',"0");
+   $(".tool-tip").attr("disabled",true)
   var cln = selectedElement.cloneNode(true);
   cln.removeAttribute("class");
   cln.classList.add("in-y-top");
@@ -337,6 +362,7 @@ function y_top_click(){
 }
 function y_bottom_click(){
    $(".d3-tip").css('opacity',"0");
+   $(".tool-tip").attr("disabled",true)
   var cln = selectedElement.cloneNode(true);
   cln.removeAttribute("class");
   cln.classList.add("in-x-top");
@@ -355,13 +381,13 @@ function y_bottom_click(){
 }
 //#endregion
 
-//#region Graph Updation real work starts her
+//#region Graph Updation real work starts here
 
 updategraph_util = function(axis) {
   if(axis == "X" && x_left_dropzone.length != 0 && x_right_dropzone.length != 0) {
-    scatterPlot.updategraph('X', x_right_dropzone, x_left_dropzone)
+    scatterPlot.updategraph('X', x_right_dropzone, x_left_dropzone);
   } else if(axis == "Y" && y_top_dropzone.length != 0 && y_bottom_dropzone.length != 0) {
-    scatterPlot.updategraph('Y', y_top_dropzone, y_bottom_dropzone)
+    scatterPlot.updategraph('Y', y_top_dropzone, y_bottom_dropzone);
   }
 }
 
@@ -398,7 +424,7 @@ if(Vgiven==undefined){
     V[attr[i]] = 0;
     Vchanged[attr[i]] = 0;
   }
-  //calxxxulating norm 
+  //calculating norm 
   for (var i = 0; i<attrNo; i++) {
     V[attr[i]] = x0[attr[i]]-x1[attr[i]];
     norm = norm + (x0[attr[i]]-x1[attr[i]])*(x0[attr[i]]-x1[attr[i]]);
@@ -433,16 +459,20 @@ else
 }
 
 //making new axis
+chartdata=[];
    index = index + 1; 
    newxname = 'x'+index;
+   for(var j=0;j<18;j++)       chartdata.push(V[attr[j]]);
    data.forEach(function(d) {
     d["coord"][newxname] = 0; 
     for (var j = 0; j<18; j++) {
       d["coord"][newxname] = d["coord"][newxname] + V[attr[j]]*d["coord"][attr[j]];
     }
   });
-
+  axis=="X"?chart.series[0].setData(chartdata):chartRight.series[0].setData(chartdata);
   data.forEach(function(d) {d[axis=="X" ? "x" : "y"] = d["coord"][newxname]; });
+  if(axis=="X") $('.x-axis-label').text(newxname);
+  if(axis=="Y") $('.y-axis-label').text(newxname);
   this.drawvis();
 }
 ScatterPlot.prototype.updategraphOnDropdownChange=function(axis,index,Vgiven){
@@ -465,7 +495,10 @@ ScatterPlot.prototype.updategraphOnDropdownChange=function(axis,index,Vgiven){
    }
  });
  this.data.forEach(function(d) {d[axis=="X" ? "x" : "y"] = d["coord"][newxname]; });
+  if(axis=="X") $('.x-axis-label').text(newxname);
+ if(axis=="Y") $('.y-axis-label').text(newxname);
  this.drawvis();
+
 }
 //#endregion
 
@@ -556,17 +589,16 @@ function toggle_lasso() {
     scatterPlot.lassoArea = scatterPlot.scatterPlotGroup.append("rect")
     .attr("width", scatterPlot.width)
     .attr("height", scatterPlot.height)
-    // .style("fill", "none")
     .style("opacity", 0)
-    // .style("pointer-events", "all")
-    // .attr('transform', 'translate(' + scatterPlot.margin.left + ',' + scatterPlot.margin.top + ')')
     scatterPlot.lasso.targetArea(scatterPlot.lassoArea)
     scatterPlot.scatterPlotGroup.call(scatterPlot.lasso);
     document.getElementById("lassoToggle").innerHTML = "Activate Zoom";
+    $("#SaveClusterBtn").removeAttr("disabled");
   } else {
     console.log("Lasso Deactivated!");
     isLassoActivated = false;
-    scatterPlot.lassoArea.remove();
+   if(scatterPlot.lassoArea) scatterPlot.lassoArea.remove();
+    $("#SaveClusterBtn").attr("disabled","disabled");
     document.getElementById("lassoToggle").innerHTML = "Activate Lasso";
     // Change Selected Items color if not
 
@@ -609,6 +641,49 @@ function saveCluster() {
     console.log("CLUSTER ADDED")
   }
   console.log(clusterMap)
+  addToCompare();
+  chooseClusterDropdown();
+}
+function addToCompare() {
+  viewBox1="350 78 710 1290"
+  viewBox2="350 -250 700 1290"
+  viewBox3="350 -580 700 1290"
+  viewBox4="350 -900 700 1290"
+var temp=$("#ToCompare1>svg");
+var temp1=$("#ToCompare2>svg");
+var temp2=$("#ToCompare3>svg");
+
+$("#ToCompare1").empty();
+$("#ToCompare1").append('<input type="checkbox" class="A">');
+$("#chart-area1>svg").clone().appendTo("#ToCompare1");
+$("#ToCompare2").empty();
+$("#ToCompare2").append('<input type="checkbox" class="B">');
+$("#ToCompare2").append(temp);
+$("#ToCompare3").empty();
+$("#ToCompare3").append('<input type="checkbox" class="C">');
+$("#ToCompare3").append(temp1);
+$("#ToCompare4").empty();
+$("#ToCompare4").append('<input type="checkbox" class="D">');
+$("#ToCompare4").append(temp2);
+if($("#ToCompare1>svg").length!=0) {
+  document.getElementById("ToCompare1").childNodes[1].setAttribute("viewBox",viewBox1);
+}
+else $("#ToCompare1").empty();
+
+if($("#ToCompare2>svg").length!=0){
+  document.getElementById("ToCompare2").childNodes[1].setAttribute("viewBox",viewBox2 );
+}
+else $("#ToCompare2").empty(),$("#ToCompare2").html("CLuster 2");
+
+if($("#ToCompare3>svg").length!=0){
+  document.getElementById("ToCompare3").childNodes[1].setAttribute("viewBox",viewBox3 );
+}
+else $("#ToCompare3").empty(),$("#ToCompare3").html("CLuster 3");
+
+if($("#ToCompare4>svg").length!=0){
+  document.getElementById("ToCompare4").childNodes[1].setAttribute("viewBox",viewBox4  );
+}
+else $("#ToCompare4").empty(),$("#ToCompare4").html("CLuster 4");
 }
 
 // Function to Check if Cluster is Valid or Not
@@ -617,7 +692,9 @@ function isValid(clusterData) {
     return true;
   else return false;
 }
-
+function toggleSideBar(){
+  $('#sidebar').toggleClass('active');
+}
 // Function to return cluster summary
 function getClusterSummary(clusterData) {
   var categoricalSummary = {};
@@ -738,7 +815,6 @@ function getContinuousSummary(clusterData) {
   return names;
 }
 
-
 // Function to Sort Dictionary and return top 5 values
 function sortDictionaryByValue(dict) {
   
@@ -768,4 +844,17 @@ function getUnique(attr) {
     uniqueHash[type_category] = 0;
   })
   return uniqueHash
+}
+
+function onCompareClusterClick(){
+  if($("input[type='checkbox']:checked").length==1)
+    alert("Select 2 clusters to compare");
+  else if($("input[type='checkbox']:checked").length==2){
+  
+   chooseCompDropdown();
+   $('#exampleModalCenter').modal('show');
+  }
+  else{
+    alert("You can select only 2 clusters to compare");
+  }
 }

@@ -11,11 +11,11 @@
 svg:not(:root){overflow: visible!important;}
 .y-top{  
     margin-left: 84px;    margin-top: 50px;position: absolute;overflow: visible;}
-.y-bottom{margin-top: 514px;
+.y-bottom{margin-top: 409px;
     margin-left: 84px;position: absolute; }
-.x-left{    margin-top: 643px;
+.x-left{    margin-top: 546px;
     margin-left: 232px;position: absolute;overflow: visible;}
-.x-right{margin-top: 643px;margin-left:739px;position: absolute;overflow: visible;}
+.x-right{margin-top: 546px;margin-left:644px;position: absolute;overflow: visible;}
 
 #chart-area1{
     position: absolute;    
@@ -45,24 +45,32 @@ table{
 }
 
 .left-bars{
-    /* margin-left: 20px;
-    margin-top: 50px */
+ margin-left:16px;
 }
-
+.right-bars{
+    margin-left:16px;
+}
 .dropdowns{   margin-left: 380px;
-    margin-top: 680px;
+    margin-top: 589px;
     position: absolute;
 }
-
-
+.card{margin-left:800px}
+.compare{
+    width: 268px;
+    height: 224px;
+    border-style: groove;
+    
+}
 #select1{
     width: 100px;
 }
 #select{
     width: 100px;
 }
-
-
+#CompareDivTable{
+    margin-left:5px;
+}
+.compare>svg{margin-left:10px;}
 .tick {
     color: #787878;
     stroke-width: 0.2px;
@@ -93,10 +101,10 @@ table{
 .selected{fill: #73AD21}
 
 .show {display: block;}
-.left-section{    margin-left: -8px; overflow: visible;}
-.mid-section{    margin-left: -141px;}
+.left-section{    margin-left: -8px; overflow: visible;margin-right: 45px;}
+.mid-section{margin-left: -154px;}
 .right-section{
-    margin-left: 390px;
+    margin-left: 219px;
 }
 .xAxis,.yAxis{width: 250px;}
 
@@ -132,3 +140,21 @@ table{
 .selected {
     fill: steelblue;
 }
+.wrapper {
+    display: flex;
+    width: 100%;
+    align-items: stretch;
+}
+#sidebar{
+    width: 321px;
+    background-color: #e15707;
+}
+#sidebar.active {
+    margin-left: -320px;
+}
+#main-content{width:100%}
+.compare{background-color: cornsilk;}
+#ToCompare1 svg{margin-top:-6px}
+#ToCompare2 svg{margin-top:-146px}
+#ToCompare3 svg{margin-top:-286px}
+#ToCompare4 svg{margin-top:-420px}

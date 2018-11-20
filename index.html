@@ -7,6 +7,8 @@
 <script src="https://code.highcharts.com/highcharts.js"></script>
 <script src="https://code.highcharts.com/modules/draggable-points.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvg/dist/browser/canvg.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/canvg/1.4/rgbcolor.min.js"></script>
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="css/bootstrap.min.css">
     <link rel="stylesheet" href="css/d3-tip-style.css">
@@ -16,20 +18,45 @@
     <title>Inter Axis</title>
   </head>
   <body>
+<div class="wrapper">
+<nav id="sidebar" class="active">
+<div class="sidebar-header">
+            <h2>Last 4 clusters</h2>
+        </div>
+  <div class="sidebar-content">
+  <div id="ToCompare1" class="compare">Cluster 1</div>
+  <div id="ToCompare2" class="compare">Cluster 2</div>
+  <div id="ToCompare3" class="compare">Cluster 3</div>
+  <div id="ToCompare4" class="compare">Cluster 4</div> 
+  </div>
+      <button type="button" onclick="onCompareClusterClick()" class="btn btn-secondary mt-2 btn-sm" >
+      Compare Clusters
+    </button>
+</nav>
+<div id="main-content">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container-fluid">
 
+            <button type="button" id="sidebarCollapse" onclick="toggleSideBar()" class="btn btn-info">
+                <i class="fas fa-align-left"></i>
+                <span>Toggle Sidebar</span>
+            </button>
+
+        </div>
+    </nav>
   <div class="row">
   <div class="left-section container  col-md-4 ">
       <div class="left-bars " id="left-bars"></div>    
       <div class="right-bars" id="right-bars"></div>
   </div>
-  <div class=" mid-section col-md-4">
+  <div class=" mid-section col-md-5">
         <div class="column">
-        <svg width="200" height="110" class="box y-top"></svg>
-        <svg width="200" height="110" class="box y-bottom"></svg>
+        <svg width="150" height="110" class="box y-top"></svg>
+        <svg width="10" height="110" class="box y-bottom"></svg>
         </div >
         <div class="row">
-        <svg width="200" height="110" class="box x-left"></svg>
-        <svg width="200" height="110" class="box x-right"></svg>
+        <svg width="150" height="110" class="box x-left"></svg>
+        <svg width="150" height="110" class="box x-right"></svg>
         </div>
         <div class="" id="chart-area1"></div>
 
@@ -48,13 +75,11 @@
       <button class="btn btn-secondary btn-sm mt-2" onclick="SaveY()">Save Y</button>
       <button class="btn btn-secondary btn-sm mt-2" onclick="ClearY()">Clear Y</button>
   </div> 
-  <div class="util-buttons">
+  <div class="util-buttons btn-group">
     <button class="btn btn-secondary mt-2 btn-sm" id="lassoToggle"onclick="toggle_lasso()">Activate Lasso</button>
-    <button class="btn btn-secondary mt-2 btn-sm" onclick="saveCluster()">Save Cluster</button>
+    <button class="btn btn-secondary mt-2 btn-sm" onclick="saveCluster()" data-toggle="modal" id="SaveClusterBtn" disabled="disabled" data-target="#onSaveCluster">Analyze and Save Cluster</button>
     <!-- Button trigger modal -->
-    <button type="button" class="btn btn-secondary mt-2 btn-sm" data-toggle="modal" data-target="#exampleModalCenter">
-      Comapare Clusters
-    </button>
+    
   </div>
   </div>
   </div> 
@@ -64,13 +89,23 @@
       <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLongTitle">Cluster Analysis</h5>
+            <h5 class="modal-title" id="exampleModalLongTitle">Compare Selected Clusters</h5>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
           </div>
           <div class="modal-body">
-            <p>Show Cluster Comparison Graphs Below</p>
+          <div class="column">
+          <div class="dropDowninModal">
+            <select id="selectComp" onchange = "chooseCompDropdown()">
+            </select>
+          </div>
+          <div class="row">
+          <div id="1CompChart" style="min-width: 310px; height: 400px; max-width: 600px; margin: 0 auto"></div>
+          <div id="2CompChart" style="min-width: 310px; height: 400px; max-width: 600px; margin: 0 auto"></div>
+           
+          </div>
+          </div>
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -79,17 +114,36 @@
         </div>
       </div>
     </div>
-  </div>
+     <div class="modal fade" id="onSaveCluster" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLongTitle">Cluster Analysis</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+          <div class="column">
+          <div class="dropDowninModal">
+            <select id="selectCluster" onchange = "chooseClusterDropdown()">
+            </select>
+          </div>
+           <div id="ClusterChart" style="min-width: 310px; height: 400px; max-width: 600px; margin: 0 auto"></div>
+            
+          </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <!-- <button type="button" class="btn btn-primary">Save changes</button> -->
+          </div>
+        </div>
+      </div>
+    </div>
 
-<script>
-function myFunc() {
-    document.getElementById("myDropdown").classList.toggle("show");
-}
-function myFunction() {
-                var btn = document.createElement("BUTTON");
-                document.body.appendChild(btn);
-        }
-  </script>
+</div>
+</div>
+
     <!-- External JS Libraries -->
     <!-- <script src="js/jquery-3.3.1.min.js"></script> -->
     <script src="js/d3.min.js"></script>
@@ -99,8 +153,8 @@ function myFunction() {
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
     <!-- Custom JS Libraries -->
-    <script src="js/highcharts-helper.js"></script>
     <script src="js/scatterPlot.js"></script>
+    <script src="js/highcharts-helper.js"></script>
     <script src="js/desc.js"></script>
     <script src="js/main.js"></script>
  

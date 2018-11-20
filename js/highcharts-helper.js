@@ -1,387 +1,312 @@
-/**
- * Draggable points plugin for Highcharts JS
- * Author: Torstein Honsi
- * License: MIT License
- * Version: 2.0.4 (2016-05-23)
- */
-
-/*global document, Highcharts */
-(function (factory) {
-    if (typeof module === 'object' && module.exports) {
-        module.exports = factory;
-    } else {
-        factory(Highcharts);
-    }
-}(function (Highcharts) {
-
-    'use strict';
-
-    var addEvent = Highcharts.addEvent,
-        each = Highcharts.each,
-        pick = Highcharts.pick;
-
-
-    /**
-     * Filter by dragMin and dragMax
-     */
-    function filterRange(newY, series, XOrY) {
-        var options = series.options,
-            dragMin = pick(options['dragMin' + XOrY], undefined),
-            dragMax = pick(options['dragMax' + XOrY], undefined),
-            precision = pick(options['dragPrecision' + XOrY], undefined);
-
-        if (!isNaN(precision)) {
-            newY = Math.round(newY / precision) * precision;
-        }
-
-        if (newY < dragMin) {
-            newY = dragMin;
-        } else if (newY > dragMax) {
-            newY = dragMax;
-        }
-        return newY;
-    }
-
-
-    Highcharts.Chart.prototype.callbacks.push(function (chart) {
-
-        var container = chart.container,
-            dragPoint,
-            dragStart,
-            dragX,
-            dragY,
-            dragPlotX,
-            dragPlotY,
-            dragPlotHigh,
-            dragPlotLow,
-            changeLow,
-            newHigh,
-            newLow;
-
-        /**
-         * Get the new values based on the drag event
-         */
-        function getNewPos(e) {
-            var originalEvent = e.originalEvent || e,
-                pageX = originalEvent.changedTouches ? originalEvent.changedTouches[0].pageX : e.pageX,
-                pageY = originalEvent.changedTouches ? originalEvent.changedTouches[0].pageY : e.pageY,
-                series = dragPoint.series,
-                draggableX = series.options.draggableX && dragPoint.draggableX !== false,
-                draggableY = series.options.draggableY && dragPoint.draggableY !== false,
-                dragSensitivity = pick(series.options.dragSensitiviy, 1),
-                deltaX = draggableX ? dragX - pageX : 0,
-                deltaY = draggableY ? dragY - pageY : 0,
-                newPlotX = dragPlotX - deltaY,
-                newPlotY = dragPlotY - deltaX,
-                newX = dragX === undefined ? dragPoint.x : series.xAxis.toValue(newPlotX, true),
-                newY = dragY === undefined ? dragPoint.y : series.yAxis.toValue(newPlotY, true),
-                ret;
-
-            newX = filterRange(newX, series, 'Y');
-            newY = filterRange(newY, series, 'X');
-
-            if (dragPoint.low) {
-                var newPlotHigh = dragPlotHigh - deltaY,
-                    newPlotLow = dragPlotLow - deltaY;
-                newHigh = dragY === undefined ? dragPoint.high : series.yAxis.toValue(newPlotHigh, true);
-                newLow = dragY === undefined ? dragPoint.low : series.yAxis.toValue(newPlotLow, true);
-                newHigh = filterRange(newHigh, series, 'Y');
-                newLow = filterRange(newLow, series, 'Y');
-            }
-            if (Math.sqrt(Math.pow(deltaX, 2) + Math.pow(deltaY, 2)) > dragSensitivity) {
-                return {
-                    x: draggableY ? newX : dragPoint.x,
-                    y: draggableX ? newY : dragPoint.y,
-                    high: (draggableY && !changeLow) ? newHigh : dragPoint.high,
-                    low: (draggableY && changeLow) ? newLow : dragPoint.low,
-                };
-            } else {
-                return null;
-            }
-        }
-
-        /**
-         * Handler for mouseup
-         */
-        function drop(e) {
-            var newPos;
-            if (dragPoint) {
-                if (e) {
-                    newPos = getNewPos(e);
-                    if (newPos) {
-                        dragPoint.update(newPos);
-
-                        // Update k-d-tree immediately to prevent tooltip jump (#43)
-                        dragPoint.series.options.kdNow = true;
-                        dragPoint.series.buildKDTree();
-                    }
-                }
-                if (newPos) {
-                    newPos.dragStart = dragStart;
-                    dragPoint.firePointEvent('drop', newPos);
-                }
-            }
-            dragPoint = dragX = dragY = undefined;
-        }
-
-        /**
-         * Handler for mousedown
-         */
-        function mouseDown(e) {
-            var options,
-                originalEvent = e.originalEvent || e,
-                hoverPoint,
-                series;
-
-            if ((originalEvent.target.getAttribute('class') || '').indexOf('highcharts-handle') !== -1) {
-                hoverPoint = originalEvent.target.point;
-            }
-
-            series = chart.hoverPoint && chart.hoverPoint.series;
-            if (!hoverPoint && chart.hoverPoint && (!series.useDragHandle || !series.useDragHandle())) {
-                hoverPoint = chart.hoverPoint;
-            }
-
-            if (hoverPoint) {
-                options = hoverPoint.series.options;
-                dragStart = {};
-                if (options.draggableX && hoverPoint.draggableX !== false) {
-                    dragPoint = hoverPoint;
-                    dragX = originalEvent.changedTouches ? originalEvent.changedTouches[0].pageX : e.pageX;
-                    dragPlotX = dragPoint.plotX;
-                    dragStart.x = dragPoint.x;
-                }
-
-                if (options.draggableX && hoverPoint.draggableX !== false) {
-                    dragPoint = hoverPoint;
-
-                    dragY = originalEvent.changedTouches ? originalEvent.changedTouches[0].pageY : e.pageY;
-                    dragPlotY = chart.plotWidth - dragPoint.plotY;
-                    dragStart.y = dragPoint.y;
-                    if (dragPoint.plotHigh) {
-                        dragPlotHigh = dragPoint.plotHigh;
-                        dragPlotLow = dragPoint.plotLow;
-                        changeLow = (Math.abs(dragPlotLow - (dragY - 60)) < Math.abs(dragPlotHigh - (dragY - 60))) ? true : false;
-                    }
-                }
-
-                // Disable zooming when dragging
-                if (dragPoint) {
-                    chart.mouseIsDown = false;
-                }
-            }
-        }
-
-        /**
-         * Handler for mousemove. If the mouse button is pressed, drag the element.
-         */
-        function mouseMove(e) {
-
-            e.preventDefault();
-
-            if (dragPoint) {
-
-                var evtArgs = getNewPos(e), // Gets x and y
-                    proceed;
-
-                // Fire the 'drag' event with a default action to move the point.
-                if (evtArgs) {
-                    evtArgs.dragStart = dragStart;
-                    dragPoint.firePointEvent(
-                        'drag',
-                        evtArgs,
-                        function () {
-
-                            var kdTree,
-                                series = dragPoint.series;
-
-                            proceed = true;
-
-                            dragPoint.update(evtArgs, false);
-
-                            // Hide halo while dragging (#14)
-                            if (series.halo) {
-                                series.halo = series.halo.destroy();
-                            }
-
-                            // Let the tooltip follow and reflect the drag point
-                            if (chart.tooltip) {
-                                chart.tooltip.refresh(chart.tooltip.shared ? [dragPoint] : dragPoint);
-                            }
-
-                            // Stacking requires full redraw
-                            if (series.stackKey) {
-                                chart.redraw();
-
-                                // Do a series redraw only. Let the k-d-tree survive the redraw in order to
-                                // prevent tooltip flickering (#43).
-                            } else {
-
-                                kdTree = series.kdTree;
-                                series.redraw();
-                                series.kdTree = kdTree;
-                            }
-                        }
-                    );
-
-
-                    // The default handler has not run because of prevented default
-                    if (!proceed) {
-                        drop();
-                    }
-                }
-            }
-        }
-
-        // Kill animation on first drag when chart.animation is set to false.
-        chart.redraw();
-
-        // Add'em
-        addEvent(container, 'mousemove', mouseMove);
-        addEvent(container, 'touchmove', mouseMove);
-        addEvent(container, 'mousedown', mouseDown);
-        addEvent(container, 'touchstart', mouseDown);
-        addEvent(document, 'mouseup', drop);
-        addEvent(document, 'touchend', drop);
-        addEvent(container, 'mouseleave', drop);
-    });
-
-    /**
-     * Extend the column chart tracker by visualizing the tracker object for small points
-     */
-    Highcharts.seriesTypes.column.prototype.useDragHandle = function () {
-        var is3d = this.chart.is3d && this.chart.is3d();
-        return !is3d;
-    };
-
-    Highcharts.seriesTypes.column.prototype.dragHandlePath = function (shapeArgs, strokeW) {
-        var x1 = shapeArgs.x,
-            y = shapeArgs.y,
-            x2 = shapeArgs.x + shapeArgs.width;
-
-        return [
-            'M', x1, y + 6 * strokeW,
-            'L', x1, y,
-            'L', x2, y,
-            'L', x2, y + 2 * strokeW,
-            'L', x1, y + 2 * strokeW,
-            'L', x2, y + 2 * strokeW,
-            'L', x2, y + 4 * strokeW,
-            'L', x1, y + 4 * strokeW,
-            'L', x2, y + 4 * strokeW,
-            'L', x2, y + 6 * strokeW
-        ];
-    };
-
-    Highcharts.wrap(Highcharts.seriesTypes.column.prototype, 'drawTracker', function (proceed) {
-        var series = this,
-            options = series.options,
-            strokeW = series.borderWidth || 0;
-
-        proceed.apply(series);
-
-        if (this.useDragHandle() && (options.draggableX || options.draggableY)) {
-
-            each(series.points, function (point) {
-
-                var path = (options.dragHandlePath || series.dragHandlePath)(point.shapeArgs, strokeW);
-
-                if (!point.handle) {
-                    point.handle = series.chart.renderer.path(path)
-                        .attr({
-                            fill: options.dragHandleFill || 'rgba(0,0,0,0.5)',
-                            'class': 'highcharts-handle',
-                            'stroke-width': strokeW,
-                            'stroke': options.dragHandleStroke || options.borderColor || 1
-                        })
-                        .css({
-                            cursor: 'col-resize'
-                        })
-                        .add(series.group);
-
-                    point.handle.element.point = point;
-                } else {
-                    point.handle.attr({d: path});
-                }
-            });
-        }
-    });
-
-}));
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-var chart = new Highcharts.Chart({
-
-    chart: {
-        renderTo: 'left-bars',
-        animation: false
-    },
-    
-    title: {
-        text: 'Highcharts draggable points demo'
-    },
-
-    xAxis: {
-        categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
-    },
-
-    plotOptions: {
-        series: {
-            point: {
-                events: {
-
-                    drag: function (e) {
-                        // Returning false stops the drag and drops. Example:
-                        /*
-                        if (e.newY > 300) {
-                            this.y = 300;
-                            return false;
-                        }
-                        */
-
-                        $('#drag').html(
-                            'Dragging <b>' + this.series.name + '</b>, <b>' + this.category + '</b> to <b>' + Highcharts.numberFormat(e.y, 2) + '</b>');
-                    },
-                    drop: function () {
-                        $('#drop').html(
-                            'In <b>' + this.series.name + '</b>, <b>' + this.category + '</b> was set to <b>' + Highcharts.numberFormat(this.y, 2) + '</b>');
-                    }
-                }
-            },
-            stickyTracking: false
+//console.log(clusterMap);
+function chooseCompDropdown()
+{
+var FirstSelection=$($("input[type='checkbox']:checked")[0]).attr("class");
+var SecondSelection=$($("input[type='checkbox']:checked")[1]).attr("class");
+var firstData=clusterMap[FirstSelection];
+var SecondData=clusterMap[SecondSelection];
+//onsole.log(firstData,SecondData);
+var selectedDropdownValue=document.getElementById("selectComp").value;
+var CompareChart1=null;
+var CompareChart2=null;
+var isCategory=false;
+for(var i=0;i<categorialList.length;i++)
+{
+    if(categorialList[i]==selectedDropdownValue) isCategory=true;
+}
+if(isCategory){
+    data=firstData;
+    var newData=data["catSum"][selectedDropdownValue];
+    var newDataToUse=[];
+   
+    newDataToUse.push({'name':'Non-'+selectedDropdownValue,'y':newData['Non-'+selectedDropdownValue]});
+    newDataToUse.push({'name':selectedDropdownValue,'y':newData[selectedDropdownValue]});
+    console.log("A",newDataToUse,firstData);
+    CompareChart1=Highcharts.chart('1CompChart', {
+        chart: {
+            plotBackgroundColor: null,
+            plotBorderWidth: null,
+            plotShadow: false,
+            type: 'pie'
         },
-        bar: {
-            stacking: 'normal'
+        title: {
+            text: selectedDropdownValue+' Values for Cluster 1'
+        },
+        tooltip: {
+            pointFormat: '<b>{point.percentage:.1f}%</b>'
+        },
+        plotOptions: {
+            pie: {
+                allowPointSelect: true,
+                cursor: 'pointer',
+                dataLabels: {
+                    enabled: false
+                },
+                showInLegend: true
+            }
+        },
+        series: [{
+
+            colorByPoint: true,
+            data: []
+        }]
+    });
+CompareChart1.series[0].setData(newDataToUse);
+// Build the chart
+data1=SecondData;
+var newData1=data1["catSum"][selectedDropdownValue];
+var newDataToUse1=[];
+
+newDataToUse1.push({'name':'Non-'+selectedDropdownValue,'y':newData1['Non-'+selectedDropdownValue]});
+newDataToUse1.push({'name':selectedDropdownValue,'y':newData1[selectedDropdownValue]});
+console.log("B",newDataToUse1,SecondData);
+CompareChart2=Highcharts.chart('2CompChart', {
+    chart: {
+        plotBackgroundColor: null,
+        plotBorderWidth: null,
+        plotShadow: false,
+        type: 'pie'
+    },
+    title: {
+        text: selectedDropdownValue+' Values for Cluster 2'
+    },
+    tooltip: {
+        pointFormat: '<b>{point.percentage:.1f}%</b>'
+    },
+    plotOptions: {
+        pie: {
+            allowPointSelect: true,
+            cursor: 'pointer',
+            dataLabels: {
+                enabled: false
+            },
+            showInLegend: true
         }
     },
-
-    tooltip: {
-        yDecimals: 2
-    },
-
     series: [{
-        data: [0, 0,1,0.2,0.9,0,0,0,0,0,0,0,1],
-        //draggableX: true,
-        draggableX: true,
-        dragMinX: -1,
-        dragMaxX:1,
-        type: 'bar',
-        minPointLength: 2
-    }]
 
+        colorByPoint: true,
+        data: []
+    }]
 });
- function getChart(){
-     return chart;
- }
+CompareChart2.series[0].setData(newDataToUse1);
+}
+else
+{
+    data=firstData;
+    var newData=data["contSum"][selectedDropdownValue];
+    var newDataToUse=[],catToShow=[];
+    var cat=[],len=Object.keys(newData).length;
+    for(var i=0;i<len;i++)
+     cat.push(Object.keys(newData)[i]);
+   for(var i=0;i<len;i++)
+   {
+       newDataToUse.push(newData[cat[i]]);
+       if (i>0) catToShow.push(cat[i-1]+"-"+cat[i]); else catToShow.push("0-"+cat[0]);
+   }
+   //console.log(newData,firstData)
+CompareChart1=Highcharts.chart('1CompChart', {
+    chart: {
+        type: 'column'
+    },
+    title: {
+        text: selectedDropdownValue+' Values for Cluster 1'
+    },
+    subtitle: {
+        text: ''
+    },
+    xAxis: {
+        categories: [],
+        crosshair: true
+    },
+    yAxis: {
+        min: 0,
+        title: {
+            text: selectedDropdownValue
+        }
+    },
+    tooltip: {
+        formatter:function(){
+            return ('<b>'+this.x+'</b>:'+this.y);
+        },
+        shared: true,
+        useHTML: true
+    },
+    plotOptions: {
+        column: {
+            pointPadding: 0.2,
+            borderWidth: 0
+        }
+    },
+    series: [{
+        name: 'Value',
+        //data: [49.9, 71.5, 106.4, 129.2, 144.0, 176.0, 135.6, 148.5, 216.4, 194.1, 95.6, 54.4]
+    }]
+});
+//console.log(newDataToUse);
+CompareChart1.series[0].setData(newDataToUse);
+CompareChart1.xAxis[0].setCategories(catToShow);
+
+data1=SecondData;
+var newData1=data1["contSum"][selectedDropdownValue];
+var newDataToUse1=[],catToShow1=[];
+var cat1=[],len=Object.keys(newData1).length;
+for(var i=0;i<len;i++)
+ cat1.push(Object.keys(newData1)[i]);
+for(var i=0;i<len;i++)
+{
+   newDataToUse1.push(newData1[cat1[i]]);
+   if (i>0) catToShow1.push(cat1[i-1]+"-"+cat1[i]); else catToShow1.push("0-"+cat1[0]);
+}
+console.log(newDataToUse1);
+CompareChart2=Highcharts.chart('2CompChart', {
+chart: {
+    type: 'column'
+},
+title: {
+    text: selectedDropdownValue+' Values for Cluster 2'
+},
+subtitle: {
+    text: ''
+},
+xAxis: {
+    categories: [],
+    crosshair: true
+},
+yAxis: {
+    min: 0,
+    title: {
+        text: selectedDropdownValue
+    }
+},
+tooltip: {
+    formatter:function(){
+        return ('<b>'+this.x+'</b>:'+this.y);
+    },
+    shared: true,
+    useHTML: true
+},
+plotOptions: {
+    column: {
+        pointPadding: 0.2,
+        borderWidth: 0
+    }
+},
+series: [{
+    name: 'Value',
+    //data: [49.9, 71.5, 106.4, 129.2, 144.0, 176.0, 135.6, 148.5, 216.4, 194.1, 95.6, 54.4]
+}]
+});
+//console.log(newDataToUse);
+CompareChart2.series[0].setData(newDataToUse1);
+CompareChart2.xAxis[0].setCategories(catToShow1);
+}
+}
+
+
+function chooseClusterDropdown(){
+//console.log(data);
+data=clusterMap["A"];
+var selectedDropdownValue=document.getElementById("selectCluster").value;
+var ClusterChart=null;
+var isCategory=false;
+for(var i=0;i<categorialList.length;i++)
+{
+    if(categorialList[i]==selectedDropdownValue) isCategory=true;
+}
+
+if(isCategory)
+{
+    var newData=data["catSum"][selectedDropdownValue];
+    var newDataToUse=[];
+   
+    newDataToUse.push({'name':'Non-'+selectedDropdownValue,'y':newData['Non-'+selectedDropdownValue]});
+    newDataToUse.push({'name':selectedDropdownValue,'y':newData[selectedDropdownValue]});
+    console.log(newDataToUse);
+    ClusterChart=Highcharts.chart('ClusterChart', {
+        chart: {
+            plotBackgroundColor: null,
+            plotBorderWidth: null,
+            plotShadow: false,
+            type: 'pie'
+        },
+        title: {
+            text: selectedDropdownValue+' Values'
+        },
+        tooltip: {
+            pointFormat: '<b>{point.percentage:.1f}%</b>'
+        },
+        plotOptions: {
+            pie: {
+                allowPointSelect: true,
+                cursor: 'pointer',
+                dataLabels: {
+                    enabled: false
+                },
+                showInLegend: true
+            }
+        },
+        series: [{
+
+            colorByPoint: true,
+            data: []
+        }]
+    });
+    ClusterChart.series[0].setData(newDataToUse);
+}
+
+
+else{
+    var newData=data["contSum"][selectedDropdownValue];
+    var newDataToUse=[],catToShow=[];
+    var cat=[],len=Object.keys(newData).length;
+    for(var i=0;i<len;i++)
+     cat.push(Object.keys(newData)[i]);
+   for(var i=0;i<len;i++)
+   {
+       newDataToUse.push(newData[cat[i]]);
+       if (i>0) catToShow.push(cat[i-1]+"-"+cat[i]); else catToShow.push("0-"+cat[0]);
+   }
+ClusterChart=Highcharts.chart('ClusterChart', {
+    chart: {
+        type: 'column'
+    },
+    title: {
+        text: selectedDropdownValue+' Values'
+    },
+    subtitle: {
+        text:''
+    },
+    xAxis: {
+        categories: [],
+        crosshair: true
+    },
+    yAxis: {
+        min: 0,
+        title: {
+            text: selectedDropdownValue
+        }
+    },
+    tooltip: {
+        formatter:function(){
+            return ('<b>'+this.x+'</b>:'+this.y);
+        },
+        shared: true,
+        useHTML: true
+    },
+    plotOptions: {
+        column: {
+            pointPadding: 0.2,
+            borderWidth: 0
+        }
+    },
+    series: [{
+        name: 'Value',
+        //data: [49.9, 71.5, 106.4, 129.2, 144.0, 176.0, 135.6, 148.5, 216.4, 194.1, 95.6, 54.4]
+    }]
+});
+//console.log(newDataToUse);
+ClusterChart.series[0].setData(newDataToUse);
+ClusterChart.xAxis[0].setCategories(catToShow);
+}
+}
