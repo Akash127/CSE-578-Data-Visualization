@@ -149,13 +149,13 @@ table{
 }
 #sidebar{
     width: 321px;
-    background-color: #e15707;
+    background-color: #e79110;
 }
 #sidebar.active {
     margin-left: -320px;
 }
 #main-content{width:100%}
-.compare{background-color: cornsilk;}
+.compare{background-color:#e79110;}
 #ToCompare1 svg{margin-top:-6px}
 #ToCompare2 svg{margin-top:-146px}
 #ToCompare3 svg{margin-top:-286px}
