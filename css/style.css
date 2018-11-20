@@ -10,12 +10,13 @@
 }
 svg:not(:root){overflow: visible!important;}
 .y-top{  
-    margin-left: 84px;    margin-top: 50px;position: absolute;overflow: visible;}
+    margin-left: 84px;margin-top: 50px;position: absolute;overflow: visible;background-color: #1fcc1f;}
 .y-bottom{margin-top: 409px;
-    margin-left: 84px;position: absolute; }
+    margin-left: 84px;position: absolute; background-color: #1fcc1f;
+}
 .x-left{    margin-top: 546px;
-    margin-left: 232px;position: absolute;overflow: visible;}
-.x-right{margin-top: 546px;margin-left:644px;position: absolute;overflow: visible;}
+    margin-left: 232px;position: absolute;overflow: visible;background-color: #1fcc1f;}
+.x-right{margin-top: 546px;margin-left:644px;position: absolute;overflow: visible;background-color: #1fcc1f;}
 
 #chart-area1{
     position: absolute;    
@@ -50,7 +51,8 @@ table{
 .right-bars{
     margin-left:16px;
 }
-.dropdowns{   margin-left: 380px;
+.dropdowns{   
+    margin-left: 352px;
     margin-top: 589px;
     position: absolute;
 }
@@ -62,10 +64,10 @@ table{
     
 }
 #select1{
-    width: 100px;
+    width: 121px;
 }
 #select{
-    width: 100px;
+    width: 121px;
 }
 #CompareDivTable{
     margin-left:5px;
@@ -158,3 +160,5 @@ table{
 #ToCompare2 svg{margin-top:-146px}
 #ToCompare3 svg{margin-top:-286px}
 #ToCompare4 svg{margin-top:-420px}
+#selectComp{margin-left: 288px;width:25%;margin-top:-21px;background-color: lavender;}
+#selectCluster{margin-left: 288px;width:25%;margin-top:-21px;background-color: lavender;}

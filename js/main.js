@@ -44,6 +44,7 @@ chart = new Highcharts.Chart({
 
   plotOptions: {
       series: {
+        borderColor: '#303030',
           point: {
               events: {
 
@@ -118,6 +119,7 @@ chartRight = new Highcharts.Chart({
     
     plotOptions: {
         series: {
+            borderColor: '#303030',
             point: {
                 events: {
                     drag: function (e) {

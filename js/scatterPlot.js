@@ -229,10 +229,10 @@ ScatterPlot.prototype.drawvis = function() {
       .attr("class","dropdown")
       .attr("clip-path", "url(#clip)")
       .on("mouseover", pointSelected)
-      .attr("fill", "#FFB55F")
+      .attr("fill", "#f7b63f")
+      .style("stroke","#53443e")
       // .attr("fill", "#A4A4A4")
       .on("click",tip.show);
-  
       // Updating scatterplot
   vis.scatterPlotGroup.selectAll("circle").data(vis.data)
     .attr('cx', function(d) {return vis.xScale(+d['x'])})
@@ -672,18 +672,21 @@ else $("#ToCompare1").empty();
 
 if($("#ToCompare2>svg").length!=0){
   document.getElementById("ToCompare2").childNodes[1].setAttribute("viewBox",viewBox2 );
+  $("#ToCompare2").css("background-color","cornsilk").css("text-align","")
 }
-else $("#ToCompare2").empty(),$("#ToCompare2").html("CLuster 2");
+else $("#ToCompare2").empty(),$("#ToCompare2").html("Cluster 2 currently not present").css("background-color","#998f8f").css("text-align","center");
 
 if($("#ToCompare3>svg").length!=0){
   document.getElementById("ToCompare3").childNodes[1].setAttribute("viewBox",viewBox3 );
+  $("#ToCompare3").css("background-color","cornsilk").css("text-align","")
 }
-else $("#ToCompare3").empty(),$("#ToCompare3").html("CLuster 3");
+else $("#ToCompare3").empty(),$("#ToCompare3").html("Cluster 3 currently not present").css("background-color","#998f8f").css("text-align","center");
 
 if($("#ToCompare4>svg").length!=0){
   document.getElementById("ToCompare4").childNodes[1].setAttribute("viewBox",viewBox4  );
+  $("#ToCompare4").css("background-color","cornsilk").css("text-align","")
 }
-else $("#ToCompare4").empty(),$("#ToCompare4").html("CLuster 4");
+else $("#ToCompare4").empty(),$("#ToCompare4").html("Cluster 4 currently not present").css("background-color","#998f8f").css("text-align","center");
 }
 
 // Function to Check if Cluster is Valid or Not
