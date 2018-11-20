@@ -1,233 +1,28 @@
 //console.log(clusterMap);
 function chooseCompDropdown()
 {
+var FirstSelection=$($("input[type='checkbox']:checked")[0]).attr("class");
+var SecondSelection=$($("input[type='checkbox']:checked")[1]).attr("class");
+var firstData=clusterMap[FirstSelection];
+var SecondData=clusterMap[SecondSelection];
+//onsole.log(firstData,SecondData);
 var selectedDropdownValue=document.getElementById("selectComp").value;
-var ClusterChart=null;
+var CompareChart1=null;
+var CompareChart2=null;
 var isCategory=false;
 for(var i=0;i<categorialList.length;i++)
 {
     if(categorialList[i]==selectedDropdownValue) isCategory=true;
 }
 if(isCategory){
-Highcharts.chart('1CompChart', {
-    chart: {
-        plotBackgroundColor: null,
-        plotBorderWidth: null,
-        plotShadow: false,
-        type: 'pie'
-    },
-    title: {
-        text: 'Browser market shares in January, 2018'
-    },
-    tooltip: {
-        pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
-    },
-    plotOptions: {
-        pie: {
-            allowPointSelect: true,
-            cursor: 'pointer',
-            dataLabels: {
-                enabled: false
-            },
-            showInLegend: true
-        }
-    },
-    series: [{
-        name: 'Brands',
-        colorByPoint: true,
-        data: [{
-            name: 'Chrome',
-            y: 61.41,
-            sliced: true,
-            selected: true
-        }, {
-            name: 'Internet Explorer',
-            y: 11.84
-        }, {
-            name: 'Firefox',
-            y: 10.85
-        }, {
-            name: 'Edge',
-            y: 4.67
-        }, {
-            name: 'Safari',
-            y: 4.18
-        }, {
-            name: 'Other',
-            y: 7.05
-        }]
-    }]
-});
-// Build the chart
-Highcharts.chart('2CompChart', {
-    chart: {
-        plotBackgroundColor: null,
-        plotBorderWidth: null,
-        plotShadow: false,
-        type: 'pie'
-    },
-    title: {
-        text: 'Browser market shares in January, 2018'
-    },
-    tooltip: {
-        pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
-    },
-    plotOptions: {
-        pie: {
-            allowPointSelect: true,
-            cursor: 'pointer',
-            dataLabels: {
-                enabled: false
-            },
-            showInLegend: true
-        }
-    },
-    series: [{
-        name: 'Brands',
-        colorByPoint: true,
-        data: [{
-            name: 'Chrome',
-            y: 61.41,
-            sliced: true,
-            selected: true
-        }, {
-            name: 'Internet Explorer',
-            y: 11.84
-        }, {
-            name: 'Firefox',
-            y: 10.85
-        }, {
-            name: 'Edge',
-            y: 4.67
-        }, {
-            name: 'Safari',
-            y: 4.18
-        }, {
-            name: 'Other',
-            y: 7.05
-        }]
-    }]
-});
-}
-else
-{
-    Highcharts.chart('1CompChart', {
-        chart: {
-            type: 'column'
-        },
-        title: {
-            text: 'Monthly Average Rainfall'
-        },
-        subtitle: {
-            text: 'Source: WorldClimate.com'
-        },
-        xAxis: {
-            categories: [
-                'Jan',
-                'Feb',
-                'Mar',
-                'Apr',
-                'May',
-                'Jun',
-                'Jul',
-                'Aug',
-                'Sep',
-                'Oct',
-                'Nov',
-                'Dec'
-            ],
-            crosshair: true
-        },
-        yAxis: {
-            min: 0,
-            title: {
-                text: 'Rainfall (mm)'
-            }
-        },
-        tooltip: {
-            headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
-            pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
-                '<td style="padding:0"><b>{point.y:.1f} mm</b></td></tr>',
-            footerFormat: '</table>',
-            shared: true,
-            useHTML: true
-        },
-        plotOptions: {
-            column: {
-                pointPadding: 0.2,
-                borderWidth: 0
-            }
-        },
-        series: [{
-            name: 'Tokyo',
-            data: [49.9, 71.5, 106.4, 129.2, 144.0, 176.0, 135.6, 148.5, 216.4, 194.1, 95.6, 54.4]
-        }]
-    });
-    Highcharts.chart('2CompChart', {
-        chart: {
-            type: 'column'
-        },
-        title: {
-            text: 'Monthly Average Rainfall'
-        },
-        subtitle: {
-            text: 'Source: WorldClimate.com'
-        },
-        xAxis: {
-            categories: [
-                'Jan',
-                'Feb',
-                'Mar',
-                'Apr',
-                'May',
-                'Jun',
-                'Jul',
-                'Aug',
-                'Sep',
-                'Oct',
-                'Nov',
-                'Dec'
-            ],
-            crosshair: true
-        },
-        yAxis: {
-            min: 0,
-            title: {
-                text: 'Rainfall (mm)'
-            }
-        },
-        tooltip: {
-            headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
-            pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
-                '<td style="padding:0"><b>{point.y:.1f} mm</b></td></tr>',
-            footerFormat: '</table>',
-            shared: true,
-            useHTML: true
-        },
-        plotOptions: {
-            column: {
-                pointPadding: 0.2,
-                borderWidth: 0
-            }
-        },
-        series: [{
-            name: 'Tokyo',
-            data: [49.9, 71.5, 106.4, 129.2, 144.0, 176.0, 135.6, 148.5, 216.4, 194.1, 95.6, 54.4]
-        }]
-    });
-}
-}
-function chooseClusterDropdown(){
-var selectedDropdownValue=document.getElementById("selectCluster").value;
-var ClusterChart=null;
-var isCategory=false;
-for(var i=0;i<categorialList.length;i++)
-{
-    if(categorialList[i]==selectedDropdownValue) isCategory=true;
-}
-if(isCategory)
-{
-    ClusterChart=Highcharts.chart('ClusterChart', {
+    data=firstData;
+    var newData=data["catSum"][selectedDropdownValue];
+    var newDataToUse=[];
+   
+    newDataToUse.push({'name':'Non-'+selectedDropdownValue,'y':newData['Non-'+selectedDropdownValue]});
+    newDataToUse.push({'name':selectedDropdownValue,'y':newData[selectedDropdownValue]});
+    console.log("A",newDataToUse,firstData);
+    CompareChart1=Highcharts.chart('1CompChart', {
         chart: {
             plotBackgroundColor: null,
             plotBorderWidth: null,
@@ -235,10 +30,10 @@ if(isCategory)
             type: 'pie'
         },
         title: {
-            text: 'Browser market shares in January, 2018'
+            text: selectedDropdownValue+' Values for Cluster 1'
         },
         tooltip: {
-            pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+            pointFormat: '<b>{point.percentage:.1f}%</b>'
         },
         plotOptions: {
             pie: {
@@ -251,71 +46,89 @@ if(isCategory)
             }
         },
         series: [{
-            name: 'Brands',
+
             colorByPoint: true,
-            data: [{
-                name: 'Chrome',
-                y: 61.41,
-                sliced: true,
-                selected: true
-            }, {
-                name: 'Internet Explorer',
-                y: 11.84
-            }, {
-                name: 'Firefox',
-                y: 10.85
-            }, {
-                name: 'Edge',
-                y: 4.67
-            }, {
-                name: 'Safari',
-                y: 4.18
-            }, {
-                name: 'Other',
-                y: 7.05
-            }]
+            data: []
         }]
     });
+CompareChart1.series[0].setData(newDataToUse);
+// Build the chart
+data1=SecondData;
+var newData1=data1["catSum"][selectedDropdownValue];
+var newDataToUse1=[];
+
+newDataToUse1.push({'name':'Non-'+selectedDropdownValue,'y':newData1['Non-'+selectedDropdownValue]});
+newDataToUse1.push({'name':selectedDropdownValue,'y':newData1[selectedDropdownValue]});
+console.log("B",newDataToUse1,SecondData);
+CompareChart2=Highcharts.chart('2CompChart', {
+    chart: {
+        plotBackgroundColor: null,
+        plotBorderWidth: null,
+        plotShadow: false,
+        type: 'pie'
+    },
+    title: {
+        text: selectedDropdownValue+' Values for Cluster 2'
+    },
+    tooltip: {
+        pointFormat: '<b>{point.percentage:.1f}%</b>'
+    },
+    plotOptions: {
+        pie: {
+            allowPointSelect: true,
+            cursor: 'pointer',
+            dataLabels: {
+                enabled: false
+            },
+            showInLegend: true
+        }
+    },
+    series: [{
+
+        colorByPoint: true,
+        data: []
+    }]
+});
+CompareChart2.series[0].setData(newDataToUse1);
 }
-else{
-ClusterChart=Highcharts.chart('ClusterChart', {
+else
+{
+    data=firstData;
+    var newData=data["contSum"][selectedDropdownValue];
+    var newDataToUse=[],catToShow=[];
+    var cat=[],len=Object.keys(newData).length;
+    for(var i=0;i<len;i++)
+     cat.push(Object.keys(newData)[i]);
+   for(var i=0;i<len;i++)
+   {
+       newDataToUse.push(newData[cat[i]]);
+       if (i>0) catToShow.push(cat[i-1]+"-"+cat[i]); else catToShow.push("0-"+cat[0]);
+   }
+   //console.log(newData,firstData)
+CompareChart1=Highcharts.chart('1CompChart', {
     chart: {
         type: 'column'
     },
     title: {
-        text: 'Monthly Average Rainfall'
+        text: selectedDropdownValue+' Values for Cluster 1'
     },
     subtitle: {
-        text: 'Source: WorldClimate.com'
+        text: ''
     },
     xAxis: {
-        categories: [
-            'Jan',
-            'Feb',
-            'Mar',
-            'Apr',
-            'May',
-            'Jun',
-            'Jul',
-            'Aug',
-            'Sep',
-            'Oct',
-            'Nov',
-            'Dec'
-        ],
+        categories: [],
         crosshair: true
     },
     yAxis: {
         min: 0,
         title: {
-            text: 'Rainfall (mm)'
+            text: selectedDropdownValue
         }
     },
     tooltip: {
-        headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
-        pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
-            '<td style="padding:0"><b>{point.y:.1f} mm</b></td></tr>',
-        footerFormat: '</table>',
+        formatter:function(){
+            return ('<b>'+this.x+'</b>:'+this.y);
+        },
         shared: true,
         useHTML: true
     },
@@ -326,9 +139,174 @@ ClusterChart=Highcharts.chart('ClusterChart', {
         }
     },
     series: [{
-        name: 'Tokyo',
-        data: [49.9, 71.5, 106.4, 129.2, 144.0, 176.0, 135.6, 148.5, 216.4, 194.1, 95.6, 54.4]
+        name: 'Value',
+        //data: [49.9, 71.5, 106.4, 129.2, 144.0, 176.0, 135.6, 148.5, 216.4, 194.1, 95.6, 54.4]
     }]
 });
+//console.log(newDataToUse);
+CompareChart1.series[0].setData(newDataToUse);
+CompareChart1.xAxis[0].setCategories(catToShow);
+
+data1=SecondData;
+var newData1=data1["contSum"][selectedDropdownValue];
+var newDataToUse1=[],catToShow1=[];
+var cat1=[],len=Object.keys(newData1).length;
+for(var i=0;i<len;i++)
+ cat1.push(Object.keys(newData1)[i]);
+for(var i=0;i<len;i++)
+{
+   newDataToUse1.push(newData1[cat1[i]]);
+   if (i>0) catToShow1.push(cat1[i-1]+"-"+cat1[i]); else catToShow1.push("0-"+cat1[0]);
+}
+console.log(newDataToUse1);
+CompareChart2=Highcharts.chart('2CompChart', {
+chart: {
+    type: 'column'
+},
+title: {
+    text: selectedDropdownValue+' Values for Cluster 2'
+},
+subtitle: {
+    text: ''
+},
+xAxis: {
+    categories: [],
+    crosshair: true
+},
+yAxis: {
+    min: 0,
+    title: {
+        text: selectedDropdownValue
+    }
+},
+tooltip: {
+    formatter:function(){
+        return ('<b>'+this.x+'</b>:'+this.y);
+    },
+    shared: true,
+    useHTML: true
+},
+plotOptions: {
+    column: {
+        pointPadding: 0.2,
+        borderWidth: 0
+    }
+},
+series: [{
+    name: 'Value',
+    //data: [49.9, 71.5, 106.4, 129.2, 144.0, 176.0, 135.6, 148.5, 216.4, 194.1, 95.6, 54.4]
+}]
+});
+//console.log(newDataToUse);
+CompareChart2.series[0].setData(newDataToUse1);
+CompareChart2.xAxis[0].setCategories(catToShow1);
+}
+}
+
+
+function chooseClusterDropdown(){
+//console.log(data);
+data=clusterMap["A"];
+var selectedDropdownValue=document.getElementById("selectCluster").value;
+var ClusterChart=null;
+var isCategory=false;
+for(var i=0;i<categorialList.length;i++)
+{
+    if(categorialList[i]==selectedDropdownValue) isCategory=true;
+}
+
+if(isCategory)
+{
+    var newData=data["catSum"][selectedDropdownValue];
+    var newDataToUse=[];
+   
+    newDataToUse.push({'name':'Non-'+selectedDropdownValue,'y':newData['Non-'+selectedDropdownValue]});
+    newDataToUse.push({'name':selectedDropdownValue,'y':newData[selectedDropdownValue]});
+    console.log(newDataToUse);
+    ClusterChart=Highcharts.chart('ClusterChart', {
+        chart: {
+            plotBackgroundColor: null,
+            plotBorderWidth: null,
+            plotShadow: false,
+            type: 'pie'
+        },
+        title: {
+            text: selectedDropdownValue+' Values'
+        },
+        tooltip: {
+            pointFormat: '<b>{point.percentage:.1f}%</b>'
+        },
+        plotOptions: {
+            pie: {
+                allowPointSelect: true,
+                cursor: 'pointer',
+                dataLabels: {
+                    enabled: false
+                },
+                showInLegend: true
+            }
+        },
+        series: [{
+
+            colorByPoint: true,
+            data: []
+        }]
+    });
+    ClusterChart.series[0].setData(newDataToUse);
+}
+
+
+else{
+    var newData=data["contSum"][selectedDropdownValue];
+    var newDataToUse=[],catToShow=[];
+    var cat=[],len=Object.keys(newData).length;
+    for(var i=0;i<len;i++)
+     cat.push(Object.keys(newData)[i]);
+   for(var i=0;i<len;i++)
+   {
+       newDataToUse.push(newData[cat[i]]);
+       if (i>0) catToShow.push(cat[i-1]+"-"+cat[i]); else catToShow.push("0-"+cat[0]);
+   }
+ClusterChart=Highcharts.chart('ClusterChart', {
+    chart: {
+        type: 'column'
+    },
+    title: {
+        text: selectedDropdownValue+' Values'
+    },
+    subtitle: {
+        text:''
+    },
+    xAxis: {
+        categories: [],
+        crosshair: true
+    },
+    yAxis: {
+        min: 0,
+        title: {
+            text: selectedDropdownValue
+        }
+    },
+    tooltip: {
+        formatter:function(){
+            return ('<b>'+this.x+'</b>:'+this.y);
+        },
+        shared: true,
+        useHTML: true
+    },
+    plotOptions: {
+        column: {
+            pointPadding: 0.2,
+            borderWidth: 0
+        }
+    },
+    series: [{
+        name: 'Value',
+        //data: [49.9, 71.5, 106.4, 129.2, 144.0, 176.0, 135.6, 148.5, 216.4, 194.1, 95.6, 54.4]
+    }]
+});
+//console.log(newDataToUse);
+ClusterChart.series[0].setData(newDataToUse);
+ClusterChart.xAxis[0].setCategories(catToShow);
 }
 }

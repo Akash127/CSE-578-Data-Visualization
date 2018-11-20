@@ -45,17 +45,18 @@ table{
 }
 
 .left-bars{
-    /* margin-left: 20px;
-    margin-top: 50px */
+ margin-left:16px;
 }
-
+.right-bars{
+    margin-left:16px;
+}
 .dropdowns{   margin-left: 380px;
     margin-top: 589px;
     position: absolute;
 }
 .card{margin-left:800px}
 .compare{
-    width: 260px;
+    width: 268px;
     height: 224px;
     border-style: groove;
     
@@ -145,13 +146,14 @@ table{
     align-items: stretch;
 }
 #sidebar{
-    width: 331px;
+    width: 321px;
+    background-color: #e15707;
 }
 #sidebar.active {
     margin-left: -320px;
 }
 #main-content{width:100%}
-.compare{margin-left:-2px}
+.compare{background-color: cornsilk;}
 #ToCompare1 svg{margin-top:-6px}
 #ToCompare2 svg{margin-top:-146px}
 #ToCompare3 svg{margin-top:-286px}

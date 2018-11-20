@@ -260,7 +260,9 @@ d3.csv("dataset/04cars data_clean.csv").then(function(data) {
 
 function chooseX() {
   var abc = document.getElementById('select').value;  
-
+  isLassoActivated=false;
+  document.getElementById("lassoToggle").innerHTML = "Activate Lasso";
+  $("#SaveClusterBtn").attr("disabled","disabled");
   // Load Dataset and Charts
 d3.csv("dataset/04cars data_clean.csv").then(function(data) {
   loadData=[];
@@ -314,7 +316,9 @@ d3.csv("dataset/04cars data_clean.csv").then(function(data) {
 
 function chooseY() {
   var abc = document.getElementById('select1').value;  
-
+  isLassoActivated=false;
+  document.getElementById("lassoToggle").innerHTML = "Activate Lasso";
+  $("#SaveClusterBtn").attr("disabled","disabled");
   // Load Dataset and Charts
 d3.csv("dataset/04cars data_clean.csv").then(function(data) {
 

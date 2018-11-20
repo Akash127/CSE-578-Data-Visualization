@@ -171,7 +171,20 @@ ScatterPlot.prototype.init = function() {
 //#endregion
 
 //#region Draw visualisation
-
+$(document).ready(function(){
+  $($("#chart-area1>svg>rect"),$("#clip>rect")).on("click",function()
+  {
+    if($(".d3-tip").css('opacity')==1) 
+    {
+      $(".d3-tip").css('opacity',"0");
+      $(".tool-tip").attr("disabled",true)
+      selected.classed("selected",false);
+      selected=null;
+    }
+  });
+});
+ 
+  
 ScatterPlot.prototype.processData = function() {
   var vis = this;
   this.data.forEach(d=>{
@@ -189,7 +202,7 @@ ScatterPlot.prototype.drawvis = function() {
     tip = d3.tip().attr('class', 'd3-tip')
      .html(function(d) {
       $(this).addClass("selected");
-         selected=d3.selectAll('.selected');
+         selected=d3.selectAll('#chart-area1 .selected');
          selectedElement=this;
          selectedProperties=d;
        var text = "<button class='btn tool-tip btn-sm btn-secondary mr-1' onclick=x_left_click()>Drop in X-Low</button>"
@@ -231,8 +244,16 @@ ScatterPlot.prototype.drawvis = function() {
 
 //#region zoom
 function zoomed (vis) {
-
+var toolTipVar=$(".d3-tip");
   //if tooltip is showing 
+  $(".d3-tip").each((element)=>{
+    if($(toolTipVar[element]).css('opacity')==1) {
+      $(toolTipVar[element]).css('opacity',"0");
+      $(".tool-tip").attr("disabled",true)
+      selected.classed("selected",false);
+      selected=null;
+    }
+  })
   if($(".d3-tip").css('opacity')==1) {
     $(".d3-tip").css('opacity',"0");
     $(".tool-tip").attr("disabled",true)
@@ -360,7 +381,7 @@ function y_bottom_click(){
 }
 //#endregion
 
-//#region Graph Updation real work starts her
+//#region Graph Updation real work starts here
 
 updategraph_util = function(axis) {
   if(axis == "X" && x_left_dropzone.length != 0 && x_right_dropzone.length != 0) {
@@ -568,17 +589,16 @@ function toggle_lasso() {
     scatterPlot.lassoArea = scatterPlot.scatterPlotGroup.append("rect")
     .attr("width", scatterPlot.width)
     .attr("height", scatterPlot.height)
-    // .style("fill", "none")
     .style("opacity", 0)
-    // .style("pointer-events", "all")
-    // .attr('transform', 'translate(' + scatterPlot.margin.left + ',' + scatterPlot.margin.top + ')')
     scatterPlot.lasso.targetArea(scatterPlot.lassoArea)
     scatterPlot.scatterPlotGroup.call(scatterPlot.lasso);
     document.getElementById("lassoToggle").innerHTML = "Activate Zoom";
+    $("#SaveClusterBtn").removeAttr("disabled");
   } else {
     console.log("Lasso Deactivated!");
     isLassoActivated = false;
-    scatterPlot.lassoArea.remove();
+   if(scatterPlot.lassoArea) scatterPlot.lassoArea.remove();
+    $("#SaveClusterBtn").attr("disabled","disabled");
     document.getElementById("lassoToggle").innerHTML = "Activate Lasso";
     // Change Selected Items color if not
 
@@ -620,30 +640,30 @@ function saveCluster() {
     selectedCluster = null;
     console.log("CLUSTER ADDED")
   }
-  //console.log(clusterMap)
+  console.log(clusterMap)
   addToCompare();
   chooseClusterDropdown();
 }
 function addToCompare() {
-  viewBox1="350 78 710 1300"
-  viewBox2="350 -250 700 1300"
-  viewBox3="350 -580 700 1300"
-  viewBox4="350 -900 700 1300"
+  viewBox1="350 78 710 1290"
+  viewBox2="350 -250 700 1290"
+  viewBox3="350 -580 700 1290"
+  viewBox4="350 -900 700 1290"
 var temp=$("#ToCompare1>svg");
 var temp1=$("#ToCompare2>svg");
 var temp2=$("#ToCompare3>svg");
 
 $("#ToCompare1").empty();
-$("#ToCompare1").append('<input type="checkbox" class="FirstC">');
+$("#ToCompare1").append('<input type="checkbox" class="A">');
 $("#chart-area1>svg").clone().appendTo("#ToCompare1");
 $("#ToCompare2").empty();
-$("#ToCompare2").append('<input type="checkbox" class="SecondC">');
+$("#ToCompare2").append('<input type="checkbox" class="B">');
 $("#ToCompare2").append(temp);
 $("#ToCompare3").empty();
-$("#ToCompare3").append('<input type="checkbox" class="ThirdC">');
+$("#ToCompare3").append('<input type="checkbox" class="C">');
 $("#ToCompare3").append(temp1);
 $("#ToCompare4").empty();
-$("#ToCompare4").append('<input type="checkbox" class="FourthC">');
+$("#ToCompare4").append('<input type="checkbox" class="D">');
 $("#ToCompare4").append(temp2);
 if($("#ToCompare1>svg").length!=0) {
   document.getElementById("ToCompare1").childNodes[1].setAttribute("viewBox",viewBox1);
@@ -653,17 +673,17 @@ else $("#ToCompare1").empty();
 if($("#ToCompare2>svg").length!=0){
   document.getElementById("ToCompare2").childNodes[1].setAttribute("viewBox",viewBox2 );
 }
-else $("#ToCompare2").empty();
+else $("#ToCompare2").empty(),$("#ToCompare2").html("CLuster 2");
 
 if($("#ToCompare3>svg").length!=0){
   document.getElementById("ToCompare3").childNodes[1].setAttribute("viewBox",viewBox3 );
 }
-else $("#ToCompare3").empty();
+else $("#ToCompare3").empty(),$("#ToCompare3").html("CLuster 3");
 
 if($("#ToCompare4>svg").length!=0){
   document.getElementById("ToCompare4").childNodes[1].setAttribute("viewBox",viewBox4  );
 }
-else $("#ToCompare4").empty();
+else $("#ToCompare4").empty(),$("#ToCompare4").html("CLuster 4");
 }
 
 // Function to Check if Cluster is Valid or Not
