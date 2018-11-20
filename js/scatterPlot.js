@@ -620,8 +620,9 @@ function saveCluster() {
     selectedCluster = null;
     console.log("CLUSTER ADDED")
   }
-  console.log(clusterMap)
+  //console.log(clusterMap)
   addToCompare();
+  chooseClusterDropdown();
 }
 function addToCompare() {
   viewBox1="350 78 710 1300"
@@ -794,7 +795,6 @@ function getContinuousSummary(clusterData) {
   return names;
 }
 
-
 // Function to Sort Dictionary and return top 5 values
 function sortDictionaryByValue(dict) {
   
@@ -824,4 +824,17 @@ function getUnique(attr) {
     uniqueHash[type_category] = 0;
   })
   return uniqueHash
+}
+
+function onCompareClusterClick(){
+  if($("input[type='checkbox']:checked").length==1)
+    alert("Select 2 clusters to compare");
+  else if($("input[type='checkbox']:checked").length==2){
+  
+   chooseCompDropdown();
+   $('#exampleModalCenter').modal('show');
+  }
+  else{
+    alert("You can select only 2 clusters to compare");
+  }
 }

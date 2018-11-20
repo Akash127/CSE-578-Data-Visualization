@@ -216,6 +216,8 @@ d3.csv("dataset/04cars data_clean.csv").then(function(data) {
          option.setAttribute("id","x"+i);
      }
      var select1 = document.getElementById("select1")
+     var selectCluster=document.getElementById("selectCluster");
+     var selectComp=document.getElementById("selectComp");
      for(var i = 0; i < arr.length; i++)
      {
          var option = document.createElement("OPTION"),
@@ -224,6 +226,24 @@ d3.csv("dataset/04cars data_clean.csv").then(function(data) {
          option.setAttribute("value",arr[i]);
          select1.insertBefore(option,select1.lastChild);
      }
+     for(var i = 0; i < arr.length; i++)
+     {
+         var option = document.createElement("OPTION"),
+         txt = document.createTextNode(arr[i]);
+         option.appendChild(txt);
+         option.setAttribute("value",arr[i]);
+         selectCluster.insertBefore(option,selectCluster.lastChild);
+    }
+
+     for(var i = 0; i < arr.length; i++)
+     {
+         var option = document.createElement("OPTION"),
+         txt = document.createTextNode(arr[i]);
+         option.appendChild(txt);
+         option.setAttribute("value",arr[i]);
+         selectComp.insertBefore(option,selectComp.lastChild);
+    }
+
      $("#select").val("HP");
      $("#select1").val("Retail Price");
 
