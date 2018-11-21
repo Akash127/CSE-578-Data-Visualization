@@ -20,24 +20,27 @@
   <body>
 <div class="wrapper">
 <nav id="sidebar" class="active">
-<div class="sidebar-header">
-            <h2>Last 4 clusters</h2>
-        </div>
-  <div class="sidebar-content">
-  <div id="ToCompare1" class="compare">Cluster 1</div>
-  <div id="ToCompare2" class="compare">Cluster 2</div>
-  <div id="ToCompare3" class="compare">Cluster 3</div>
-  <div id="ToCompare4" class="compare">Cluster 4</div> 
+  <div class="sidebar-header text-center">
+      <h3>Saved Clusters</h3>
   </div>
-      <button type="button" onclick="onCompareClusterClick()" class="btn btn-secondary mt-2 btn-sm" >
+  <div class="sidebar-content">
+    <div id="ToCompare1" class="compare m-2"></div>
+    <div id="ToCompare2" class="compare m-2"></div>
+    <div id="ToCompare3" class="compare m-2"></div>
+    <div id="ToCompare4" class="compare m-2"></div> 
+  </div>
+
+  <div class="text-center">
+    <button type="button" onclick="onCompareClusterClick()" class="btn btn-dark mb-2 text-center" >
       Compare Clusters
     </button>
+  </div>
 </nav>
 <div id="main-content">
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <div class="container-fluid">
 
-            <button type="button" id="sidebarCollapse" onclick="toggleSideBar()" class="btn btn-info">
+            <button type="button" id="sidebarCollapse" onclick="toggleSideBar()" class="btn btn-secondary">
                 <i class="fas fa-align-left"></i>
                 <span>Toggle Sidebar</span>
             </button>

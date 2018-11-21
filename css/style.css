@@ -140,6 +140,8 @@ table{
 .selected {
     fill: steelblue;
 }
+
+/* Side Bar Styles */
 .wrapper {
     display: flex;
     width: 100%;
@@ -147,14 +149,25 @@ table{
 }
 #sidebar{
     width: 321px;
-    background-color: #e15707;
+    /* background-color: #6C757D; */
+    background-color: #6C757D;
+    /* background-color: #E7E7E7; */
 }
 #sidebar.active {
     margin-left: -320px;
 }
 #main-content{width:100%}
-.compare{background-color: cornsilk;}
 #ToCompare1 svg{margin-top:-6px}
 #ToCompare2 svg{margin-top:-146px}
 #ToCompare3 svg{margin-top:-286px}
 #ToCompare4 svg{margin-top:-420px}
+
+.sidebar-header {
+    color:#F4F9FA;
+}
+
+.compare {
+    /* border: 2px solid red; */
+    border-radius: 10px;
+    background-color: #BBBDBF;
+}

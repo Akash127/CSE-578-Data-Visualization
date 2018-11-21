@@ -655,41 +655,41 @@ function addToCompare() {
   viewBox2="350 -250 700 1290"
   viewBox3="350 -580 700 1290"
   viewBox4="350 -900 700 1290"
-var temp=$("#ToCompare1>svg");
-var temp1=$("#ToCompare2>svg");
-var temp2=$("#ToCompare3>svg");
+  var temp=$("#ToCompare1>svg");
+  var temp1=$("#ToCompare2>svg");
+  var temp2=$("#ToCompare3>svg");
 
-$("#ToCompare1").empty();
-$("#ToCompare1").append('<input type="checkbox" class="A">');
-$("#chart-area1>svg").clone().appendTo("#ToCompare1");
-$("#ToCompare2").empty();
-$("#ToCompare2").append('<input type="checkbox" class="B">');
-$("#ToCompare2").append(temp);
-$("#ToCompare3").empty();
-$("#ToCompare3").append('<input type="checkbox" class="C">');
-$("#ToCompare3").append(temp1);
-$("#ToCompare4").empty();
-$("#ToCompare4").append('<input type="checkbox" class="D">');
-$("#ToCompare4").append(temp2);
-if($("#ToCompare1>svg").length!=0) {
-  document.getElementById("ToCompare1").childNodes[1].setAttribute("viewBox",viewBox1);
-}
-else $("#ToCompare1").empty();
+  $("#ToCompare1").empty();
+  $("#ToCompare1").append('<input type="checkbox" class="A">');
+  $("#chart-area1>svg").clone().appendTo("#ToCompare1");
+  $("#ToCompare2").empty();
+  $("#ToCompare2").append('<input type="checkbox" class="B">');
+  $("#ToCompare2").append(temp);
+  $("#ToCompare3").empty();
+  $("#ToCompare3").append('<input type="checkbox" class="C">');
+  $("#ToCompare3").append(temp1);
+  $("#ToCompare4").empty();
+  $("#ToCompare4").append('<input type="checkbox" class="D">');
+  $("#ToCompare4").append(temp2);
+  if($("#ToCompare1>svg").length!=0) {
+    document.getElementById("ToCompare1").childNodes[1].setAttribute("viewBox",viewBox1);
+  }
+  else $("#ToCompare1").empty();
 
-if($("#ToCompare2>svg").length!=0){
-  document.getElementById("ToCompare2").childNodes[1].setAttribute("viewBox",viewBox2 );
-}
-else $("#ToCompare2").empty(),$("#ToCompare2").html("CLuster 2");
+  if($("#ToCompare2>svg").length!=0){
+    document.getElementById("ToCompare2").childNodes[1].setAttribute("viewBox",viewBox2 );
+  }
+  // else $("#ToCompare2").empty(),$("#ToCompare2").html("CLuster 2");
 
-if($("#ToCompare3>svg").length!=0){
-  document.getElementById("ToCompare3").childNodes[1].setAttribute("viewBox",viewBox3 );
-}
-else $("#ToCompare3").empty(),$("#ToCompare3").html("CLuster 3");
+  if($("#ToCompare3>svg").length!=0){
+    document.getElementById("ToCompare3").childNodes[1].setAttribute("viewBox",viewBox3 );
+  }
+  // else $("#ToCompare3").empty(),$("#ToCompare3").html("CLuster 3");
 
-if($("#ToCompare4>svg").length!=0){
-  document.getElementById("ToCompare4").childNodes[1].setAttribute("viewBox",viewBox4  );
-}
-else $("#ToCompare4").empty(),$("#ToCompare4").html("CLuster 4");
+  if($("#ToCompare4>svg").length!=0){
+    document.getElementById("ToCompare4").childNodes[1].setAttribute("viewBox",viewBox4  );
+  }
+  // else $("#ToCompare4").empty(),$("#ToCompare4").html("CLuster 4");
 }
 
 // Function to Check if Cluster is Valid or Not
