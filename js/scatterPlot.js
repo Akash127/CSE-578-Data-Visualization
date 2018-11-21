@@ -635,8 +635,13 @@ function saveCluster() {
   }
 
   if(selectedCluster) {
-    clusterMap[indexMap[clusterInputIndex]] = selectedCluster
-    clusterInputIndex = (clusterInputIndex + 1) % 4
+    clusterMap['D'] = clusterMap['C']
+    clusterMap['C'] = clusterMap['B']
+    clusterMap['B'] = clusterMap['A']
+    clusterMap['A'] = selectedCluster;
+
+    // clusterMap[indexMap[clusterInputIndex]] = selectedCluster
+    // clusterInputIndex = (clusterInputIndex + 1) % 4
     selectedCluster = null;
     console.log("CLUSTER ADDED")
   }
@@ -644,6 +649,7 @@ function saveCluster() {
   addToCompare();
   chooseClusterDropdown();
 }
+
 function addToCompare() {
   viewBox1="350 78 710 1290"
   viewBox2="350 -250 700 1290"
