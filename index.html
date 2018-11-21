@@ -24,10 +24,10 @@
       <h3>Saved Clusters</h3>
   </div>
   <div class="sidebar-content">
-    <div id="ToCompare1" class="compare m-2"></div>
-    <div id="ToCompare2" class="compare m-2"></div>
-    <div id="ToCompare3" class="compare m-2"></div>
-    <div id="ToCompare4" class="compare m-2"></div> 
+  <div id="ToCompare1" class="compare  m-2">Cluster 1 is currently not present</div>
+  <div id="ToCompare2" class="compare  m-2">Cluster 2 is currently not present</div>
+  <div id="ToCompare3" class="compare  m-2">Cluster 3 is currently not present</div>
+  <div id="ToCompare4" class="compare m-2">Cluster 4 is currently not present</div> 
   </div>
 
   <div class="text-center">
@@ -65,14 +65,14 @@
 
  <div class="dropdowns">
     <div class="xAxis">
-      <select id="select" onchange = "chooseX()">
+      <select id="select"  class=" btn btn-secondary"  onchange = "chooseX()">
           <option value="default">default</option>
       </select>
       <button class="btn btn-secondary btn-sm" onclick="SaveX()">Save X</button>
       <button class="btn btn-secondary btn-sm" onclick="ClearX()">Clear X</button>
     </div>
     <div class="yAxis">
-      <select id="select1" onchange = "chooseY()">
+      <select id="select1" class=" btn btn-secondary" onchange = "chooseY()">
         <option value="default">default</option>
       </select>
       <button class="btn btn-secondary btn-sm mt-2" onclick="SaveY()">Save Y</button>
@@ -80,7 +80,7 @@
   </div> 
   <div class="util-buttons btn-group">
     <button class="btn btn-secondary mt-2 btn-sm" id="lassoToggle"onclick="toggle_lasso()">Activate Lasso</button>
-    <button class="btn btn-secondary mt-2 btn-sm" onclick="saveCluster()" data-toggle="modal" id="SaveClusterBtn" disabled="disabled" data-target="#onSaveCluster">Analyze and Save Cluster</button>
+    <button class="btn btn-secondary mt-2 btn-sm" onclick="saveCluster()" data-toggle="modal" id="SaveClusterBtn" disabled="disabled" data-target="#onSaveCluster">Analyze/Save Cluster</button>
     <!-- Button trigger modal -->
     
   </div>
@@ -88,8 +88,8 @@
   </div> 
   <div class="right-section col-md-2" id="desc"></div>
     <!-- Modal -->
-    <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-      <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal fade " id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+      <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
         <div class="modal-content">
           <div class="modal-header">
             <h5 class="modal-title" id="exampleModalLongTitle">Compare Selected Clusters</h5>
@@ -100,12 +100,12 @@
           <div class="modal-body">
           <div class="column">
           <div class="dropDowninModal">
-            <select id="selectComp" onchange = "chooseCompDropdown()">
+            <select id="selectComp" class="btn" onchange = "chooseCompDropdown()">
             </select>
           </div>
           <div class="row">
-          <div id="1CompChart" style="min-width: 310px; height: 400px; max-width: 600px; margin: 0 auto"></div>
-          <div id="2CompChart" style="min-width: 310px; height: 400px; max-width: 600px; margin: 0 auto"></div>
+          <div id="1CompChart" style="min-width: 310px; height: 400px; max-width: 600px; margin: 0 auto;border-style:groove;"></div>
+          <div id="2CompChart" style="min-width: 310px; height: 400px; max-width: 600px; margin: 0 auto;border-style:groove;"></div>
            
           </div>
           </div>
@@ -118,7 +118,7 @@
       </div>
     </div>
      <div class="modal fade" id="onSaveCluster" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-      <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
         <div class="modal-content">
           <div class="modal-header">
             <h5 class="modal-title" id="exampleModalLongTitle">Cluster Analysis</h5>
@@ -129,7 +129,7 @@
           <div class="modal-body">
           <div class="column">
           <div class="dropDowninModal">
-            <select id="selectCluster" onchange = "chooseClusterDropdown()">
+            <select id="selectCluster" class="btn" onchange = "chooseClusterDropdown()">
             </select>
           </div>
            <div id="ClusterChart" style="min-width: 310px; height: 400px; max-width: 600px; margin: 0 auto"></div>

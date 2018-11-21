@@ -99,6 +99,7 @@ else
     var cat=[],len=Object.keys(newData).length;
     for(var i=0;i<len;i++)
      cat.push(Object.keys(newData)[i]);
+     cat.sort();
    for(var i=0;i<len;i++)
    {
        newDataToUse.push(newData[cat[i]]);
@@ -153,6 +154,7 @@ var newDataToUse1=[],catToShow1=[];
 var cat1=[],len=Object.keys(newData1).length;
 for(var i=0;i<len;i++)
  cat1.push(Object.keys(newData1)[i]);
+ cat1.sort();
 for(var i=0;i<len;i++)
 {
    newDataToUse1.push(newData1[cat1[i]]);
@@ -219,10 +221,9 @@ if(isCategory)
 {
     var newData=data["catSum"][selectedDropdownValue];
     var newDataToUse=[];
-   
     newDataToUse.push({'name':'Non-'+selectedDropdownValue,'y':newData['Non-'+selectedDropdownValue]});
     newDataToUse.push({'name':selectedDropdownValue,'y':newData[selectedDropdownValue]});
-    console.log(newDataToUse);
+    //console.log(newDataToUse);
     ClusterChart=Highcharts.chart('ClusterChart', {
         chart: {
             plotBackgroundColor: null,
@@ -262,6 +263,7 @@ else{
     var cat=[],len=Object.keys(newData).length;
     for(var i=0;i<len;i++)
      cat.push(Object.keys(newData)[i]);
+    cat.sort();
    for(var i=0;i<len;i++)
    {
        newDataToUse.push(newData[cat[i]]);
@@ -310,3 +312,155 @@ ClusterChart.series[0].setData(newDataToUse);
 ClusterChart.xAxis[0].setCategories(catToShow);
 }
 }
+
+var chart=null;
+chart = new Highcharts.Chart({
+  chart: {
+      renderTo: 'left-bars',
+      animation: true,
+      height:400,
+      width:400
+  },
+  credits:{
+    enabled:false
+},
+  title: {
+      text: 'X-Axis attributes weights'
+  },
+
+  xAxis: {
+      categories: []
+  },
+  yAxis: {
+    softMax: 1
+},
+
+  plotOptions: {
+      series: {
+        borderColor: '#303030',
+          point: {
+              events: {
+
+                  drag: function (e) {
+                    
+                  },
+                  drop: function () {
+                    var V={},data=chart.series[0].data;
+                    for(var i=0;i<18;i++)
+                    {
+                         V[data[i].category]=data[i].y;
+                    }
+                    changed="X";
+                    GlobalV.push(V);
+                    scatterPlot.updategraph("X",[],[],V);
+                    }
+              }
+          },
+          stickyTracking: false,
+          dragDrop: {
+            draggableY: true,
+            dragMaxY:1,
+            dragMinY:-1
+        }
+      },
+      bar: {
+          stacking: 'normal', minPointLength: 2
+      },
+      line: {
+          cursor: 'ns-resize'
+      }
+  },
+
+  tooltip: {
+      yDecimals: 2,
+      formatter:function(){
+          return this.x + ":" +this.y;
+      }
+  },
+  legend: {
+    enabled: false
+},  
+  series: [{
+      type: 'bar',
+      negativeColor: '#FF0000'
+  }]
+
+});
+var chartRight=null;
+chartRight = new Highcharts.Chart({
+    chart: {
+        renderTo: 'right-bars',
+        animation: false,
+        height:400,
+        width:400
+    },
+    credits:{
+        enabled:false
+    },
+    title: {
+        text: 'Y-Axis attributes weights'
+    },
+    legend: {
+        enabled: false
+    },
+    xAxis: {
+        categories: []
+    },
+    yAxis: {
+        Max: 1
+    },
+    
+    plotOptions: {
+        series: {
+            borderColor: '#303030',
+            point: {
+                events: {
+                    drag: function (e) {
+                      
+                    },
+                    drop: function () {
+                        var V={},data=chartRight.series[0].data;
+                        for(var i=0;i<18;i++)
+                        {
+                             V[data[i].category]=data[i].y;
+                        }
+                        
+                        GlobalV.push(V);
+                        scatterPlot.updategraph("Y",[],[],V);
+                        changed="Y";
+                    }
+                }
+            },
+            dragDrop: {
+                draggableY: true,
+                dragMaxY:1,
+                dragMinY:-1
+            },
+            stickyTracking: false
+        },
+        bar: {
+            stacking: 'normal',
+            //cursor: 'ns-resize'
+        },
+        line: {
+            cursor: 'ns-resize'
+        }
+    },
+  
+    tooltip: {
+        yDecimals: 2,
+        formatter:function(){
+            return this.x + ":" +this.y;
+        }
+    },
+  
+    series: [{  
+        //draggableX: true,
+        type: 'bar',
+        width:300,
+        height:500,
+        minPointLength: 2,        
+        negativeColor: '#FF0000'
+    }]
+  
+  });
