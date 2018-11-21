@@ -61,19 +61,18 @@ d3.csv("dataset/" + fileNameMap[fileName]).then(function(data) {
    var tmpMin=d3.min(loadData,function(d){return +d["raw"][columns[i]];});
    loadData.forEach(function(d){
      d["coord"][columns[i]]=((+d["raw"][columns[i]]-tmpMin)/(tmpMax-tmpMin));
-     delete d["coord"]["Vehicle Name"];
-     delete d["coord"]["Pickup"];
+     if(localStorage['myKey']=='Car') delete d["coord"]["Vehicle Name"],delete d["coord"]["Pickup"];
    });
   }
-  columns.splice(0,1);
-  columns.splice(5,1);
+  if(localStorage['myKey']=='Car') columns.splice(0,1),columns.splice(5,1);
   loadData["columns"]=columns;
- // var slicedcolumns=columns.slice(4,20);
   this.chart.xAxis[0].setCategories(columns);
   this.chartRight.xAxis[0].setCategories(columns);
-//  console.log(loadData);
-  xv =11;
-  yv = 7;
+
+  if(localStorage['myKey']=='Car') {xv =11,yv = 7;}
+  else if(localStorage['myKey']=='Diabetes'){xv=3,yv=7;}
+  else if(localStorage['myKey']=='Wine'){xv=3,yv=7;}
+
   scatterPlot = new ScatterPlot(loadData, "#chart-area1", xv, yv);
   if(!selectedPoint) {
     selectedPoint = loadData[0].raw
@@ -118,14 +117,13 @@ d3.csv("dataset/" + fileNameMap[fileName]).then(function(data) {
          selectComp.insertBefore(option,selectComp.lastChild);
     }
 
-     $("#select").val("HP");
-     $("#select1").val("Retail Price");
-
      var chartData=[],chartData1=[];
+     $("#select").val(columns[xv]);
+     $("#select1").val(columns[yv]);
      for(var i=0;i<columns.length;i++)
         {
-            if(arr[i]=="Retail Price")  chartData.push(1); else chartData.push(0)
-            if(arr[i]=="HP") chartData1.push(1); else chartData1.push(0);
+            if(arr[i]==columns[yv])  chartData.push(1); else chartData.push(0)
+            if(arr[i]==columns[xv]) chartData1.push(1); else chartData1.push(0);
         }
         this.chart.series[0].setData(chartData1);
         this.chartRight.series[0].setData(chartData);
@@ -134,6 +132,8 @@ d3.csv("dataset/" + fileNameMap[fileName]).then(function(data) {
 
 function chooseX() {
   var abc = document.getElementById('select').value;  
+  var xyz=document.getElementById('select1').value;  
+  selected=null;
   isLassoActivated=false;
   document.getElementById("lassoToggle").innerHTML = "Activate Lasso";
   $("#SaveClusterBtn").attr("disabled","disabled");
@@ -155,11 +155,10 @@ d3.csv("dataset/" + fileNameMap[fileName]).then(function(data) {
    var tmpMin=d3.min(loadData,function(d){return +d["raw"][columns[i]];});
    loadData.forEach(function(d){
      d["coord"][columns[i]]=((+d["raw"][columns[i]]-tmpMin)/(tmpMax-tmpMin));
-     delete d["coord"]["Vehicle Name"];
-     delete d["coord"]["Pickup"];
+     if(localStorage['myKey']=='Car') delete d["coord"]["Vehicle Name"],delete d["coord"]["Pickup"];
    });
   }
-  columns.splice(0,1);columns.splice(5,1);
+  if(localStorage['myKey']=='Car') columns.splice(0,1),columns.splice(5,1);
   loadData["columns"]=columns;
 
   //console.log(columns);
@@ -184,13 +183,20 @@ d3.csv("dataset/" + fileNameMap[fileName]).then(function(data) {
     }
     scatterPlot = new ScatterPlot(loadData, "#chart-area1", xv, yv); 
   }
+  if(xyz.startsWith("x"))
+    {
+    ind=xyz.substr(1)-1;
+    scatterPlot.updategraphOnDropdownChange("Y",ind+1,GlobalV[ind]);
+    }
   chart.series[0].setData(chartData);
 });
 }
 
 function chooseY() {
-  var abc = document.getElementById('select1').value;  
+  var abc = document.getElementById('select1').value;
+  var xyz=document.getElementById('select').value;  
   isLassoActivated=false;
+  selected=null;
   document.getElementById("lassoToggle").innerHTML = "Activate Lasso";
   $("#SaveClusterBtn").attr("disabled","disabled");
   // Load Dataset and Charts
@@ -206,18 +212,15 @@ d3.csv("dataset/" + fileNameMap[fileName]).then(function(data) {
   });
 
   var columns =  data.columns;
-
   for(var i=0;i<columns.length;i++){
    var tmpMax=d3.max(loadData,function(d){return +d["raw"][columns[i]];});
    var tmpMin=d3.min(loadData,function(d){return +d["raw"][columns[i]];});
    loadData.forEach(function(d){
      d["coord"][columns[i]]=((+d["raw"][columns[i]]-tmpMin)/(tmpMax-tmpMin));
-     delete d["coord"]["Vehicle Name"];
-     delete d["coord"]["Pickup"];
+     if(localStorage['myKey']=='Car') delete d["coord"]["Vehicle Name"],delete d["coord"]["Pickup"];
    });
   }
-  columns.splice(0,1);
-  columns.splice(5,1);
+  if(localStorage['myKey']=='Car') columns.splice(0,1),columns.splice(5,1);
   loadData["columns"]=columns;
   var chartData=[];
   if(abc.startsWith("x"))
@@ -225,22 +228,25 @@ d3.csv("dataset/" + fileNameMap[fileName]).then(function(data) {
    var ind=abc.substr(1)-1;
    for(var i =0;i<columns.length;i++)
     chartData.push(GlobalV[ind][columns[i]]); 
-  scatterPlot.updategraphOnDropdownChange("Y",ind+1,GlobalV[ind]);     
+  scatterPlot.updategraphOnDropdownChange("Y",ind+1,GlobalV[ind]);    
   }
   else{
     var t = document.getElementById('chart-area1');  
     t.innerHTML = '';
-  
-  for(var i=0;i<columns.length;i++){
-    
+  for(var i=0;i<columns.length;i++){  
     if (columns[i] == abc) {
         yv = i;
       chartData.push(1);
     }
     else chartData.push(0);
     }
-    scatterPlot = new ScatterPlot(loadData, "#chart-area1", xv, yv);
+    scatterPlot = new ScatterPlot(loadData, "#chart-area1", xv, yv);   
 }
+if(xyz.startsWith("x"))
+    {
+    ind=xyz.substr(1)-1;
+    scatterPlot.updategraphOnDropdownChange("X",ind+1,GlobalV[ind]);
+    }
   chartRight.series[0].setData(chartData);
 });
 }

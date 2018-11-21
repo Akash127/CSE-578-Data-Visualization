@@ -10,13 +10,13 @@
 }
 svg:not(:root){overflow: visible!important;}
 .y-top{  
-    margin-left: 84px;margin-top: 50px;position: absolute;overflow: visible;background-color: #1fcc1f;}
+    margin-left: 84px;margin-top: 50px;position: absolute;overflow: visible;background-color: #69c869;}
 .y-bottom{margin-top: 409px;
-    margin-left: 84px;position: absolute; background-color: #1fcc1f;
+    margin-left: 84px;position: absolute; background-color: #69c869;
 }
 .x-left{    margin-top: 546px;
-    margin-left: 232px;position: absolute;overflow: visible;background-color: #1fcc1f;}
-.x-right{margin-top: 546px;margin-left:644px;position: absolute;overflow: visible;background-color: #1fcc1f;}
+    margin-left: 232px;position: absolute;overflow: visible;background-color: #69c869;}
+.x-right{margin-top: 546px;margin-left:644px;position: absolute;overflow: visible;background-color: #69c869;}
 
 #chart-area1{
     position: absolute;    

@@ -21,7 +21,6 @@ if(isCategory){
    
     newDataToUse.push({'name':'Non-'+selectedDropdownValue,'y':newData['Non-'+selectedDropdownValue]});
     newDataToUse.push({'name':selectedDropdownValue,'y':newData[selectedDropdownValue]});
-    console.log("A",newDataToUse,firstData);
     CompareChart1=Highcharts.chart('1CompChart', {
         chart: {
             plotBackgroundColor: null,
@@ -59,7 +58,6 @@ var newDataToUse1=[];
 
 newDataToUse1.push({'name':'Non-'+selectedDropdownValue,'y':newData1['Non-'+selectedDropdownValue]});
 newDataToUse1.push({'name':selectedDropdownValue,'y':newData1[selectedDropdownValue]});
-console.log("B",newDataToUse1,SecondData);
 CompareChart2=Highcharts.chart('2CompChart', {
     chart: {
         plotBackgroundColor: null,
@@ -101,11 +99,12 @@ else
      cat.push(Object.keys(newData)[i]);
      cat.sort();
    for(var i=0;i<len;i++)
-   {
        newDataToUse.push(newData[cat[i]]);
-       if (i>0) catToShow.push(cat[i-1]+"-"+cat[i]); else catToShow.push("0-"+cat[0]);
-   }
-   //console.log(newData,firstData)
+
+   cat.forEach((element,i)=>{
+    if(Number(element)%1!=0) cat[i]=Number(element).toFixed(3);
+    if (i>0) catToShow.push(cat[i-1]+"-"+cat[i]); else catToShow.push("0-"+cat[0]);
+    });
 CompareChart1=Highcharts.chart('1CompChart', {
     chart: {
         type: 'column'
@@ -140,11 +139,10 @@ CompareChart1=Highcharts.chart('1CompChart', {
         }
     },
     series: [{
-        name: 'Value',
+        name: selectedDropdownValue,
         //data: [49.9, 71.5, 106.4, 129.2, 144.0, 176.0, 135.6, 148.5, 216.4, 194.1, 95.6, 54.4]
     }]
 });
-//console.log(newDataToUse);
 CompareChart1.series[0].setData(newDataToUse);
 CompareChart1.xAxis[0].setCategories(catToShow);
 
@@ -156,11 +154,13 @@ for(var i=0;i<len;i++)
  cat1.push(Object.keys(newData1)[i]);
  cat1.sort();
 for(var i=0;i<len;i++)
-{
    newDataToUse1.push(newData1[cat1[i]]);
-   if (i>0) catToShow1.push(cat1[i-1]+"-"+cat1[i]); else catToShow1.push("0-"+cat1[0]);
-}
-console.log(newDataToUse1);
+       
+ cat1.forEach((element,i)=>{
+ if(Number(element)%1!=0) cat1[i]=Number(element).toFixed(3);
+ if (i>0) catToShow1.push(cat[i-1]+"-"+cat1[i]); else catToShow1.push("0-"+cat1[0]);
+ });
+
 CompareChart2=Highcharts.chart('2CompChart', {
 chart: {
     type: 'column'
@@ -195,16 +195,14 @@ plotOptions: {
     }
 },
 series: [{
-    name: 'Value',
+    name: selectedDropdownValue,
     //data: [49.9, 71.5, 106.4, 129.2, 144.0, 176.0, 135.6, 148.5, 216.4, 194.1, 95.6, 54.4]
 }]
 });
-//console.log(newDataToUse);
 CompareChart2.series[0].setData(newDataToUse1);
 CompareChart2.xAxis[0].setCategories(catToShow1);
 }
 }
-
 
 function chooseClusterDropdown(){
 //console.log(data);
@@ -265,10 +263,13 @@ else{
      cat.push(Object.keys(newData)[i]);
     cat.sort();
    for(var i=0;i<len;i++)
-   {
-       newDataToUse.push(newData[cat[i]]);
-       if (i>0) catToShow.push(cat[i-1]+"-"+cat[i]); else catToShow.push("0-"+cat[0]);
-   }
+     newDataToUse.push(newData[cat[i]]);
+
+   cat.forEach((element,i)=>{
+    if(Number(element)%1!=0) cat[i]=Number(element).toFixed(3);
+    if (i>0) catToShow.push(cat[i-1]+"-"+cat[i]); else catToShow.push("0-"+cat[0]);
+    });
+
 ClusterChart=Highcharts.chart('ClusterChart', {
     chart: {
         type: 'column'
@@ -303,7 +304,7 @@ ClusterChart=Highcharts.chart('ClusterChart', {
         }
     },
     series: [{
-        name: 'Value',
+        name: selectedDropdownValue,
         //data: [49.9, 71.5, 106.4, 129.2, 144.0, 176.0, 135.6, 148.5, 216.4, 194.1, 95.6, 54.4]
     }]
 });
@@ -346,7 +347,7 @@ chart = new Highcharts.Chart({
                   },
                   drop: function () {
                     var V={},data=chart.series[0].data;
-                    for(var i=0;i<18;i++)
+                    for(var i=0;i<data.length;i++)
                     {
                          V[data[i].category]=data[i].y;
                     }
@@ -420,7 +421,7 @@ chartRight = new Highcharts.Chart({
                     },
                     drop: function () {
                         var V={},data=chartRight.series[0].data;
-                        for(var i=0;i<18;i++)
+                        for(var i=0;i<data.length;i++)
                         {
                              V[data[i].category]=data[i].y;
                         }
