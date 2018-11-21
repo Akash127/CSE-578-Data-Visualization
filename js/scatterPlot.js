@@ -143,7 +143,7 @@ ScatterPlot.prototype.init = function() {
     .attr("clip-path", "url(#clip)")
     // Adding Axis Labels
   vis.scatterPlotGroup.append("text")
-    .text(x_dropdown=="default"? vis.columns[initX]:x_dropdown)
+    .text(vis.columns[initX])
     .attr("y", vis.height + 50)
     .attr("x", vis.width/2)
     .attr("class", "x-axis-label")
@@ -155,7 +155,7 @@ ScatterPlot.prototype.init = function() {
     .attr("class", "y-axis-label")
     .attr("font-size", "18px")
     .attr("transform", "rotate(-90)")
-  
+
   //Add Lasso Objects
   vis.lasso = d3.lasso()
     .closePathDistance(75) 
@@ -398,7 +398,7 @@ ScatterPlot.prototype.updategraph=function(axis, high, low,Vgiven){
     element["coord"]["Pickup"]=2;
   });
   attr=this.data.columns;
-  var attrNo=18; //t be changed
+  var attrNo=attr.length; //t be changed
   var x1={},
   x0={};
 if(Vgiven==undefined){
@@ -447,11 +447,11 @@ if(Vgiven==undefined){
 else
 {
   var V = Vgiven, Verror = {}, norm = 0;
-  for (var i = 0; i<18; i++) {
+  for (var i = 0; i<attrNo; i++) {
    norm = norm + (V[attr[i]])*(V[attr[i]]);
   }
   norm = Math.sqrt(norm);
-  for (var i = 0; i<18; i++) {
+  for (var i = 0; i<attrNo; i++) {
    V[attr[i]] = V[attr[i]]/norm;
    Verror[attr[i]] = 0;
   }
@@ -461,10 +461,10 @@ else
 chartdata=[];
    index = index + 1; 
    newxname = 'x'+index;
-   for(var j=0;j<18;j++)       chartdata.push(V[attr[j]]);
+   for(var j=0;j<attrNo;j++)       chartdata.push(V[attr[j]]);
    data.forEach(function(d) {
     d["coord"][newxname] = 0; 
-    for (var j = 0; j<18; j++) {
+    for (var j = 0; j<attrNo; j++) {
       d["coord"][newxname] = d["coord"][newxname] + V[attr[j]]*d["coord"][attr[j]];
     }
   });
@@ -477,11 +477,12 @@ chartdata=[];
 ScatterPlot.prototype.updategraphOnDropdownChange=function(axis,index,Vgiven){
   var V = Vgiven, Verror = {}, norm = 0;
   attr=this.data.columns;
-  for (var i = 0; i<18; i++) {
+  attrNo=attr.length;
+  for (var i = 0; i<attrNo; i++) {
    norm = norm + (V[attr[i]])*(V[attr[i]]);
   }
   norm = Math.sqrt(norm);
-  for (var i = 0; i<18; i++) {
+  for (var i = 0; i<attrNo; i++) {
    V[attr[i]] = V[attr[i]]/norm;
    Verror[attr[i]] = 0;
   }
@@ -489,12 +490,12 @@ ScatterPlot.prototype.updategraphOnDropdownChange=function(axis,index,Vgiven){
   newxname = 'x'+index;
   this.data.forEach(function(d) {
    d["coord"][newxname] = 0; 
-   for (var j = 0; j<18; j++) {
+   for (var j = 0; j<attrNo; j++) {
      d["coord"][newxname] = d["coord"][newxname] + V[attr[j]]*d["coord"][attr[j]];
    }
  });
  this.data.forEach(function(d) {d[axis=="X" ? "x" : "y"] = d["coord"][newxname]; });
-  if(axis=="X") $('.x-axis-label').text(newxname);
+ if(axis=="X") $('.x-axis-label').text(newxname);
  if(axis=="Y") $('.y-axis-label').text(newxname);
  this.drawvis();
 
@@ -775,22 +776,21 @@ function getContinuousSummary(clusterData) {
     matrix[i] = rowValue;
   }
   var names = {};
-  var j= 0;
-  for (j = 1; j <= nc - 1; j++) {
+  if(localStorage['myKey']=='Car')var j= 1; else j=0;
+  for (; j <= nc - 1; j++) {
     var s = new Set();
     for (i = 0; i <= cl - 1; i++ ) {
-      s.add(Math.floor(Number(matrix[i][j])));
+      s.add(Math.floor(Number(matrix[i][j])* 1000) / 1000);
     }
-    if(s.has(0) && s.has(1))
+    if(s.has(0) && s.has(1) && s.size==2)
     {
      rangeArray=undefined;
-     categorialList.push(value[j]);
+    if(!categorialList.includes(value[j])) categorialList.push(value[j]);
     }
-    else if (s.size >= 2 ) {
+    else {
       var arr = Array.from(s);
       var minv, maxv;
-      minv = arr[0];
-      maxv = arr[0];
+    if(s.size==1)minv=0,maxv=1;else minv = arr[0],maxv = arr[0];
       for (var ch in arr) {
         minv = Math.min(minv,arr[ch]);
         maxv = Math.max(maxv,arr[ch]);
