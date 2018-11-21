@@ -45,11 +45,9 @@
           </button>
 
           <div class="btn-group" data-toggle="buttons">
-              <!-- <div class="util-buttons btn-group"> -->
-                  <button class="btn btn-secondary active" id="carBtn" onclick="changeToCarData()">Car Data</button>
-                  <button class="btn btn-secondary" id="wineBtn" onclick="changeToWineData()">Wine Data</button>
-                  <button class="btn btn-secondary" id="diabetesBtn" onclick="changeToDiabetesData()">Diabetes Data</button>
-              <!-- </div> -->
+            <button class="btn btn-secondary active" id="carBtn" onclick="changeToCarData()">Car Data</button>
+            <button class="btn btn-secondary" id="wineBtn" onclick="changeToWineData()">Wine Data</button>
+            <button class="btn btn-secondary" id="diabetesBtn" onclick="changeToDiabetesData()">Diabetes Data</button>
           </div>
         </div>
     </nav>
@@ -98,7 +96,7 @@
       <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLongTitle">Compare Selected Clusters</h5>
+            <h5 class="modal-title" id="exampleModalLongTitle">Cluster Comparison</h5>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
@@ -110,15 +108,14 @@
             </select>
           </div>
           <div class="row">
-          <div id="1CompChart" style="min-width: 310px; height: 400px; max-width: 600px; margin: 0 auto;border-style:groove;"></div>
-          <div id="2CompChart" style="min-width: 310px; height: 400px; max-width: 600px; margin: 0 auto;border-style:groove;"></div>
+          <div id="1CompChart" style="min-width: 310px; height: 400px; max-width: 600px; margin: 0 auto;"></div>
+          <div id="2CompChart" style="min-width: 310px; height: 400px; max-width: 600px; margin: 0 auto;"></div>
            
           </div>
           </div>
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-            <!-- <button type="button" class="btn btn-primary">Save changes</button> -->
           </div>
         </div>
       </div>
