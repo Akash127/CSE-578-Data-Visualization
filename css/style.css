@@ -142,6 +142,8 @@ table{
 .selected {
     fill: steelblue;
 }
+
+/* Side Bar Styles */
 .wrapper {
     display: flex;
     width: 100%;
@@ -149,16 +151,25 @@ table{
 }
 #sidebar{
     width: 321px;
-    background-color: #e79110;
+    background-color: #6e757d;
 }
 #sidebar.active {
     margin-left: -320px;
 }
 #main-content{width:100%}
-.compare{background-color:#e79110;}
 #ToCompare1 svg{margin-top:-6px}
 #ToCompare2 svg{margin-top:-146px}
 #ToCompare3 svg{margin-top:-286px}
 #ToCompare4 svg{margin-top:-420px}
-#selectComp{margin-left: 288px;width:25%;margin-top:-21px;background-color: lavender;}
-#selectCluster{margin-left: 288px;width:25%;margin-top:-21px;background-color: lavender;}
+#selectComp{margin-left: 288px;width:25%;margin-top:-21px;height: 35px;background-color: lavender;}
+#selectCluster{margin-left: 288px;width:25%;margin-top:-21px;background-color: lavender;height: 35px;}
+
+.sidebar-header {
+    color:#F4F9FA;
+}
+
+.compare {
+    /* border: 2px solid red; */
+    border-radius: 10px;
+    background-color: #BBBDBF;
+}

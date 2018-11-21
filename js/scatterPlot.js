@@ -635,8 +635,13 @@ function saveCluster() {
   }
 
   if(selectedCluster) {
-    clusterMap[indexMap[clusterInputIndex]] = selectedCluster
-    clusterInputIndex = (clusterInputIndex + 1) % 4
+    clusterMap['D'] = clusterMap['C']
+    clusterMap['C'] = clusterMap['B']
+    clusterMap['B'] = clusterMap['A']
+    clusterMap['A'] = selectedCluster;
+
+    // clusterMap[indexMap[clusterInputIndex]] = selectedCluster
+    // clusterInputIndex = (clusterInputIndex + 1) % 4
     selectedCluster = null;
     console.log("CLUSTER ADDED")
   }
@@ -644,6 +649,7 @@ function saveCluster() {
   addToCompare();
   chooseClusterDropdown();
 }
+
 function addToCompare() {
   viewBox1="350 78 710 1290"
   viewBox2="350 -250 700 1290"
@@ -675,19 +681,19 @@ if($("#ToCompare2>svg").length!=0){
   document.getElementById("ToCompare2").childNodes[1].setAttribute("viewBox",viewBox2 );
   $("#ToCompare2").css("background-color","cornsilk").css("text-align","")
 }
-else $("#ToCompare2").empty(),$("#ToCompare2").html("Cluster 2 currently not present").css("background-color","#e79110").css("text-align","center");
+else $("#ToCompare2").empty(),$("#ToCompare2").html("Cluster 2 currently not present").css("background-color","#BBBDBF").css("text-align","center");
 
 if($("#ToCompare3>svg").length!=0){
   document.getElementById("ToCompare3").childNodes[1].setAttribute("viewBox",viewBox3 );
   $("#ToCompare3").css("background-color","cornsilk").css("text-align","")
 }
-else $("#ToCompare3").empty(),$("#ToCompare3").html("Cluster 3 currently not present").css("background-color","#e79110").css("text-align","center");
+else $("#ToCompare3").empty(),$("#ToCompare3").html("Cluster 3 currently not present").css("background-color","#BBBDBF").css("text-align","center");
 
 if($("#ToCompare4>svg").length!=0){
   document.getElementById("ToCompare4").childNodes[1].setAttribute("viewBox",viewBox4  );
   $("#ToCompare4").css("background-color","cornsilk").css("text-align","")
 }
-else $("#ToCompare4").empty(),$("#ToCompare4").html("Cluster 4 currently not present").css("background-color","#e79110").css("text-align","center");
+else $("#ToCompare4").empty(),$("#ToCompare4").html("Cluster 4 currently not present").css("background-color","#BBBDBF").css("text-align","center");
 }
 
 // Function to Check if Cluster is Valid or Not
