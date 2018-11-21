@@ -99,6 +99,7 @@ else
     var cat=[],len=Object.keys(newData).length;
     for(var i=0;i<len;i++)
      cat.push(Object.keys(newData)[i]);
+     cat.sort();
    for(var i=0;i<len;i++)
    {
        newDataToUse.push(newData[cat[i]]);
@@ -153,6 +154,7 @@ var newDataToUse1=[],catToShow1=[];
 var cat1=[],len=Object.keys(newData1).length;
 for(var i=0;i<len;i++)
  cat1.push(Object.keys(newData1)[i]);
+ cat1.sort();
 for(var i=0;i<len;i++)
 {
    newDataToUse1.push(newData1[cat1[i]]);
@@ -219,10 +221,9 @@ if(isCategory)
 {
     var newData=data["catSum"][selectedDropdownValue];
     var newDataToUse=[];
-   
     newDataToUse.push({'name':'Non-'+selectedDropdownValue,'y':newData['Non-'+selectedDropdownValue]});
     newDataToUse.push({'name':selectedDropdownValue,'y':newData[selectedDropdownValue]});
-    console.log(newDataToUse);
+    //console.log(newDataToUse);
     ClusterChart=Highcharts.chart('ClusterChart', {
         chart: {
             plotBackgroundColor: null,
@@ -262,6 +263,7 @@ else{
     var cat=[],len=Object.keys(newData).length;
     for(var i=0;i<len;i++)
      cat.push(Object.keys(newData)[i]);
+    cat.sort();
    for(var i=0;i<len;i++)
    {
        newDataToUse.push(newData[cat[i]]);
