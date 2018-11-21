@@ -133,6 +133,7 @@ d3.csv("dataset/" + fileNameMap[fileName]).then(function(data) {
 function chooseX() {
   var abc = document.getElementById('select').value;  
   var xyz=document.getElementById('select1').value;  
+  selected=null;
   isLassoActivated=false;
   document.getElementById("lassoToggle").innerHTML = "Activate Lasso";
   $("#SaveClusterBtn").attr("disabled","disabled");
@@ -195,6 +196,7 @@ function chooseY() {
   var abc = document.getElementById('select1').value;
   var xyz=document.getElementById('select').value;  
   isLassoActivated=false;
+  selected=null;
   document.getElementById("lassoToggle").innerHTML = "Activate Lasso";
   $("#SaveClusterBtn").attr("disabled","disabled");
   // Load Dataset and Charts
