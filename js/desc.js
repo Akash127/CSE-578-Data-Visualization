@@ -8,6 +8,7 @@ DescriptionTable.prototype.createTable = function() {
   this.processData();
   
   this.table = d3.select(this.containerClassName).append('table')
+    .attr("class", "table table-bordered table-sm text-light bg-secondary")
   this.thead = this.table.append('thead')
   this.tbody = this.table.append('tbody');
   

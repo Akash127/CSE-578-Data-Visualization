@@ -10,12 +10,13 @@
 }
 svg:not(:root){overflow: visible!important;}
 .y-top{  
-    margin-left: 84px;    margin-top: 50px;position: absolute;overflow: visible;}
-.y-bottom{margin-top: 559px;
-    margin-left: 84px;position: absolute; }
-.x-left{    margin-top: 700px;
-    margin-left: 232px;position: absolute;overflow: visible;}
-.x-right{margin-top: 700px;margin-left:739px;position: absolute;overflow: visible;}
+    margin-left: 84px;margin-top: 50px;position: absolute;overflow: visible;background-color: #69c869;}
+.y-bottom{margin-top: 409px;
+    margin-left: 84px;position: absolute; background-color: #69c869;
+}
+.x-left{    margin-top: 546px;
+    margin-left: 232px;position: absolute;overflow: visible;background-color: #69c869;}
+.x-right{margin-top: 546px;margin-left:644px;position: absolute;overflow: visible;background-color: #69c869;}
 
 #chart-area1{
     position: absolute;    
@@ -45,25 +46,33 @@ table{
 }
 
 .left-bars{
-    /* margin-left: 20px;
-    margin-top: 50px */
+ margin-left:16px;
 }
-
-.dropdowns{
-    margin-left: -202px;
-    margin-top: 42px;
+.right-bars{
+    margin-left:16px;
 }
-
+.dropdowns{   
+    margin-left: 352px;
+    margin-top: 589px;
+    position: absolute;
+}
+.card{margin-left:800px}
+.compare{
+    width: 268px;
+    height: 224px;
+    border-style: groove;
+    
+}
 #select1{
-    width: 100px;
-    margin-left: 262px;
+    width: 121px;
 }
 #select{
-    width: 100px;
-    margin-left: 262px;
+    width: 121px;
 }
-
-
+#CompareDivTable{
+    margin-left:5px;
+}
+.compare>svg{margin-left:10px;}
 .tick {
     color: #787878;
     stroke-width: 0.2px;
@@ -94,8 +103,73 @@ table{
 .selected{fill: #73AD21}
 
 .show {display: block;}
-.left-section{    margin-left: -31px; overflow: visible;}
-.mid-section{    margin-left: -141px;}
+.left-section{    margin-left: -8px; overflow: visible;margin-right: 45px;}
+.mid-section{margin-left: -154px;}
 .right-section{
-    margin-left: 390px;
+    margin-left: 219px;
+}
+.xAxis,.yAxis{width: 250px;}
+
+/* Lasso Styles */
+
+.lasso path {
+    stroke: rgb(80,80,80);
+    stroke-width:2px;
+}
+
+.lasso .drawn {
+    fill-opacity:.05 ;
+}
+
+.lasso .loop_close {
+    fill:none;
+    stroke-dasharray: 4,4;
+}
+
+.lasso .origin {
+    fill:#3399FF;
+    fill-opacity:.5;
+}
+
+.not_possible {
+    fill: rgb(200,200,200);
+}
+
+.possible {
+    fill: #EC888C;
+}
+
+.selected {
+    fill: steelblue;
+}
+
+/* Side Bar Styles */
+.wrapper {
+    display: flex;
+    width: 100%;
+    align-items: stretch;
+}
+#sidebar{
+    width: 321px;
+    background-color: #6e757d;
+}
+#sidebar.active {
+    margin-left: -320px;
+}
+#main-content{width:100%}
+#ToCompare1 svg{margin-top:-6px}
+#ToCompare2 svg{margin-top:-146px}
+#ToCompare3 svg{margin-top:-286px}
+#ToCompare4 svg{margin-top:-420px}
+#selectComp{margin-left: 288px;width:25%;margin-top:-21px;height: 35px;background-color: lavender;}
+#selectCluster{margin-left: 288px;width:25%;margin-top:-21px;background-color: lavender;height: 35px;}
+
+.sidebar-header {
+    color:#F4F9FA;
+}
+
+.compare {
+    /* border: 2px solid red; */
+    border-radius: 10px;
+    background-color: #BBBDBF;
 }
