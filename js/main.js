@@ -6,23 +6,45 @@ var GlobalV=[];
 var changed;
 var isLassoActivated = false;
 
+var fileNameMap = {
+  'Car':"Cars.csv",
+  'Wine':'Wine.csv',
+  'Diabetes':'Diabetes.csv'
+}
+
+// Read Filename from Local Storage
+fileName = localStorage['myKey'] || 'Car'
+
 function pointSelected(event) {
   selectedPoint = event.raw;
   desc.update();
 }
 
-// function toggle_lasso() {
-//     console.log("Lasso Activated");
-//     if(isLasso) {
-//         isLasso = false;
-//     } else {
-//         isLasso = true;
-//     }
-// }
+// Function to Change Data to Wine Data
+function changeToWineData() {
+  localStorage['myKey'] = 'Wine';
+  document.location.reload(true)
+  console.log("Change to Wine Data")
+}
+// Function to Change Data to Diabetes Data
+function changeToDiabetesData() {
+  localStorage['myKey'] = 'Diabetes';
+  document.location.reload(true)
+  console.log("Change to Diabetes Data")
+}
 
+// Function to Change Data to Car Data
+function changeToCarData() {
+  localStorage['myKey'] = 'Car';
+  document.location.reload(true)
+  console.log("Change to Car Data")
+}
+
+console.log("Loading: " + fileNameMap[fileName])
 
 // Load Dataset and Charts
-d3.csv("dataset/04cars data_clean.csv").then(function(data) {
+d3.csv("dataset/" + fileNameMap[fileName]).then(function(data) {
+  console.log(data)
   da=data;
   data.forEach(element => {
     var tmp={"Name":null,"raw":null,"coord":null};
@@ -116,7 +138,7 @@ function chooseX() {
   document.getElementById("lassoToggle").innerHTML = "Activate Lasso";
   $("#SaveClusterBtn").attr("disabled","disabled");
   // Load Dataset and Charts
-d3.csv("dataset/04cars data_clean.csv").then(function(data) {
+d3.csv("dataset/" + fileNameMap[fileName]).then(function(data) {
   loadData=[];
   data.forEach(element => {
     var tmp={"Name":null,"raw":null,"coord":null};
@@ -172,7 +194,7 @@ function chooseY() {
   document.getElementById("lassoToggle").innerHTML = "Activate Lasso";
   $("#SaveClusterBtn").attr("disabled","disabled");
   // Load Dataset and Charts
-d3.csv("dataset/04cars data_clean.csv").then(function(data) {
+d3.csv("dataset/" + fileNameMap[fileName]).then(function(data) {
 
     loadData=[];
   data.forEach(element => {
