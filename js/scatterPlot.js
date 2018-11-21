@@ -26,8 +26,7 @@ var clusterMap = {
 var clusterInputIndex = 0;
 var selectedCluster = null;
 
-var categorialList = ['Sports Car', 'SUV', 'Wagon', 'Minivan', 'Small/Sporty/ Compact/Large Sedan', 
-'Pickup', 'AWD', 'RWD', 'LodaLassan']
+var categorialList = []
 
 //#endregion
 
@@ -709,9 +708,9 @@ function toggleSideBar(){
 function getClusterSummary(clusterData) {
   var categoricalSummary = {};
   var continuousSummary = {};
-
-  categoricalSummary = getCategoricalSummary(clusterData);
+  
   continuousSummary = getContinuousSummary(clusterData);
+  categoricalSummary = getCategoricalSummary(clusterData);
 
   var result = {
     catSum: categoricalSummary,
@@ -777,12 +776,17 @@ function getContinuousSummary(clusterData) {
   }
   var names = {};
   var j= 0;
-  for (j = 0; j <= nc - 1; j++) {
+  for (j = 1; j <= nc - 1; j++) {
     var s = new Set();
     for (i = 0; i <= cl - 1; i++ ) {
       s.add(Math.floor(Number(matrix[i][j])));
     }
-    if (s.size >= 5) {
+    if(s.has(0) && s.has(1))
+    {
+     rangeArray=undefined;
+     categorialList.push(value[j]);
+    }
+    else if (s.size >= 2 ) {
       var arr = Array.from(s);
       var minv, maxv;
       minv = arr[0];
@@ -800,17 +804,15 @@ function getContinuousSummary(clusterData) {
         countRange[p] = 0;
       }
     var rangeArray = {};
-    for (var ch in arr) {
-        var val = arr[ch];
-        var diff = val - minv;
-        var part = Math.floor(diff/interval);
-        if (arr[ch] == maxv) {
-          countRange[part-1]++;
-          continue;
-        }
-        countRange[part]++;
-      }
-      var rangeArray = {};
+
+    clusterData.forEach((element)=>{
+     var common_diff=((maxv-minv)/10),attr_val=element["raw"][value[j]];
+     for(var i=0;i<10;i++)
+        if(attr_val>=(minv+common_diff*i) && attr_val<=(minv+common_diff*(i+1))) 
+           countRange[i]++;
+    });
+
+      rangeArray = {};
       for (var m in countRange) {
         v1 = minv + m*interval;
         v2 = v1 + interval;
@@ -819,9 +821,10 @@ function getContinuousSummary(clusterData) {
         rangeArray[v1] = countRange[m];
       }
     }
+  
     names[value[j]] = rangeArray; 
   }
-  console.log(names);
+  console.log("name",names);
   return names;
 }
 
