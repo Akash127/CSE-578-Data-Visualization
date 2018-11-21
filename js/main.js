@@ -7,7 +7,7 @@ var changed;
 var isLassoActivated = false;
 
 var fileNameMap = {
-  'Car':"Car.csv",
+  'Car':"Cars.csv",
   'Wine':'Wine.csv',
   'Diabetes':'Diabetes.csv'
 }
@@ -44,6 +44,7 @@ console.log("Loading: " + fileNameMap[fileName])
 
 // Load Dataset and Charts
 d3.csv("dataset/" + fileNameMap[fileName]).then(function(data) {
+  console.log(data)
   da=data;
   data.forEach(element => {
     var tmp={"Name":null,"raw":null,"coord":null};
@@ -137,7 +138,7 @@ function chooseX() {
   document.getElementById("lassoToggle").innerHTML = "Activate Lasso";
   $("#SaveClusterBtn").attr("disabled","disabled");
   // Load Dataset and Charts
-d3.csv("dataset/04cars data_clean.csv").then(function(data) {
+d3.csv("dataset/" + fileNameMap[fileName]).then(function(data) {
   loadData=[];
   data.forEach(element => {
     var tmp={"Name":null,"raw":null,"coord":null};
@@ -193,7 +194,7 @@ function chooseY() {
   document.getElementById("lassoToggle").innerHTML = "Activate Lasso";
   $("#SaveClusterBtn").attr("disabled","disabled");
   // Load Dataset and Charts
-d3.csv("dataset/04cars data_clean.csv").then(function(data) {
+d3.csv("dataset/" + fileNameMap[fileName]).then(function(data) {
 
     loadData=[];
   data.forEach(element => {
