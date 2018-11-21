@@ -709,7 +709,7 @@ function toggleSideBar(){
 function getClusterSummary(clusterData) {
   var categoricalSummary = {};
   var continuousSummary = {};
-  
+  categorialList=[];
   continuousSummary = getContinuousSummary(clusterData);
   categoricalSummary = getCategoricalSummary(clusterData);
 
