@@ -12,6 +12,7 @@ var y_bottom_dropzone=[];
 var tip;
 var index=0;
 var newxname;
+var isNewCluster=true;
 var lineData = [
   {"x": 0, "y": -Number.MAX_SAFE_INTEGER},
   {"x": 0, "y": Number.MAX_SAFE_INTEGER}
@@ -468,7 +469,7 @@ chartdata=[];
       d["coord"][newxname] = d["coord"][newxname] + V[attr[j]]*d["coord"][attr[j]];
     }
   });
-  axis=="X"?chart.series[0].setData(chartdata):chartRight.series[0].setData(chartdata);
+ if(Vgiven==undefined)  axis=="X"?chart.series[0].setData(chartdata):chartRight.series[0].setData(chartdata); //changing the higchart only if the axis is made from dropzzones
   data.forEach(function(d) {d[axis=="X" ? "x" : "y"] = d["coord"][newxname]; });
   if(axis=="X") $('.x-axis-label').text(newxname);
   if(axis=="Y") $('.y-axis-label').text(newxname);
@@ -620,20 +621,20 @@ function processClusterData(clusterData) {
   // Check if valid cluster
   if(isValid(clusterData)) {
     // Can do some further processing here.
+    isNewCluster=true;
     selectedCluster = getClusterSummary(clusterData)
   }
 }
 
 // Function to Save Cluster When Button is Clicked
 function saveCluster() {
-  console.log("INSIDE SAVE CLUSTER")
   var indexMap = {
     0:'A',
     1:'B',
     2:'C',
     3:'D'
   }
-
+if(isNewCluster==true){
   if(selectedCluster) {
     clusterMap['D'] = clusterMap['C']
     clusterMap['C'] = clusterMap['B']
@@ -642,12 +643,17 @@ function saveCluster() {
 
     // clusterMap[indexMap[clusterInputIndex]] = selectedCluster
     // clusterInputIndex = (clusterInputIndex + 1) % 4
-    selectedCluster = null;
+    //selectedCluster = null;
     console.log("CLUSTER ADDED")
   }
   console.log(clusterMap)
   addToCompare();
   chooseClusterDropdown();
+  $("#onSaveCluster").modal('show');
+  isNewCluster=false;
+ }
+ else if(selectedCluster) $("#onSaveCluster").modal('show'),console.log(clusterMap);
+ else  alert("Please select a cluster to analyse and save!");
 }
 
 function addToCompare() {
