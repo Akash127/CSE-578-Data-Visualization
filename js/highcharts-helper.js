@@ -3,67 +3,57 @@ function chooseCompDropdown()
 {
 var FirstSelection=$($("input[type='checkbox']:checked")[0]).attr("class");
 var SecondSelection=$($("input[type='checkbox']:checked")[1]).attr("class");
-var firstData=clusterMap[FirstSelection];
-var SecondData=clusterMap[SecondSelection];
+var data=clusterMap[FirstSelection];
+var data1=clusterMap[SecondSelection];
+var isException=false;
 //onsole.log(firstData,SecondData);
 var selectedDropdownValue=document.getElementById("selectComp").value;
 var CompareChart1=null;
 var CompareChart2=null;
 var isCategory=false;
-for(var i=0;i<categorialList.length;i++)
-{
-    if(categorialList[i]==selectedDropdownValue) isCategory=true;
-}
-if(isCategory){
-    data=firstData;
-    var newData=data["catSum"][selectedDropdownValue];
-    var newDataToUse=[];
-   
-    newDataToUse.push({'name':'Non-'+selectedDropdownValue,'y':newData['Non-'+selectedDropdownValue]});
-    newDataToUse.push({'name':selectedDropdownValue,'y':newData[selectedDropdownValue]});
-    CompareChart1=Highcharts.chart('1CompChart', {
-        chart: {
-            plotBackgroundColor: null,
-            plotBorderWidth: null,
-            plotShadow: false,
-            type: 'pie'
-        },
-        title: {
-            text: selectedDropdownValue+' Values for Cluster 1'
-        },
-        tooltip: {
-            pointFormat: '<b>{point.percentage:.1f}%</b>'
-        },
-        plotOptions: {
-            pie: {
-                allowPointSelect: true,
-                cursor: 'pointer',
-                dataLabels: {
-                    enabled: false
-                },
-                showInLegend: true
-            }
-        },
-        series: [{
+if(ExceptionClustersList.includes(selectedDropdownValue)) isException=true;
+if(categorialList.includes(selectedDropdownValue)) isCategory=true;
+CompareChart1=Highcharts.chart('1CompChart', {
+    chart: {
+        plotBackgroundColor: null,
+        plotBorderWidth: null,
+        plotShadow: false,
+        type: 'pie'
+    },
+    credits:{
+        enabled:false
+    },
+    title: {
+        text: selectedDropdownValue+' Values for Cluster 1'
+    },
+    tooltip: {
+        pointFormat: '<b>{point.percentage:.1f}%</b>'
+    },
+    plotOptions: {
+        pie: {
+            allowPointSelect: true,
+            cursor: 'pointer',
+            dataLabels: {
+                enabled: false
+            },
+            showInLegend: true
+        }
+    },
+    series: [{
 
-            colorByPoint: true,
-            data: []
-        }]
-    });
-CompareChart1.series[0].setData(newDataToUse);
-// Build the chart
-data1=SecondData;
-var newData1=data1["catSum"][selectedDropdownValue];
-var newDataToUse1=[];
-
-newDataToUse1.push({'name':'Non-'+selectedDropdownValue,'y':newData1['Non-'+selectedDropdownValue]});
-newDataToUse1.push({'name':selectedDropdownValue,'y':newData1[selectedDropdownValue]});
+        colorByPoint: true,
+        data: []
+    }]
+});
 CompareChart2=Highcharts.chart('2CompChart', {
     chart: {
         plotBackgroundColor: null,
         plotBorderWidth: null,
         plotShadow: false,
         type: 'pie'
+    },
+    credits:{
+        enabled:false
     },
     title: {
         text: selectedDropdownValue+' Values for Cluster 2'
@@ -87,11 +77,52 @@ CompareChart2=Highcharts.chart('2CompChart', {
         data: []
     }]
 });
+
+if(isCategory){
+var newData=data["catSum"][selectedDropdownValue];
+var newDataToUse=[];
+
+newDataToUse.push({'name':'Non-'+selectedDropdownValue,'y':newData['Non-'+selectedDropdownValue]});
+newDataToUse.push({'name':selectedDropdownValue,'y':newData[selectedDropdownValue]});
+CompareChart1.series[0].setData(newDataToUse);
+// Build the chart
+var newData1=data1["catSum"][selectedDropdownValue];
+var newDataToUse1=[];
+newDataToUse1.push({'name':'Non-'+selectedDropdownValue,'y':newData1['Non-'+selectedDropdownValue]});
+newDataToUse1.push({'name':selectedDropdownValue,'y':newData1[selectedDropdownValue]});
 CompareChart2.series[0].setData(newDataToUse1);
+}
+
+else if(isException)
+{
+    var newData=data["expSum"];
+    var dataForCharts;
+    newData.forEach(e=>{
+     if(e[selectedDropdownValue])
+     dataForCharts=e[selectedDropdownValue];
+    });
+    var newDataCategories=[],newDataToUse=[];
+    newDataCategories.push(Object.keys(dataForCharts));
+    for(var i=0;i<newDataCategories[0].length;i++){
+    newDataToUse.push({'name':newDataCategories[0][i],'y':dataForCharts[newDataCategories[0][i]]});
+    }
+    CompareChart1.series[0].setData(newDataToUse);
+
+    var newData1=data1["expSum"];
+    var dataForCharts1;
+    newData1.forEach(e=>{
+     if(e[selectedDropdownValue])
+     dataForCharts1=e[selectedDropdownValue];
+    });
+    var newDataCategories1=[],newDataToUse1=[];
+    newDataCategories1.push(Object.keys(dataForCharts1));
+    for(var i=0;i<newDataCategories1[0].length;i++){
+    newDataToUse1.push({'name':newDataCategories1[0][i],'y':dataForCharts1[newDataCategories1[0][i]]});
+    }
+    CompareChart2.series[0].setData(newDataToUse1);
 }
 else
 {
-    data=firstData;
     var newData=data["contSum"][selectedDropdownValue];
     var newDataToUse=[],catToShow=[];
     var cat=[],len=Object.keys(newData).length;
@@ -108,6 +139,9 @@ else
 CompareChart1=Highcharts.chart('1CompChart', {
     chart: {
         type: 'column'
+    },
+    credits:{
+        enabled:false
     },
     title: {
         text: selectedDropdownValue+' Values for Cluster 1'
@@ -133,9 +167,11 @@ CompareChart1=Highcharts.chart('1CompChart', {
         useHTML: true
     },
     plotOptions: {
+        series:{
+            borderColor: '#303030'
+        },
         column: {
             pointPadding: 0.2,
-            borderWidth: 0
         }
     },
     series: [{
@@ -146,7 +182,7 @@ CompareChart1=Highcharts.chart('1CompChart', {
 CompareChart1.series[0].setData(newDataToUse);
 CompareChart1.xAxis[0].setCategories(catToShow);
 
-data1=SecondData;
+
 var newData1=data1["contSum"][selectedDropdownValue];
 var newDataToUse1=[],catToShow1=[];
 var cat1=[],len=Object.keys(newData1).length;
@@ -164,6 +200,9 @@ for(var i=0;i<len;i++)
 CompareChart2=Highcharts.chart('2CompChart', {
 chart: {
     type: 'column'
+},
+credits:{
+    enabled:false
 },
 title: {
     text: selectedDropdownValue+' Values for Cluster 2'
@@ -189,9 +228,11 @@ tooltip: {
     useHTML: true
 },
 plotOptions: {
+    series:{
+        borderColor: '#303030'
+    },
     column: {
         pointPadding: 0.2,
-        borderWidth: 0
     }
 },
 series: [{
@@ -208,53 +249,72 @@ function chooseClusterDropdown(){
 //console.log(data);
 data=clusterMap["A"];
 var selectedDropdownValue=document.getElementById("selectCluster").value;
-var ClusterChart=null;
+var ClusterChart;
 var isCategory=false;
-for(var i=0;i<categorialList.length;i++)
-{
-    if(categorialList[i]==selectedDropdownValue) isCategory=true;
-}
+var isException=false;
 
+ClusterChart=Highcharts.chart('ClusterChart', {
+    chart: {
+        plotBackgroundColor: null,
+        plotBorderWidth: null,
+        plotShadow: false,
+        type: 'pie'
+    },
+    credits:{
+        enabled:false
+    },
+    title: {
+        text:  selectedDropdownValue+' Values'
+    },
+    tooltip: {
+        pointFormat: '<b>{point.percentage:.1f}%</b>'
+    },
+    plotOptions: {
+        series:{
+            borderColor: '#303030'
+        },
+        pie: {
+            allowPointSelect: true,
+            cursor: 'pointer',
+            dataLabels: {
+                enabled: false
+            },
+            showInLegend: true
+        }
+    },
+    series: [{
+
+        colorByPoint: true,
+        data: []
+    }]
+});
+
+if(ExceptionClustersList.includes(selectedDropdownValue)) isException=true;
+else if(categorialList.includes(selectedDropdownValue)) isCategory=true;
 if(isCategory)
 {
     var newData=data["catSum"][selectedDropdownValue];
     var newDataToUse=[];
     newDataToUse.push({'name':'Non-'+selectedDropdownValue,'y':newData['Non-'+selectedDropdownValue]});
     newDataToUse.push({'name':selectedDropdownValue,'y':newData[selectedDropdownValue]});
-    //console.log(newDataToUse);
-    ClusterChart=Highcharts.chart('ClusterChart', {
-        chart: {
-            plotBackgroundColor: null,
-            plotBorderWidth: null,
-            plotShadow: false,
-            type: 'pie'
-        },
-        title: {
-            text: selectedDropdownValue+' Values'
-        },
-        tooltip: {
-            pointFormat: '<b>{point.percentage:.1f}%</b>'
-        },
-        plotOptions: {
-            pie: {
-                allowPointSelect: true,
-                cursor: 'pointer',
-                dataLabels: {
-                    enabled: false
-                },
-                showInLegend: true
-            }
-        },
-        series: [{
-
-            colorByPoint: true,
-            data: []
-        }]
-    });
     ClusterChart.series[0].setData(newDataToUse);
 }
 
-
+else if(isException)
+{
+    var newData=data["expSum"];
+    var dataForCharts;
+    newData.forEach(e=>{
+     if(e[selectedDropdownValue])
+     dataForCharts=e[selectedDropdownValue];
+    });
+    var newDataCategories=[],newDataToUse=[];
+    newDataCategories.push(Object.keys(dataForCharts));
+    for(var i=0;i<newDataCategories[0].length;i++){
+    newDataToUse.push({'name':newDataCategories[0][i],'y':dataForCharts[newDataCategories[0][i]]});
+    }
+    ClusterChart.series[0].setData(newDataToUse);
+}
 else{
     var newData=data["contSum"][selectedDropdownValue];
     var newDataToUse=[],catToShow=[];
@@ -277,6 +337,9 @@ ClusterChart=Highcharts.chart('ClusterChart', {
     title: {
         text: selectedDropdownValue+' Values'
     },
+    credits:{
+        enabled:false
+    },
     subtitle: {
         text:''
     },
@@ -298,10 +361,13 @@ ClusterChart=Highcharts.chart('ClusterChart', {
         useHTML: true
     },
     plotOptions: {
+        series:{
+            borderColor: '#303030'
+        },
         column: {
             pointPadding: 0.2,
-            borderWidth: 0
         }
+        
     },
     series: [{
         name: selectedDropdownValue,
@@ -465,3 +531,5 @@ chartRight = new Highcharts.Chart({
     }]
   
   });
+
+
