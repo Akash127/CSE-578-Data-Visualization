@@ -710,12 +710,15 @@ function getClusterSummary(clusterData) {
   var categoricalSummary = {};
   var continuousSummary = {};
   categorialList=[];
+  ExceptionClustersList=[];
+  ExceptionClusterData=[];
   continuousSummary = getContinuousSummary(clusterData);
   categoricalSummary = getCategoricalSummary(clusterData);
 
   var result = {
     catSum: categoricalSummary,
-    contSum: continuousSummary 
+    contSum: continuousSummary,
+    expSum:ExceptionClusterData
   }
   return result;
 }
@@ -749,6 +752,7 @@ function getCategoricalSummary(clusterData) {
     newAttributeMap[attr][temp] = attributeMap[attr][0]
   }
 
+  
   return newAttributeMap;
 }
 
@@ -787,7 +791,7 @@ function getContinuousSummary(clusterData) {
      rangeArray=undefined;
     if(!categorialList.includes(value[j])) categorialList.push(value[j]);
     }
-    else {
+    else if(s.size>5) {
       var arr = Array.from(s);
       var minv, maxv;
     if(s.size==1)minv=0,maxv=1;else minv = arr[0],maxv = arr[0];
@@ -821,10 +825,30 @@ function getContinuousSummary(clusterData) {
         rangeArray[v1] = countRange[m];
       }
     }
-  
+    else{
+      let array=Array.from(s);
+      array.sort();
+      //console.log(s,array,newAttributeMap);
+      var newAttributeMap = {};
+      array.forEach(element=>{
+        newAttributeMap[element] = 0;
+      })
+
+      clusterData.forEach(element=>{
+        var val=Number(element["raw"][value[j]]);
+        if(array.includes(val)){
+          newAttributeMap[val]++;
+        }
+      });
+       var jsonToAppendToExceptionList={};jsonToAppendToExceptionList[value[j]]={};
+       jsonToAppendToExceptionList[value[j]]=(newAttributeMap);
+        ExceptionClusterData.push(jsonToAppendToExceptionList);
+        ExceptionClustersList.push(value[j]);
+        console.log(s,array,newAttributeMap);
+      }
     names[value[j]] = rangeArray; 
   }
-  console.log("name",names);
+ // console.log("name",names);
   return names;
 }
 
@@ -860,7 +884,7 @@ function getUnique(attr) {
 }
 
 function onCompareClusterClick(){
-  if($("input[type='checkbox']:checked").length==1)
+  if($("input[type='checkbox']:checked").length==1 || $("input[type='checkbox']:checked").length==0)
     alert("Select 2 clusters to compare");
   else if($("input[type='checkbox']:checked").length==2){
   
