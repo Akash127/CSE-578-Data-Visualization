@@ -12,6 +12,7 @@ var y_bottom_dropzone=[];
 var tip;
 var index=0;
 var newxname;
+var isNewCluster=true;
 var lineData = [
   {"x": 0, "y": -Number.MAX_SAFE_INTEGER},
   {"x": 0, "y": Number.MAX_SAFE_INTEGER}
@@ -468,7 +469,7 @@ chartdata=[];
       d["coord"][newxname] = d["coord"][newxname] + V[attr[j]]*d["coord"][attr[j]];
     }
   });
-  axis=="X"?chart.series[0].setData(chartdata):chartRight.series[0].setData(chartdata);
+ if(Vgiven==undefined)  axis=="X"?chart.series[0].setData(chartdata):chartRight.series[0].setData(chartdata); //changing the higchart only if the axis is made from dropzzones
   data.forEach(function(d) {d[axis=="X" ? "x" : "y"] = d["coord"][newxname]; });
   if(axis=="X") $('.x-axis-label').text(newxname);
   if(axis=="Y") $('.y-axis-label').text(newxname);
@@ -620,20 +621,20 @@ function processClusterData(clusterData) {
   // Check if valid cluster
   if(isValid(clusterData)) {
     // Can do some further processing here.
+    isNewCluster=true;
     selectedCluster = getClusterSummary(clusterData)
   }
 }
 
 // Function to Save Cluster When Button is Clicked
 function saveCluster() {
-  console.log("INSIDE SAVE CLUSTER")
   var indexMap = {
     0:'A',
     1:'B',
     2:'C',
     3:'D'
   }
-
+if(isNewCluster==true){
   if(selectedCluster) {
     clusterMap['D'] = clusterMap['C']
     clusterMap['C'] = clusterMap['B']
@@ -642,12 +643,17 @@ function saveCluster() {
 
     // clusterMap[indexMap[clusterInputIndex]] = selectedCluster
     // clusterInputIndex = (clusterInputIndex + 1) % 4
-    selectedCluster = null;
+    //selectedCluster = null;
     console.log("CLUSTER ADDED")
   }
   console.log(clusterMap)
   addToCompare();
   chooseClusterDropdown();
+  $("#onSaveCluster").modal('show');
+  isNewCluster=false;
+ }
+ else if(selectedCluster) $("#onSaveCluster").modal('show'),console.log(clusterMap);
+ else  alert("Please select a cluster to analyse and save!");
 }
 
 function addToCompare() {
@@ -710,12 +716,15 @@ function getClusterSummary(clusterData) {
   var categoricalSummary = {};
   var continuousSummary = {};
   categorialList=[];
+  ExceptionClustersList=[];
+  ExceptionClusterData=[];
   continuousSummary = getContinuousSummary(clusterData);
   categoricalSummary = getCategoricalSummary(clusterData);
 
   var result = {
     catSum: categoricalSummary,
-    contSum: continuousSummary 
+    contSum: continuousSummary,
+    expSum:ExceptionClusterData
   }
   return result;
 }
@@ -749,6 +758,7 @@ function getCategoricalSummary(clusterData) {
     newAttributeMap[attr][temp] = attributeMap[attr][0]
   }
 
+  
   return newAttributeMap;
 }
 
@@ -787,7 +797,7 @@ function getContinuousSummary(clusterData) {
      rangeArray=undefined;
     if(!categorialList.includes(value[j])) categorialList.push(value[j]);
     }
-    else {
+    else if(s.size>5) {
       var arr = Array.from(s);
       var minv, maxv;
     if(s.size==1)minv=0,maxv=1;else minv = arr[0],maxv = arr[0];
@@ -821,10 +831,30 @@ function getContinuousSummary(clusterData) {
         rangeArray[v1] = countRange[m];
       }
     }
-  
+    else{
+      let array=Array.from(s);
+      array.sort();
+      //console.log(s,array,newAttributeMap);
+      var newAttributeMap = {};
+      array.forEach(element=>{
+        newAttributeMap[element] = 0;
+      })
+
+      clusterData.forEach(element=>{
+        var val=Number(element["raw"][value[j]]);
+        if(array.includes(val)){
+          newAttributeMap[val]++;
+        }
+      });
+       var jsonToAppendToExceptionList={};jsonToAppendToExceptionList[value[j]]={};
+       jsonToAppendToExceptionList[value[j]]=(newAttributeMap);
+        ExceptionClusterData.push(jsonToAppendToExceptionList);
+        ExceptionClustersList.push(value[j]);
+        console.log(s,array,newAttributeMap);
+      }
     names[value[j]] = rangeArray; 
   }
-  console.log("name",names);
+ // console.log("name",names);
   return names;
 }
 
@@ -860,7 +890,7 @@ function getUnique(attr) {
 }
 
 function onCompareClusterClick(){
-  if($("input[type='checkbox']:checked").length==1)
+  if($("input[type='checkbox']:checked").length==1 || $("input[type='checkbox']:checked").length==0)
     alert("Select 2 clusters to compare");
   else if($("input[type='checkbox']:checked").length==2){
   
