@@ -133,7 +133,7 @@ else
        newDataToUse.push(newData[cat[i]]);
 
    cat.forEach((element,i)=>{
-    if(Number(element)%1!=0) cat[i]=Number(element).toFixed(3);
+    if((Number(element))%1!=0) cat[i]=Number(element).toFixed(3);
     if (i>0) catToShow.push(cat[i-1]+"-"+cat[i]); else catToShow.push("0-"+cat[0]);
     });
 CompareChart1=Highcharts.chart('1CompChart', {
@@ -193,8 +193,8 @@ for(var i=0;i<len;i++)
    newDataToUse1.push(newData1[cat1[i]]);
        
  cat1.forEach((element,i)=>{
- if(Number(element)%1!=0) cat1[i]=Number(element).toFixed(3);
- if (i>0) catToShow1.push(cat[i-1]+"-"+cat1[i]); else catToShow1.push("0-"+cat1[0]);
+ if((Number(element))%1!=0) cat1[i]=Number(element).toFixed(3);
+ if (i>0) catToShow1.push(cat1[i-1]+"-"+cat1[i]); else catToShow1.push("0-"+cat1[0]);
  });
 
 CompareChart2=Highcharts.chart('2CompChart', {
