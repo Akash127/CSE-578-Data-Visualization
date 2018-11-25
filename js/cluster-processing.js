@@ -103,7 +103,9 @@ function getClusterSummary(clusterData) {
   var result = {
     catSum: categoricalSummary,
     contSum: continuousSummary,
-    expSum:ExceptionClusterData
+    expSum:ExceptionClusterData,
+    catList:categorialList,
+    expList:ExceptionClustersList
   }
   return result;
 }

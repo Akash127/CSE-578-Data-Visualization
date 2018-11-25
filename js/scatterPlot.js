@@ -207,8 +207,9 @@ ScatterPlot.prototype.drawvis = function() {
          selectedProperties=d;
        var text = "<button class='btn tool-tip btn-sm btn-secondary mr-1' onclick=x_left_click()>Drop in X-Low</button>"
        +"<button class='btn tool-tip  btn-sm btn-secondary mr-1' onclick=x_right_click()>Drop in X-High</button>"
+       +"<button class='btn tool-tip btn-sm btn-secondary' onclick=y_bottom_click()>Drop in Y-Low</button>"
        +"<button class='btn tool-tip btn-sm btn-secondary mr-1' onclick=y_top_click()>Drop in Y-High</button>"
-      +"<button class='btn tool-tip btn-sm btn-secondary' onclick=y_bottom_click()>Drop in Y-Low</button>"
+      
        return text;
      });
    vis.scatterPlotGroup.call(tip);
@@ -238,6 +239,7 @@ ScatterPlot.prototype.drawvis = function() {
     .attr('cy', function(d) {return vis.yScale(+d['y'])});
  
   vis.lasso.items(vis.scatterPlotGroup.selectAll("circle"))
+  
 }
 //#endregion
 
@@ -473,6 +475,8 @@ chartdata=[];
   if(axis=="X") $('.x-axis-label').text(newxname);
   if(axis=="Y") $('.y-axis-label').text(newxname);
   this.drawvis();
+
+  
 }
 ScatterPlot.prototype.updategraphOnDropdownChange=function(axis,index,Vgiven){
   var V = Vgiven, Verror = {}, norm = 0;
