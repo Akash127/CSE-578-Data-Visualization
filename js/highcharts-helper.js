@@ -12,10 +12,10 @@ var CompareChart1=null;
 var CompareChart2=null;
 var isCategoryChart1=false;
 var isCategoryChart2=false;
-if(data["catList"].includes(selectedDropdownValue)) isExceptionChart1=true;
-if(data["expList"].includes(selectedDropdownValue)) isCategoryChart1=true;
-if(data1["catList"].includes(selectedDropdownValue)) isExceptionChart2=true;
-if(data1["expList"].includes(selectedDropdownValue)) isCategoryChart2=true;
+if(data["catList"].includes(selectedDropdownValue)) isCategoryChart1=true;
+if(data["expList"].includes(selectedDropdownValue)) isExceptionChart1=true;
+if(data1["catList"].includes(selectedDropdownValue)) isCategoryChart2=true;
+if(data1["expList"].includes(selectedDropdownValue)) isExceptionChart2=true;
 
 CompareChart1=Highcharts.chart('1CompChart', {
     chart: {

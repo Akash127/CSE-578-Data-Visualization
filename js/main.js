@@ -12,8 +12,19 @@ var fileNameMap = {
   'Diabetes':'Diabetes.csv'
 }
 
+var fileNameBtn = {
+  'Car':"carBtn",
+  'Wine':'wineBtn',
+  'Diabetes':'diabetesBtn'
+}
+
 // Read Filename from Local Storage
 fileName = localStorage['myKey'] || 'Car'
+
+document.getElementById('carBtn').className = 'btn btn-secondary ';
+document.getElementById('wineBtn').className = 'btn btn-secondary ';
+document.getElementById('diabetesBtn').className = 'btn btn-secondary ';
+document.getElementById(fileNameBtn[fileName]).className = 'btn btn-secondary active';
 
 function pointSelected(event) {
   selectedPoint = event.raw;
