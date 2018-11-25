@@ -5,14 +5,18 @@ var FirstSelection=$($("input[type='checkbox']:checked")[0]).attr("class");
 var SecondSelection=$($("input[type='checkbox']:checked")[1]).attr("class");
 var data=clusterMap[FirstSelection];
 var data1=clusterMap[SecondSelection];
-var isException=false;
-//onsole.log(firstData,SecondData);
+var isExceptionChart1=false;
+var isExceptionChart2=false;
 var selectedDropdownValue=document.getElementById("selectComp").value;
 var CompareChart1=null;
 var CompareChart2=null;
-var isCategory=false;
-if(ExceptionClustersList.includes(selectedDropdownValue)) isException=true;
-if(categorialList.includes(selectedDropdownValue)) isCategory=true;
+var isCategoryChart1=false;
+var isCategoryChart2=false;
+if(data["catList"].includes(selectedDropdownValue)) isExceptionChart1=true;
+if(data["expList"].includes(selectedDropdownValue)) isCategoryChart1=true;
+if(data1["catList"].includes(selectedDropdownValue)) isExceptionChart2=true;
+if(data1["expList"].includes(selectedDropdownValue)) isCategoryChart2=true;
+
 CompareChart1=Highcharts.chart('1CompChart', {
     chart: {
         plotBackgroundColor: null,
@@ -78,7 +82,7 @@ CompareChart2=Highcharts.chart('2CompChart', {
     }]
 });
 
-if(isCategory){
+if(isCategoryChart1){
 var newData=data["catSum"][selectedDropdownValue];
 var newDataToUse=[];
 
@@ -86,14 +90,9 @@ newDataToUse.push({'name':'Non-'+selectedDropdownValue,'y':newData['Non-'+select
 newDataToUse.push({'name':selectedDropdownValue,'y':newData[selectedDropdownValue]});
 CompareChart1.series[0].setData(newDataToUse);
 // Build the chart
-var newData1=data1["catSum"][selectedDropdownValue];
-var newDataToUse1=[];
-newDataToUse1.push({'name':'Non-'+selectedDropdownValue,'y':newData1['Non-'+selectedDropdownValue]});
-newDataToUse1.push({'name':selectedDropdownValue,'y':newData1[selectedDropdownValue]});
-CompareChart2.series[0].setData(newDataToUse1);
 }
 
-else if(isException)
+else if(isExceptionChart1)
 {
     var newData=data["expSum"];
     var dataForCharts;
@@ -107,19 +106,6 @@ else if(isException)
     newDataToUse.push({'name':newDataCategories[0][i],'y':dataForCharts[newDataCategories[0][i]]});
     }
     CompareChart1.series[0].setData(newDataToUse);
-
-    var newData1=data1["expSum"];
-    var dataForCharts1;
-    newData1.forEach(e=>{
-     if(e[selectedDropdownValue])
-     dataForCharts1=e[selectedDropdownValue];
-    });
-    var newDataCategories1=[],newDataToUse1=[];
-    newDataCategories1.push(Object.keys(dataForCharts1));
-    for(var i=0;i<newDataCategories1[0].length;i++){
-    newDataToUse1.push({'name':newDataCategories1[0][i],'y':dataForCharts1[newDataCategories1[0][i]]});
-    }
-    CompareChart2.series[0].setData(newDataToUse1);
 }
 else
 {
@@ -181,67 +167,91 @@ CompareChart1=Highcharts.chart('1CompChart', {
 });
 CompareChart1.series[0].setData(newDataToUse);
 CompareChart1.xAxis[0].setCategories(catToShow);
+}
 
-
-var newData1=data1["contSum"][selectedDropdownValue];
-var newDataToUse1=[],catToShow1=[];
-var cat1=[],len=Object.keys(newData1).length;
-for(var i=0;i<len;i++)
- cat1.push(Object.keys(newData1)[i]);
- cat1.sort();
-for(var i=0;i<len;i++)
-   newDataToUse1.push(newData1[cat1[i]]);
-       
- cat1.forEach((element,i)=>{
- if((Number(element))%1!=0) cat1[i]=Number(element).toFixed(3);
- if (i>0) catToShow1.push(cat1[i-1]+"-"+cat1[i]); else catToShow1.push("0-"+cat1[0]);
- });
-
-CompareChart2=Highcharts.chart('2CompChart', {
-chart: {
-    type: 'column'
-},
-credits:{
-    enabled:false
-},
-title: {
-    text: selectedDropdownValue+' Values for Cluster 2'
-},
-subtitle: {
-    text: ''
-},
-xAxis: {
-    categories: [],
-    crosshair: true
-},
-yAxis: {
-    min: 0,
-    title: {
-        text: selectedDropdownValue
-    }
-},
-tooltip: {
-    formatter:function(){
-        return ('<b>'+this.x+'</b>:'+this.y);
-    },
-    shared: true,
-    useHTML: true
-},
-plotOptions: {
-    series:{
-        borderColor: '#303030'
-    },
-    column: {
-        pointPadding: 0.2,
-    }
-},
-series: [{
-    name: selectedDropdownValue,
-    //data: [49.9, 71.5, 106.4, 129.2, 144.0, 176.0, 135.6, 148.5, 216.4, 194.1, 95.6, 54.4]
-}]
-});
+if(isCategoryChart2){
+var newData1=data1["catSum"][selectedDropdownValue];
+var newDataToUse1=[];
+newDataToUse1.push({'name':'Non-'+selectedDropdownValue,'y':newData1['Non-'+selectedDropdownValue]});
+newDataToUse1.push({'name':selectedDropdownValue,'y':newData1[selectedDropdownValue]});
 CompareChart2.series[0].setData(newDataToUse1);
-CompareChart2.xAxis[0].setCategories(catToShow1);
+}
+else if(isExceptionChart2){
+    var newData1=data1["expSum"];
+    var dataForCharts1;
+    newData1.forEach(e=>{
+     if(e[selectedDropdownValue])
+     dataForCharts1=e[selectedDropdownValue];
+    });
+    var newDataCategories1=[],newDataToUse1=[];
+    newDataCategories1.push(Object.keys(dataForCharts1));
+    for(var i=0;i<newDataCategories1[0].length;i++){
+    newDataToUse1.push({'name':newDataCategories1[0][i],'y':dataForCharts1[newDataCategories1[0][i]]});
+    }
+    CompareChart2.series[0].setData(newDataToUse1);
+}
+else{
+
+    var newData1=data1["contSum"][selectedDropdownValue];
+    var newDataToUse1=[],catToShow1=[];
+    var cat1=[],len=Object.keys(newData1).length;
+    for(var i=0;i<len;i++)
+     cat1.push(Object.keys(newData1)[i]);
+     cat1.sort();
+    for(var i=0;i<len;i++)
+       newDataToUse1.push(newData1[cat1[i]]);
+           
+     cat1.forEach((element,i)=>{
+     if((Number(element))%1!=0) cat1[i]=Number(element).toFixed(3);
+     if (i>0) catToShow1.push(cat1[i-1]+"-"+cat1[i]); else catToShow1.push("0-"+cat1[0]);
+     });
+    
+    CompareChart2=Highcharts.chart('2CompChart', {
+    chart: {
+        type: 'column'
+    },
+    credits:{
+        enabled:false
+    },
+    title: {
+        text: selectedDropdownValue+' Values for Cluster 2'
+    },
+    subtitle: {
+        text: ''
+    },
+    xAxis: {
+        categories: [],
+        crosshair: true
+    },
+    yAxis: {
+        min: 0,
+        title: {
+            text: selectedDropdownValue
+        }
+    },
+    tooltip: {
+        formatter:function(){
+            return ('<b>'+this.x+'</b>:'+this.y);
+        },
+        shared: true,
+        useHTML: true
+    },
+    plotOptions: {
+        series:{
+            borderColor: '#303030'
+        },
+        column: {
+            pointPadding: 0.2,
+        }
+    },
+    series: [{
+        name: selectedDropdownValue,
+        //data: [49.9, 71.5, 106.4, 129.2, 144.0, 176.0, 135.6, 148.5, 216.4, 194.1, 95.6, 54.4]
+    }]
+    });
+    CompareChart2.series[0].setData(newDataToUse1);
+    CompareChart2.xAxis[0].setCategories(catToShow1);
+    
 }
 }
 
