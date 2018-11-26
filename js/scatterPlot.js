@@ -207,8 +207,8 @@ ScatterPlot.prototype.drawvis = function() {
          selectedProperties=d;
        var text = "<button class='btn tool-tip btn-sm btn-secondary mr-1' onclick=x_left_click()>Drop in X-Low</button>"
        +"<button class='btn tool-tip  btn-sm btn-secondary mr-1' onclick=x_right_click()>Drop in X-High</button>"
-       +"<button class='btn tool-tip btn-sm btn-secondary' onclick=y_bottom_click()>Drop in Y-Low</button>"
-       +"<button class='btn tool-tip btn-sm btn-secondary mr-1' onclick=y_top_click()>Drop in Y-High</button>"
+       +"<button class='btn tool-tip btn-sm btn-secondary mr-1' onclick=y_bottom_click()>Drop in Y-Low</button>"
+       +"<button class='btn tool-tip btn-sm btn-secondary' onclick=y_top_click()>Drop in Y-High</button>"
       
        return text;
      });
@@ -398,6 +398,9 @@ ScatterPlot.prototype.updategraph=function(axis, high, low,Vgiven){
   data.forEach((element)=>{
     element["coord"]["Vehicle Name"]=1;
     element["coord"]["Pickup"]=2;
+    element["coord"]["Name"]=1;
+    element["coord"]["Song Title"]=1;
+    element["coord"]["Artist"]=1;
   });
   attr=this.data.columns;
   var attrNo=attr.length; //t be changed

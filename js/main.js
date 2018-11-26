@@ -8,22 +8,22 @@ var isLassoActivated = false;
 
 var fileNameMap = {
   'Car':"Cars.csv",
-  'Wine':'Wine.csv',
-  'Diabetes':'Diabetes.csv'
+  'Spotify':'Spotify.csv',
+  'Pokemon':'Pokemon.csv'
 }
 
 var fileNameBtn = {
   'Car':"carBtn",
-  'Wine':'wineBtn',
-  'Diabetes':'diabetesBtn'
+  'Spotify':'spotifyBtn',
+  'Pokemon':'pokemonBtn'
 }
 
 // Read Filename from Local Storage
 fileName = localStorage['myKey'] || 'Car'
 
 document.getElementById('carBtn').className = 'btn btn-secondary ';
-document.getElementById('wineBtn').className = 'btn btn-secondary ';
-document.getElementById('diabetesBtn').className = 'btn btn-secondary ';
+document.getElementById('spotifyBtn').className = 'btn btn-secondary ';
+document.getElementById('pokemonBtn').className = 'btn btn-secondary ';
 document.getElementById(fileNameBtn[fileName]).className = 'btn btn-secondary active';
 
 function pointSelected(event) {
@@ -31,17 +31,17 @@ function pointSelected(event) {
   desc.update();
 }
 
-// Function to Change Data to Wine Data
-function changeToWineData() {
-  localStorage['myKey'] = 'Wine';
+// Function to Change Data to Spotify Data
+function changeToSpotifyData() {
+  localStorage['myKey'] = 'Spotify';
   document.location.reload(true)
-  console.log("Change to Wine Data")
+  console.log("Change to Spotify Data")
 }
-// Function to Change Data to Diabetes Data
-function changeToDiabetesData() {
-  localStorage['myKey'] = 'Diabetes';
+// Function to Change Data to Pokemon Data
+function changeToPokemonData() {
+  localStorage['myKey'] = 'Pokemon';
   document.location.reload(true)
-  console.log("Change to Diabetes Data")
+  console.log("Change to Pokemon Data")
 }
 
 // Function to Change Data to Car Data
@@ -81,8 +81,8 @@ d3.csv("dataset/" + fileNameMap[fileName]).then(function(data) {
   this.chartRight.xAxis[0].setCategories(columns);
 
   if(localStorage['myKey']=='Car') {xv =11,yv = 7;}
-  else if(localStorage['myKey']=='Diabetes'){xv=3,yv=7;}
-  else if(localStorage['myKey']=='Wine'){xv=3,yv=7;}
+  else if(localStorage['myKey']=='Pokemon'){xv=3,yv=7;}
+  else if(localStorage['myKey']=='Spotify'){xv=3,yv=7;}
 
   scatterPlot = new ScatterPlot(loadData, "#chart-area1", xv, yv);
   if(!selectedPoint) {
