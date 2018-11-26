@@ -73,9 +73,13 @@ d3.csv("dataset/" + fileNameMap[fileName]).then(function(data) {
    loadData.forEach(function(d){
      d["coord"][columns[i]]=((+d["raw"][columns[i]]-tmpMin)/(tmpMax-tmpMin));
      if(localStorage['myKey']=='Car') delete d["coord"]["Vehicle Name"],delete d["coord"]["Pickup"];
+     if(localStorage['myKey']=='Spotify') delete d["coord"]["Name"],delete["coord"]["Artist"]
+     if(localStorage['myKey']=='Pokemon') delete d["coord"]["Name"]
    });
   }
   if(localStorage['myKey']=='Car') columns.splice(0,1),columns.splice(5,1);
+  if(localStorage['myKey']=='Pokemon') columns.splice(0,1)
+  if(localStorage['myKey']=='Spotify') columns.splice(0,1),columns.splice(0,1);
   loadData["columns"]=columns;
   this.chart.xAxis[0].setCategories(columns);
   this.chartRight.xAxis[0].setCategories(columns);
@@ -167,9 +171,13 @@ d3.csv("dataset/" + fileNameMap[fileName]).then(function(data) {
    loadData.forEach(function(d){
      d["coord"][columns[i]]=((+d["raw"][columns[i]]-tmpMin)/(tmpMax-tmpMin));
      if(localStorage['myKey']=='Car') delete d["coord"]["Vehicle Name"],delete d["coord"]["Pickup"];
-   });
+     if(localStorage['myKey']=='Spotify') delete d["coord"]["Name"],delete["coord"]["Artist"]
+     if(localStorage['myKey']=='Pokemon') delete d["coord"]["Name"]
+     });
   }
   if(localStorage['myKey']=='Car') columns.splice(0,1),columns.splice(5,1);
+  if(localStorage['myKey']=='Pokemon') columns.splice(0,1)
+  if(localStorage['myKey']=='Spotify') columns.splice(0,1),columns.splice(0,1);
   loadData["columns"]=columns;
 
   //console.log(columns);
@@ -229,9 +237,13 @@ d3.csv("dataset/" + fileNameMap[fileName]).then(function(data) {
    loadData.forEach(function(d){
      d["coord"][columns[i]]=((+d["raw"][columns[i]]-tmpMin)/(tmpMax-tmpMin));
      if(localStorage['myKey']=='Car') delete d["coord"]["Vehicle Name"],delete d["coord"]["Pickup"];
+     if(localStorage['myKey']=='Spotify') delete d["coord"]["Name"],delete["coord"]["Artist"]
+     if(localStorage['myKey']=='Pokemon') delete d["coord"]["Name"]
    });
   }
   if(localStorage['myKey']=='Car') columns.splice(0,1),columns.splice(5,1);
+  if(localStorage['myKey']=='Pokemon') columns.splice(0,1)
+  if(localStorage['myKey']=='Spotify') columns.splice(0,1),columns.splice(0,1);
   loadData["columns"]=columns;
   var chartData=[];
   if(abc.startsWith("x"))

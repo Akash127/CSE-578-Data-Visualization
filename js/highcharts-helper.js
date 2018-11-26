@@ -102,10 +102,21 @@ else if(isExceptionChart1)
     });
     var newDataCategories=[],newDataToUse=[];
     newDataCategories.push(Object.keys(dataForCharts));
+    if(newDataCategories[0].length==1)
+    {
+        if(newDataCategories[0][0]==0)  newDataToUse.push({'name':"Non-"+selectedDropdownValue,'y':dataForCharts[newDataCategories[0][0]]});
+        else if(newDataCategories[0][0]==1) newDataToUse.push({'name':selectedDropdownValue,'y':dataForCharts[newDataCategories[0][0]]});
+        else{newDataToUse.push({'name':newDataCategories[0][0],'y':dataForCharts[newDataCategories[0][0]]});}
+        CompareChart1.series[0].setData(newDataToUse);
+    }
+    else{
+
     for(var i=0;i<newDataCategories[0].length;i++){
     newDataToUse.push({'name':newDataCategories[0][i],'y':dataForCharts[newDataCategories[0][i]]});
-    }
     CompareChart1.series[0].setData(newDataToUse);
+    }
+ }
+
 }
 else
 {
@@ -185,11 +196,20 @@ else if(isExceptionChart2){
     });
     var newDataCategories1=[],newDataToUse1=[];
     newDataCategories1.push(Object.keys(dataForCharts1));
-    for(var i=0;i<newDataCategories1[0].length;i++){
-    newDataToUse1.push({'name':newDataCategories1[0][i],'y':dataForCharts1[newDataCategories1[0][i]]});
+    if(newDataCategories1[0].length==1)
+    {
+        if(newDataCategories1[0][0]==0)  newDataToUse1.push({'name':"Non-"+selectedDropdownValue,'y':dataForCharts1[newDataCategories1[0][0]]});
+        else if(newDataCategories1[0][0]==1) newDataToUse1.push({'name':selectedDropdownValue,'y':dataForCharts1[newDataCategories1[0][0]]});
+        else{newDataToUse1.push({'name':newDataCategories1[0][0],'y':dataForCharts1[newDataCategories1[0][0]]});}
+        CompareChart2.series[0].setData(newDataToUse1);
     }
-    CompareChart2.series[0].setData(newDataToUse1);
-}
+    else{
+        for(var i=0;i<newDataCategories1[0].length;i++){
+        newDataToUse1.push({'name':newDataCategories1[0][i],'y':dataForCharts1[newDataCategories1[0][i]]});
+        }
+        CompareChart2.series[0].setData(newDataToUse1);
+    }
+ }
 else{
 
     var newData1=data1["contSum"][selectedDropdownValue];
@@ -320,10 +340,20 @@ else if(isException)
     });
     var newDataCategories=[],newDataToUse=[];
     newDataCategories.push(Object.keys(dataForCharts));
+    if(newDataCategories[0].length==1)
+    {
+        if(newDataCategories[0][0]==0)  newDataToUse.push({'name':"Non-"+selectedDropdownValue,'y':dataForCharts[newDataCategories[0][0]]});
+        else if(newDataCategories[0][0]==1) newDataToUse.push({'name':selectedDropdownValue,'y':dataForCharts[newDataCategories[0][0]]});
+        else{newDataToUse.push({'name':newDataCategories[0][0],'y':dataForCharts[newDataCategories[0][0]]});}
+        ClusterChart.series[0].setData(newDataToUse);
+    }
+    else{
     for(var i=0;i<newDataCategories[0].length;i++){
     newDataToUse.push({'name':newDataCategories[0][i],'y':dataForCharts[newDataCategories[0][i]]});
-    }
     ClusterChart.series[0].setData(newDataToUse);
+    }
+   
+  }
 }
 else{
     var newData=data["contSum"][selectedDropdownValue];
