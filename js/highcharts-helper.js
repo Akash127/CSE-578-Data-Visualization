@@ -125,7 +125,6 @@ else
     var cat=[],len=Object.keys(newData).length;
     for(var i=0;i<len;i++)
      cat.push(Object.keys(newData)[i]);
-     cat.sort();
    for(var i=0;i<len;i++)
        newDataToUse.push(newData[cat[i]]);
 
@@ -148,13 +147,15 @@ CompareChart1=Highcharts.chart('1CompChart', {
     },
     xAxis: {
         categories: [],
-        crosshair: true
-    },
-    yAxis: {
-        min: 0,
+        crosshair: true,
         title: {
             text: selectedDropdownValue
         }
+    },
+  
+    yAxis: {
+        min: 0,
+        title:{text:"Number of Points"}
     },
     tooltip: {
         formatter:function(){
@@ -217,7 +218,6 @@ else{
     var cat1=[],len=Object.keys(newData1).length;
     for(var i=0;i<len;i++)
      cat1.push(Object.keys(newData1)[i]);
-     cat1.sort();
     for(var i=0;i<len;i++)
        newDataToUse1.push(newData1[cat1[i]]);
            
@@ -241,14 +241,18 @@ else{
     },
     xAxis: {
         categories: [],
-        crosshair: true
-    },
-    yAxis: {
-        min: 0,
+        crosshair: true,
         title: {
             text: selectedDropdownValue
         }
     },
+    yAxis: {
+        min: 0,
+        title: {
+            text: "Number of points"
+        }
+    },
+
     tooltip: {
         formatter:function(){
             return ('<b>'+this.x+'</b>:'+this.y);
@@ -361,7 +365,6 @@ else{
     var cat=[],len=Object.keys(newData).length;
     for(var i=0;i<len;i++)
      cat.push(Object.keys(newData)[i]);
-    cat.sort();
    for(var i=0;i<len;i++)
      newDataToUse.push(newData[cat[i]]);
 
@@ -385,14 +388,18 @@ ClusterChart=Highcharts.chart('ClusterChart', {
     },
     xAxis: {
         categories: [],
-        crosshair: true
-    },
-    yAxis: {
-        min: 0,
+        crosshair: true,
         title: {
             text: selectedDropdownValue
         }
     },
+    yAxis: {
+        min: 0,
+        title: {
+            text: "Number of points"
+        }
+    },
+
     tooltip: {
         formatter:function(){
             return ('<b>'+this.x+'</b>:'+this.y);
