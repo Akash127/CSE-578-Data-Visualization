@@ -1,6 +1,6 @@
 //#region global values will be defined here
-var initX=13;
-var initY=9;
+var initialXColumnNo=13;
+var initialYColumnNo=9;
 var selected;
 var selectedElement;
 var selectedProperties;
@@ -32,11 +32,11 @@ var categorialList = []
 //#endregion
 
 //#region some scatterplot init
-ScatterPlot = function(data, containerClassName, xv, yv) {
+ScatterPlot = function(data, containerClassName, xAxisColumnNo, yAxisColumnNo) {
   this.data = data
   this.containerClassName = containerClassName
-  initX = xv;
-  initY = yv;
+  initialXColumnNo = xAxisColumnNo;
+  initialYColumnNo = yAxisColumnNo;
   this.init();
 };
 
@@ -53,10 +53,10 @@ ScatterPlot.prototype.init = function() {
     
   vis.columns = this.data.columns;
 
-  var xmax = d3.max(this.data,function(d){return +d["coord"][vis.columns[initX]]});
-  var xmin = d3.min(this.data,function(d){return +d["coord"][vis.columns[initX]]});
-  var ymax = d3.max(this.data,function(d){return +d["coord"][vis.columns[initY]]});
-  var ymin = d3.min(this.data,function(d){return +d["coord"][vis.columns[initY]]});
+  var xmax = d3.max(this.data,function(d){return +d["coord"][vis.columns[initialXColumnNo]]});
+  var xmin = d3.min(this.data,function(d){return +d["coord"][vis.columns[initialXColumnNo]]});
+  var ymax = d3.max(this.data,function(d){return +d["coord"][vis.columns[initialYColumnNo]]});
+  var ymin = d3.min(this.data,function(d){return +d["coord"][vis.columns[initialYColumnNo]]});
 
   // Initiating Scales for Axis and Inverted Axis
 
@@ -144,13 +144,13 @@ ScatterPlot.prototype.init = function() {
     .attr("clip-path", "url(#clip)")
     // Adding Axis Labels
   vis.scatterPlotGroup.append("text")
-    .text(vis.columns[initX])
+    .text(vis.columns[initialXColumnNo])
     .attr("y", vis.height + 50)
     .attr("x", vis.width/2)
     .attr("class", "x-axis-label")
     .attr("font-size", "18px")
   vis.scatterPlotGroup.append("text")
-    .text(vis.columns[initY])
+    .text(vis.columns[initialYColumnNo])
     .attr("x", -vis.height/2 - 50)
     .attr("y", -35)
     .attr("class", "y-axis-label")
@@ -188,8 +188,8 @@ $(document).ready(function(){
 ScatterPlot.prototype.processData = function() {
   var vis = this;
   this.data.forEach(d=>{
-    d['x']=d["coord"][vis.columns[initX]];
-    d['y']=d["coord"][vis.columns[initY]];
+    d['x']=d["coord"][vis.columns[initialXColumnNo]];
+    d['y']=d["coord"][vis.columns[initialYColumnNo]];
   })
   vis.drawvis();
 }
@@ -393,8 +393,11 @@ updategraph_util = function(axis) {
 }
 
 
-ScatterPlot.prototype.updategraph=function(axis, high, low,Vgiven){
+ScatterPlot.prototype.updategraph=function(axis, high, low,newGivenVector)
+{
   var data=this.data;
+  var decisionVector = {};
+
   data.forEach((element)=>{
     element["coord"]["Vehicle Name"]=1;
     element["coord"]["Pickup"]=2;
@@ -402,110 +405,95 @@ ScatterPlot.prototype.updategraph=function(axis, high, low,Vgiven){
     element["coord"]["Song Title"]=1;
     element["coord"]["Artist"]=1;
   });
+
   attr=this.data.columns;
-  var attrNo=attr.length; //t be changed
-  var x1={},
-  x0={};
-if(Vgiven==undefined){
-  for (var i = 0; i<attrNo; i++) {
-    x1[attr[i]] = d3.mean(low, function(d) { return d["coord"][attr[i]]});
-    x0[attr[i]] = d3.mean(high, function(d) { return d["coord"][attr[i]]});
-  }
+  var attrLen=attr.length; //t be changed
+  var AttrLowMean={},AttrHighMean={};
 
-  var hlpair = [];
-  for (var i = 0; i<high.length; i++) {
-    for (var j = 0; j<low.length; j++) {
-      var tmpelt = {};
-      for (var k = 0; k<attrNo; k++) {
-        tmpelt[attr[k]] = high[i]["coord"][attr[k]] - low[j]["coord"][attr[k]];
-      }
-      hlpair[hlpair.length] = tmpelt;
-    }
-  }
-  var V = {}, Vchanged = {}, Verror = {}, norm = 0;
-  //initialise V,Verr
-  for (var i = 0; i<attrNo; i++) {
-    V[attr[i]] = 0;
-    Vchanged[attr[i]] = 0;
-  }
-  //calculating norm 
-  for (var i = 0; i<attrNo; i++) {
-    V[attr[i]] = x0[attr[i]]-x1[attr[i]];
-    norm = norm + (x0[attr[i]]-x1[attr[i]])*(x0[attr[i]]-x1[attr[i]]);
-   }
-   var VV = [];
-   for (var i = 0; i<attrNo; i++) {
-     VV[i] = {"attr":attr[i], "value":V[attr[i]]};
-   }
-   //VV and Verror
-   VV.sort(function(a,b) {return Math.abs(b["value"]) - Math.abs(a["value"]);});
-   norm = Math.sqrt(norm);
-   for (var i = 0; i<attrNo; i++) 
-   { 
-    V[attr[i]] = V[attr[i]]/norm;
-    if (hlpair.length>1) { Verror[attr[i]] = d3.deviation(hlpair, function(d) { return d[attr[i]]; }); }
-    else { Verror[attr[i]] = 0; }
-  }
-  GlobalV.push(V);
-  changed=axis;
-}
-else
-{
-  var V = Vgiven, Verror = {}, norm = 0;
-  for (var i = 0; i<attrNo; i++) {
-   norm = norm + (V[attr[i]])*(V[attr[i]]);
-  }
-  norm = Math.sqrt(norm);
-  for (var i = 0; i<attrNo; i++) {
-   V[attr[i]] = V[attr[i]]/norm;
-   Verror[attr[i]] = 0;
-  }
-}
+  if(newGivenVector==undefined) ///if the update is coming from dropzones
+  { 
+    attr.forEach(element=>{
+      decisionVector[element]=0;
+      AttrLowMean[element] = d3.mean(low, function(d) { return d["coord"][element]});
+      AttrHighMean[element] = d3.mean(high, function(d) { return d["coord"][element]});
+    });
 
-//making new axis
-chartdata=[];
-   index = index + 1; 
-   newxname = 'x'+index;
-   for(var j=0;j<attrNo;j++)       chartdata.push(V[attr[j]]);
-   data.forEach(function(d) {
+    decisionVector=makeNewAxisVector(newGivenVector,attr,AttrHighMean,AttrLowMean)
+    GlobalV.push(decisionVector);
+  }
+  else  
+  //if change is coming from highcharts
+  decisionVector=makeNewAxisVector(newGivenVector,attr)  
+  
+  //making new axis
+  chartdata=[];
+  index = index + 1; 
+  newxname = 'x'+index;
+
+  for(var j=0;j<attrLen;j++)       
+    chartdata.push(decisionVector[attr[j]]);
+  
+  data.forEach(function(d) {
     d["coord"][newxname] = 0; 
-    for (var j = 0; j<attrNo; j++) {
-      d["coord"][newxname] = d["coord"][newxname] + V[attr[j]]*d["coord"][attr[j]];
-    }
+    for (var j = 0; j<attrLen; j++)
+      d["coord"][newxname] = d["coord"][newxname] + decisionVector[attr[j]]*d["coord"][attr[j]];
   });
- if(Vgiven==undefined)  axis=="X"?chart.series[0].setData(chartdata):chartRight.series[0].setData(chartdata); //changing the higchart only if the axis is made from dropzzones
-  data.forEach(function(d) {d[axis=="X" ? "x" : "y"] = d["coord"][newxname]; });
+  
+  //changing the higchart only if the axis is made from dropzzones
+  if(newGivenVector==undefined)  axis=="X"?chart.series[0].setData(chartdata):chartRight.series[0].setData(chartdata);   
+  
+  //plotting new points
+  data.forEach(function(d) {
+    d[axis=="X" ? "x" : "y"] = d["coord"][newxname]; 
+  });
+  
+  //changing Axis labels
   if(axis=="X") $('.x-axis-label').text(newxname);
   if(axis=="Y") $('.y-axis-label').text(newxname);
-  this.drawvis();
+  
+  //drawing the vis again
+  this.drawvis(); 
+ }
 
-  
-}
-ScatterPlot.prototype.updategraphOnDropdownChange=function(axis,index,Vgiven){
-  var V = Vgiven, Verror = {}, norm = 0;
+ScatterPlot.prototype.updategraphOnDropdownChange=function(axis,index,newGivenVector){
   attr=this.data.columns;
-  attrNo=attr.length;
-  for (var i = 0; i<attrNo; i++) {
-   norm = norm + (V[attr[i]])*(V[attr[i]]);
-  }
-  norm = Math.sqrt(norm);
-  for (var i = 0; i<attrNo; i++) {
-   V[attr[i]] = V[attr[i]]/norm;
-   Verror[attr[i]] = 0;
-  }
-  
+  attrLen=attr.length;
+  decisionVector=makeNewAxisVector(newGivenVector,attr);
   newxname = 'x'+index;
   this.data.forEach(function(d) {
    d["coord"][newxname] = 0; 
-   for (var j = 0; j<attrNo; j++) {
-     d["coord"][newxname] = d["coord"][newxname] + V[attr[j]]*d["coord"][attr[j]];
+   for (var j = 0; j<attrLen; j++) {
+     d["coord"][newxname] = d["coord"][newxname] + decisionVector[attr[j]]*d["coord"][attr[j]];
    }
- });
- this.data.forEach(function(d) {d[axis=="X" ? "x" : "y"] = d["coord"][newxname]; });
- if(axis=="X") $('.x-axis-label').text(newxname);
- if(axis=="Y") $('.y-axis-label').text(newxname);
- this.drawvis();
+  });
 
+  //changing the datapoints
+  this.data.forEach(function(d) {d[axis=="X" ? "x" : "y"] = d["coord"][newxname]; });
+  if(axis=="X") $('.x-axis-label').text(newxname);
+  if(axis=="Y") $('.y-axis-label').text(newxname);
+  this.drawvis();
+}
+
+function makeNewAxisVector(givenVector,attr,AttrHighMean,AttrLowMean)
+{
+ var vectorToReturn={},denominator=0;
+  if(givenVector==undefined){
+   attr.forEach(element=>{
+     vectorToReturn[element] = AttrHighMean[element]-AttrLowMean[element];
+     denominator = denominator + (AttrHighMean[element]-AttrLowMean[element])*(AttrHighMean[element]-AttrLowMean[element]);
+   });
+ }
+ else{
+   vectorToReturn=givenVector;
+   attr.forEach(element=>{
+     denominator=denominator+vectorToReturn[element]*vectorToReturn[element];
+   });
+ }
+ denominator = Math.sqrt(denominator);
+ attr.forEach(element=>{
+   vectorToReturn[element] = vectorToReturn[element]/denominator;
+ });
+ return vectorToReturn;
 }
 //#endregion
 
@@ -513,31 +501,53 @@ ScatterPlot.prototype.updategraphOnDropdownChange=function(axis,index,Vgiven){
 function SaveX()
 {
   var select = document.getElementById("select");
-  if(changed=="X"){ 
-  var option = document.createElement("OPTION"),txt=document.createTextNode("x"+index);
-  option.appendChild(txt);
-  option.setAttribute("value","x"+index);
-  select.insertBefore(option,select.lastChild); 
-  $("#select").val($('#select option:last').val());
+  var isPresent=false;
+  var dropdownlist=$('#select>option');
+  var x_axis_label=$(".x-axis-label").text();
+  for(var i=0;i<$(dropdownlist).length;i++)
+  {
+    if($(dropdownlist[i]).val()==x_axis_label)  
+      isPresent=true;
   }
+  if(!isPresent){ 
+    var option = document.createElement("OPTION"),txt=document.createTextNode(x_axis_label);
+    option.appendChild(txt);
+    option.setAttribute("value",x_axis_label);
+    select.insertBefore(option,select.lastChild); 
+    $("#select").val($('#select option:last').val());
+  }
+  else
+    alert("Sorry,You cannot save the same axis again!!!");
+  
 }
 function SaveY()
 {
   var select1 = document.getElementById("select1");
- if(changed=="Y"){
-  var option = document.createElement("OPTION"),txt=document.createTextNode("x"+index);
-  option.appendChild(txt);
-  option.setAttribute("value","x"+index);
-  select1.insertBefore(option,select1.lastChild);
-  $("#select1").val($('#select1 option:last').val());
- }
+  var isPresent=false;
+  var dropdownlist=$('#select1>option');
+  var y_axis_label=$(".y-axis-label").text();
+  for(var i=0;i<$(dropdownlist).length;i++)
+  {
+    if($(dropdownlist[i]).val()==$(".y-axis-label").text())  
+      isPresent=true;
+  }
+  if(!isPresent){
+    var option = document.createElement("OPTION"),txt=document.createTextNode(y_axis_label);
+    option.appendChild(txt);
+    option.setAttribute("value",y_axis_label);
+    select1.insertBefore(option,select1.lastChild);
+    $("#select1").val($('#select1 option:last').val());
+  }
+  else
+    alert("Sorry,You cannot save the same axis again!!!");
+  
 }
 function ClearX(){
   x_right_dropzone=[];
   x_left_dropzone=[];
   while($(".x-left")[0].lastChild) $(".x-left")[0].removeChild($(".x-left")[0].lastChild);
   while($(".x-right")[0].lastChild) $(".x-right")[0].removeChild($(".x-right")[0].lastChild);
-  document.getElementById('select').value="HP";
+  document.getElementById('select').value=this.data.columns[initialXColumnNo];
   chooseX();
 }
 function ClearY(){
@@ -545,7 +555,7 @@ function ClearY(){
   y_top_click=[];
   while($(".y-top")[0].lastChild) $(".y-top")[0].removeChild($(".y-top")[0].lastChild);
   while($(".y-bottom")[0].lastChild) $(".y-bottom")[0].removeChild($(".y-bottom")[0].lastChild);
-  document.getElementById('select1').value="Retail Price";
+  document.getElementById('select1').value=this.data.columns[initialYColumnNo];
   chooseY();
 }
 //#endregion

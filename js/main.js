@@ -5,7 +5,7 @@ var loadData=[];
 var GlobalV=[];
 var changed;
 var isLassoActivated = false;
-
+var xAxisColumnNo,yAxisColumnNo;
 var fileNameMap = {
   'Car':"Cars.csv",
   'Spotify':'Spotify.csv',
@@ -20,6 +20,7 @@ var fileNameBtn = {
 
 // Read Filename from Local Storage
 fileName = localStorage['myKey'] || 'Car'
+localStorage['myKey']=fileName
 
 document.getElementById('carBtn').className = 'btn btn-secondary ';
 document.getElementById('spotifyBtn').className = 'btn btn-secondary ';
@@ -84,11 +85,11 @@ d3.csv("dataset/" + fileNameMap[fileName]).then(function(data) {
   this.chart.xAxis[0].setCategories(columns);
   this.chartRight.xAxis[0].setCategories(columns);
 
-  if(localStorage['myKey']=='Car') {xv =11,yv = 7;}
-  else if(localStorage['myKey']=='Pokemon'){xv=3,yv=7;}
-  else if(localStorage['myKey']=='Spotify'){xv=3,yv=7;}
+  if(localStorage['myKey']=='Car') {xAxisColumnNo =11,yAxisColumnNo = 7;}
+  else if(localStorage['myKey']=='Pokemon'){xAxisColumnNo=2,yAxisColumnNo=7;}
+  else if(localStorage['myKey']=='Spotify'){xAxisColumnNo=3,yAxisColumnNo=7;}
 
-  scatterPlot = new ScatterPlot(loadData, "#chart-area1", xv, yv);
+  scatterPlot = new ScatterPlot(loadData, "#chart-area1", xAxisColumnNo, yAxisColumnNo);
   if(!selectedPoint) {
     selectedPoint = loadData[0].raw
   }
@@ -133,12 +134,12 @@ d3.csv("dataset/" + fileNameMap[fileName]).then(function(data) {
     }
 
      var chartData=[],chartData1=[];
-     $("#select").val(columns[xv]);
-     $("#select1").val(columns[yv]);
+     $("#select").val(columns[xAxisColumnNo]);
+     $("#select1").val(columns[yAxisColumnNo]);
      for(var i=0;i<columns.length;i++)
         {
-            if(arr[i]==columns[yv])  chartData.push(1); else chartData.push(0)
-            if(arr[i]==columns[xv]) chartData1.push(1); else chartData1.push(0);
+            if(arr[i]==columns[yAxisColumnNo])  chartData.push(1); else chartData.push(0)
+            if(arr[i]==columns[xAxisColumnNo]) chartData1.push(1); else chartData1.push(0);
         }
         this.chart.series[0].setData(chartData1);
         this.chartRight.series[0].setData(chartData);
@@ -195,12 +196,12 @@ d3.csv("dataset/" + fileNameMap[fileName]).then(function(data) {
     t.innerHTML = '';
   for(var i=0;i<columns.length;i++){
     if (columns[i] == abc) {
-      xv = i;
+      xAxisColumnNo = i;
       chartData.push(1);
     }
     else chartData.push(0);
     }
-    scatterPlot = new ScatterPlot(loadData, "#chart-area1", xv, yv); 
+    scatterPlot = new ScatterPlot(loadData, "#chart-area1", xAxisColumnNo, yAxisColumnNo); 
   }
   if(xyz.startsWith("x"))
     {
@@ -258,12 +259,12 @@ d3.csv("dataset/" + fileNameMap[fileName]).then(function(data) {
     t.innerHTML = '';
   for(var i=0;i<columns.length;i++){  
     if (columns[i] == abc) {
-        yv = i;
+        yAxisColumnNo = i;
       chartData.push(1);
     }
     else chartData.push(0);
     }
-    scatterPlot = new ScatterPlot(loadData, "#chart-area1", xv, yv);   
+    scatterPlot = new ScatterPlot(loadData, "#chart-area1", xAxisColumnNo, yAxisColumnNo);   
 }
 if(xyz.startsWith("x"))
     {

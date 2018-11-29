@@ -173,3 +173,7 @@ table{
     border-radius: 10px;
     background-color: #BBBDBF;
 }
+
+.highcharts-axis{
+    font-weight: bold;
+}
