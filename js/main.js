@@ -154,7 +154,7 @@ function chooseX() {
   document.getElementById("lassoToggle").innerHTML = "Activate Lasso";
   $("#SaveClusterBtn").attr("disabled","disabled");
   // Load Dataset and Charts
-d3.csv("dataset/" + fileNameMap[fileName]).then(function(data) {
+  d3.csv("dataset/" + fileNameMap[fileName]).then(function(data) {
   loadData=[];
   data.forEach(element => {
     var tmp={"Name":null,"raw":null,"coord":null};
@@ -163,7 +163,6 @@ d3.csv("dataset/" + fileNameMap[fileName]).then(function(data) {
     tmp["coord"]={};
     loadData.push(tmp);
   });
-  //console.log(loadData);
   var columns=  data.columns;
 
   for(var i=0;i<columns.length;i++){

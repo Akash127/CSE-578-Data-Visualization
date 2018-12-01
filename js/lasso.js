@@ -41,6 +41,7 @@ function toggle_lasso() {
   if(!isLassoActivated) {
     console.log("Lasso Activated!");
     isLassoActivated = true;
+    isNewCluster=false;
     scatterPlot.lassoArea = scatterPlot.scatterPlotGroup.append("rect")
     .attr("width", scatterPlot.width)
     .attr("height", scatterPlot.height)
