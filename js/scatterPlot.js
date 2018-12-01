@@ -450,7 +450,8 @@ ScatterPlot.prototype.updategraph=function(axis, high, low,newGivenVector)
   //changing Axis labels
   if(axis=="X") $('.x-axis-label').text(newxname);
   if(axis=="Y") $('.y-axis-label').text(newxname);
-  
+  $('#chart-area1 .selected').removeClass("selected");
+
   //drawing the vis again
   this.drawvis(); 
  }
@@ -471,6 +472,7 @@ ScatterPlot.prototype.updategraphOnDropdownChange=function(axis,index,newGivenVe
   this.data.forEach(function(d) {d[axis=="X" ? "x" : "y"] = d["coord"][newxname]; });
   if(axis=="X") $('.x-axis-label').text(newxname);
   if(axis=="Y") $('.y-axis-label').text(newxname);
+  $('#chart-area1 .selected').removeClass("selected");
   this.drawvis();
 }
 
@@ -503,7 +505,7 @@ function SaveX()
   var select = document.getElementById("select");
   var isPresent=false;
   var dropdownlist=$('#select>option');
-  var x_axis_label=$(".x-axis-label").text();
+  var x_axis_label=$($(".x-axis-label")[$(".x-axis-label").length-1]).text();
   for(var i=0;i<$(dropdownlist).length;i++)
   {
     if($(dropdownlist[i]).val()==x_axis_label)  
@@ -517,7 +519,7 @@ function SaveX()
     $("#select").val($('#select option:last').val());
   }
   else
-    alert("Sorry,You cannot save the same axis again!!!");
+    alert("Sorry,you cannot save the same axis again!!!");
   
 }
 function SaveY()
@@ -525,10 +527,10 @@ function SaveY()
   var select1 = document.getElementById("select1");
   var isPresent=false;
   var dropdownlist=$('#select1>option');
-  var y_axis_label=$(".y-axis-label").text();
+  var y_axis_label=$($(".y-axis-label")[$(".y-axis-label").length-1]).text();
   for(var i=0;i<$(dropdownlist).length;i++)
   {
-    if($(dropdownlist[i]).val()==$(".y-axis-label").text())  
+    if($(dropdownlist[i]).val()==y_axis_label)  
       isPresent=true;
   }
   if(!isPresent){
@@ -539,7 +541,7 @@ function SaveY()
     $("#select1").val($('#select1 option:last').val());
   }
   else
-    alert("Sorry,You cannot save the same axis again!!!");
+    alert("Sorry,you cannot save the same axis again!!!");
   
 }
 function ClearX(){
