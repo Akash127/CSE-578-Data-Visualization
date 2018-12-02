@@ -10,6 +10,7 @@ This project was done as part of CSE 578 Data Visualization coursework at Arizon
 The system allows user driven data visualization using Scatter Plot Axes. The system works on three types of dataset: Cars, Pokemon and Spotify.
   
 ![SystemImage2](https://drive.google.com/uc?export=view&id=1IvN6brei7MDPxAoCfcirqmg4MN7mNJVe =100x100)
+
 ![SystemImage3](https://drive.google.com/uc?export=view&id=1uKoLnJbXdpwMJUsSmAT5o30Ra6iLdKdV =100x100)
 
 ## Usage
