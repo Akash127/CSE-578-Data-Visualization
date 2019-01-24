@@ -1,4 +1,4 @@
-# CSE-578-Data-Visualization
+# Interaxis
 
 Switch to Development Branch for Latest Deployed Code.
 
