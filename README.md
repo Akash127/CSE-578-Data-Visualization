@@ -1,6 +1,6 @@
 # Interaxis
 
-Switch to Development Branch for Latest Deployed Code.
+Switch to Heroku-Deploy Branch for Latest Deployed Code.
 
 ## Design and Implementation
 
@@ -21,5 +21,5 @@ The Project Report can be accessed through this [link](https://drive.google.com/
 
 ## Usage
 
-The system can be accessed using the [link](https://storage.googleapis.com/interaxiscse578/index.html).
+The system can be accessed using the [link](https://vast-falls-22865.herokuapp.com/).
 For online demo follow this [link](https://www.youtube.com/watch?v=6cm3xBokBLg&t).
